@@ -1,0 +1,42 @@
+<resources>
+    <!-- 字体规范-->
+    <dimen name="def_height">50dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_1">0.4dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_72">72dp</dimen>
+    <dimen name="sp_12">12sp</dimen>
+    <dimen name="sp_10">10sp</dimen>
+    <dimen name="sp_14">14sp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="gridview_item_height">195.5dp</dimen>
+    <!--全局的根布局左右水平间距-->
+
+    <!-- 书本字体默认大小 -->
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <!-- 状态栏电池厚度 -->
+    <!-- 书本宽边距 -->
+    <!-- 书本高边距 -->
+    <!-- 状态栏离底部距离 -->
+    <!-- 行间距 -->
+    <!-- 段间距 -->
+
+    <!-- 书本字体最小大小 -->
+    <!-- 书本字体最大大小 -->
+    <!-- 设置行高 -->
+
+    <!-- app -->
+
+    <!-- widget -->
+
+    <!-- margin padding -->
+    <dimen name="space_30">30dp</dimen>
+
+    <!-- navigation -->
+
+    <!-- Text Size -->
+    <dimen name="text_size_20">20sp</dimen>
+</resources>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/commodity_rel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/ripple_bg2"
+    android:clickable="true"
+    android:padding="3dip">
+
+
+    <RelativeLayout
+        android:id="@+id/commodity_rel_image"
+        android:layout_width="80dip"
+        android:layout_height="80dip"
+        android:layout_marginRight="10dip"
+     >
+
+        <ImageView
+            android:layout_width="80dip"
+            android:layout_height="80dip"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitXY" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/commodity_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@+id/commodity_rel_image"
+        android:ellipsize="end"
+        android:lineSpacingExtra="7dp"
+        android:maxLines="2"
+        android:text="玉龙雪山"
+        android:textColor="@color/nb_text_common_h1"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/commodity_text"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/commodity_name"
+        android:layout_marginTop="8dip"
+        android:layout_toRightOf="@id/commodity_rel_image"
+        android:background="@color/nb_divider_narrow"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/commodity_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/commodity_text"
+        android:layout_marginTop="8dip"
+        android:layout_toRightOf="@+id/commodity_rel_image"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4px"
+        android:maxLines="2"
+        android:text="@string/app_name"
+        android:textColor="@color/nb_text_common_h1"
+        android:textSize="14sp" />
+
+
+
+</RelativeLayout>

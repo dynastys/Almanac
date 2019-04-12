@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffeeeeee"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancel"
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/dp_10"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            android:id="@+id/confirm"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/dp_10"
+            />
+    </RelativeLayout>
+    <cn.carbs.android.indicatorview.library.IndicatorView
+        android:id="@+id/indicator_view"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="#ffeeeeee"
+        app:iv_IndicatorColorEnd="@color/main_bg4"
+        app:iv_IndicatorColorGradient="true"
+        app:iv_IndicatorColorStart="@color/main_bg4"
+        app:iv_IndicatorEven="true"
+        app:iv_IndicatorHeight="2dp"
+        app:iv_IndicatorTextArray="@array/indicator_string_array"
+        app:iv_IndicatorTextSize="16dp" />
+
+    <com.zt.rainbowweather.view.GregorianLunarCalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:glcv_GregorianThemeColor="@color/main_bg4"
+        app:glcv_LunarThemeColor="@color/main_bg4"
+        app:glcv_NormalTextColor="#FF777777"
+        app:glcv_ScrollAnimation="true"
+          />
+
+    <TextView
+        android:id="@+id/button_get_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:gravity="center"
+        android:text="aaa" />
+
+</LinearLayout>

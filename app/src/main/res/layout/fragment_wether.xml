@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.xy.xylibrary.refresh.SuperEasyRefreshLayout
+        android:id="@+id/list_swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+         >
+
+
+        <com.zt.rainbowweather.view.TranslucentScrollView
+            android:id="@+id/home_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/lin_wether"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_header"
+                        android:layout_width="match_parent"
+                        android:background="@color/white_A30"
+                        android:layout_height="300dp">
+
+                        <com.zt.rainbowweather.presenter.dynamic.DynamicWeatherView
+                            android:id="@+id/dynamicWeather"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="25dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/shop_list_bar"
+                                android:layout_width="match_parent"
+                                android:layout_height="?actionBarSize"
+                              />
+                            <TextView
+                                android:id="@+id/forecast_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="2013-12-30"
+                                android:textColor="#fff"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tv_h_curr_temp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:textColor="#fff"
+                                android:textSize="40sp"
+                                android:text="23℃" />
+
+                            <TextView
+                                android:id="@+id/tv_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_h_curr_temp"
+                                android:layout_marginTop="6dp"
+                                android:textColor="#fff"
+                                android:textSize="16sp"
+                                android:text="黄浦区 君安大街" />
+
+                            <TextView
+                                android:id="@+id/tv_h_curr_weather"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_address"
+                                android:layout_marginTop="3dp"
+                                android:textColor="#fff"
+                                android:textSize="16sp"
+                                android:text="晴" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:background="@color/lucency">
+
+                            <com.zt.rainbowweather.view.DrawableCenterTextView
+                                android:id="@+id/tv_h_aqi"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@mipmap/minute_rain_fall_normal"
+                                android:drawablePadding="9dp"
+                                android:paddingVertical="9dp"
+                                android:textColor="#fff"
+                                android:text="空气优35" />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginVertical="9dp"
+                                android:background="@android:color/white"></View>
+
+                            <com.zt.rainbowweather.view.DrawableCenterTextView
+                                android:id="@+id/tv_h_rain"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@mipmap/minute_rain_fall_normal"
+                                android:drawablePadding="9dp"
+                                android:paddingVertical="9dp"
+                                android:textColor="#fff"
+                                android:text="未来2小时无雨" />
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/caih"
+                            />
+                        <com.check.ox.sdk.LionWallView
+                            android:id="@+id/TMAw1"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            tools:shape="square"/>
+
+                    </RelativeLayout>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:descendantFocusability="blocksDescendants">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/rv_advise_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:nestedScrollingEnabled="false" />
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/dp_10"
+                                android:background="@color/nb_text_common_h3"
+                                >
+                                <TextView
+                                    android:id="@+id/load_more"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/load_more"
+                                    android:ems="1"
+                                    />
+                            </RelativeLayout>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <RelativeLayout
+                        android:id="@+id/relat_ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/banner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:scaleType="fitXY" />
+                        <TextView
+                            android:id="@+id/tv_ad_flag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
+                            android:background="#4d000000"
+                            android:paddingBottom="1dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingTop="1dp"
+                            android:text="广告"
+                            android:textColor="@color/white"
+                            />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:background="#eee" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:drawableLeft="@drawable/ic_access_time"
+                            android:padding="@dimen/dp_10"
+                            android:text="@string/hour_24" />
+
+                        <TextView
+                            android:id="@+id/at_present"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:padding="@dimen/dp_10"
+                            android:text="当前：20°" />
+                    </RelativeLayout>
+
+                    <com.zt.rainbowweather.view.MiuiWeatherView
+                        android:id="@+id/weather"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        app:background_color="#ffffff"
+                        app:line_interval="60dp"
+                        app:min_point_height="60dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:background="#eee" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="330dp"
+                        android:layout_marginTop="20dp"
+                        android:scrollbars="none">
+
+                        <com.zt.rainbowweather.view.ScrollFutureDaysWeatherView
+                            android:id="@+id/sfdwv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.xy.xylibrary.view.ColumnHorizontalScrollView
+                            android:id="@+id/column"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:id="@+id/mRadioGroup_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+
+                        </com.xy.xylibrary.view.ColumnHorizontalScrollView>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0.4dp"
+                        android:layout_below="@+id/popup_tv"
+                        android:background="@color/nb_divider_narrow"
+
+                        />
+
+                    <com.xy.xylibrary.view.CustomScrollViewPager
+                        android:id="@+id/viewpager_column"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.zt.rainbowweather.view.TranslucentScrollView>
+
+    </com.xy.xylibrary.refresh.SuperEasyRefreshLayout>
+
+    <com.zt.rainbowweather.view.TranslucentActionBar
+        android:id="@+id/details_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:background="@drawable/gradual_change" />
+
+    <TextView
+        android:id="@+id/list_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_A30" />
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_bar"
+        android:background="@color/white_A30"
+        android:gravity="center_vertical">
+
+    </RelativeLayout>
+</RelativeLayout>

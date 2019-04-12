@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--通用一级标题的颜色-->
+    <color name="nb_text_common_h1">#212121</color>
+    <!--通用二级标题的颜色-->
+    <color name="nb_text_common_h2">#727272</color>
+    <color name="main_bg4">#257FE8</color>
+    <color name="divider">#727272</color>
+    <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
+    <color name="subscribe_item_normal_bg">#fff5f5f5</color>
+    <!--通用分割线细-->
+    <color name="nb_divider_narrow">#E3E3E3</color>
+    <color name="white">#ffffff</color>
+    <color name="main_bg2">#F93322</color>
+</resources>

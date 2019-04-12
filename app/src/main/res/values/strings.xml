@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">彩虹天气</string>
+    <string name="hour_24">24小时天气</string>
+    <string-array name="indicator_string_array">
+        <item>公历</item>
+        <item>农历</item>
+    </string-array>
+    <string-array name="npv_lunar_year_without_measure_hint">
+        <item>二零一六</item>
+    </string-array>
+    <string-array name="npv_lunar_month_without_measure_hint">
+        <item>十一</item>
+    </string-array>
+    <string-array name="npv_lunar_day_with_measure_hint">
+        <item>初一</item>
+    </string-array>
+    <string name="format_skip">跳过 %d</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="load_more">加载更多</string>
+    <string name="share_the_weather">分享天气</string>
+    <string name="serve_txt">服务</string>
+    <string name="instrument">工具</string>
+    <string name="version_updating">1.添加反馈以后联系方式的填写\n2.添加初步的登录注册功能\n3.优化用户体验</string>
+
+</resources>
