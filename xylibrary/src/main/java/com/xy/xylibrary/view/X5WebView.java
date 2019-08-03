@@ -47,23 +47,27 @@ public class X5WebView extends WebView {
 	private Handler mTestHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case MSG_OPEN_TEST_URL:
-					if (!mNeedTestPage) {
-						return;
-					}
+			try {
+				switch (msg.what) {
+					case MSG_OPEN_TEST_URL:
+						if (!mNeedTestPage) {
+							return;
+						}
 
-					String testUrl = "file:///sdcard/outputHtml/html/"
-							+ Integer.toString(mCurrentUrl) + ".html";
+						String testUrl = "file:///sdcard/outputHtml/html/"
+								+ Integer.toString(mCurrentUrl) + ".html";
 
-						 loadUrl(testUrl);
+						loadUrl(testUrl);
 
 
-					mCurrentUrl++;
-					break;
-				case MSG_INIT_UI:
-					SetWebview();
-					break;
+						mCurrentUrl++;
+						break;
+					case MSG_INIT_UI:
+						SetWebview();
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			super.handleMessage(msg);
 		}
@@ -89,174 +93,188 @@ public class X5WebView extends WebView {
 	}
 
 	private void initWebViewSettings() {
-		WebSettings webSetting = this.getSettings();
-		webSetting.setJavaScriptEnabled(true);
-		webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
-		webSetting.setAllowFileAccess(true);
-		webSetting.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
-		webSetting.setSupportZoom(true);
-		webSetting.setBuiltInZoomControls(true);
-		webSetting.setUseWideViewPort(true);
-		webSetting.setSupportMultipleWindows(true);
-		// webSetting.setLoadWithOverviewMode(true);
-		webSetting.setAppCacheEnabled(true);
-		// webSetting.setDatabaseEnabled(true);
-		webSetting.setDomStorageEnabled(true);
-		webSetting.setGeolocationEnabled(true);
-		webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
-		// webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
-		webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-		// webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-		webSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
-		SetWebview();
+		try {
+			WebSettings webSetting = this.getSettings();
+			webSetting.setJavaScriptEnabled(true);
+			webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
+			webSetting.setAllowFileAccess(true);
+			webSetting.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
+			webSetting.setSupportZoom(true);
+			webSetting.setBuiltInZoomControls(false);
+			webSetting.setUseWideViewPort(true);
+			webSetting.setSupportMultipleWindows(true);
+			// webSetting.setLoadWithOverviewMode(true);
+			webSetting.setAppCacheEnabled(true);
+			// webSetting.setDatabaseEnabled(true);
+			webSetting.setDomStorageEnabled(true);
+			webSetting.setGeolocationEnabled(true);
+			webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
+			// webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
+			webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
+			// webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
+			webSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+			SetWebview();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		// this.getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
 		// settings 的设计
 
 	}
 	private void initProgressBar() {
- 		// ProgressBar(getApplicationContext(),
+		// ProgressBar(getApplicationContext(),
 		// null,
 		// android.R.attr.progressBarStyleHorizontal);
-		mPageLoadingProgressBar.setMax(100);
-		mPageLoadingProgressBar.setProgressDrawable(this.getResources()
-				.getDrawable(R.drawable.color_progressbar));
+		if(mPageLoadingProgressBar != null){
+			mPageLoadingProgressBar.setMax(100);
+			mPageLoadingProgressBar.setProgressDrawable(this.getResources()
+					.getDrawable(R.drawable.color_progressbar));
+		}
 	}
 
 	private void SetWebview(){
-		initProgressBar();
-		this.setWebViewClient(new WebViewClient() {
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				return false;
-			}
-
-			@Override
-			public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
-
-				sslErrorHandler.proceed();//接受信任所有网站的证书
-			}
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				super.onPageFinished(view, url);
-				// mTestHandler.sendEmptyMessage(MSG_OPEN_TEST_URL);
-				mTestHandler.sendEmptyMessageDelayed(MSG_OPEN_TEST_URL, 5000);// 5s?
-				if (Integer.parseInt(Build.VERSION.SDK) >= 16)
-
-				if(!TextUtils.isEmpty(view.getTitle())){
-					textView.setText(view.getTitle());
+		try {
+			initProgressBar();
+			this.setWebViewClient(new WebViewClient() {
+				@Override
+				public boolean shouldOverrideUrlLoading(WebView view, String url) {
+					return false;
 				}
 
-				/* mWebView.showLog("test Log"); */
-			}
-		});
-
-		this.setWebChromeClient(new WebChromeClient() {
-			@Override
-			public void onProgressChanged(WebView webView, int i) {
-				super.onProgressChanged(webView, i);
-				mPageLoadingProgressBar.setProgress(i);
-			}
-
-			@Override
-			public boolean onJsConfirm(WebView arg0, String arg1, String arg2,
-									   JsResult arg3) {
-				return super.onJsConfirm(arg0, arg1, arg2, arg3);
-			}
-
-//			View myVideoView;
-//			View myNormalView;
-			IX5WebChromeClient.CustomViewCallback callback;
-
-			// /////////////////////////////////////////////////////////
-			//
-
-			/**
-			 * 全屏播放配置
-			 */
-			@Override
-			public void onShowCustomView(View view,
-										 IX5WebChromeClient.CustomViewCallback customViewCallback) {
-//				FrameLayout normalView = (FrameLayout) findViewById(R.id.web_filechooser);
-//				ViewGroup viewGroup = (ViewGroup) normalView.getParent();
-//				viewGroup.removeView(normalView);
-//				viewGroup.addView(view);
-//				myVideoView = view;
-//				myNormalView = normalView;
-				callback = customViewCallback;
-			}
-
-			@Override
-			public void onHideCustomView() {
-				if (callback != null) {
-					callback.onCustomViewHidden();
-					callback = null;
+				@Override
+				public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
+					sslErrorHandler.proceed();//接受信任所有网站的证书
 				}
-//				if (myVideoView != null) {
-//					ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
-//					viewGroup.removeView(myVideoView);
-//					viewGroup.addView(myNormalView);
-//				}
-			}
 
-			@Override
-			public boolean onJsAlert(WebView arg0, String arg1, String arg2,
-									 JsResult arg3) {
+				@Override
+				public void onPageFinished(WebView view, String url) {
+					super.onPageFinished(view, url);
+					// mTestHandler.sendEmptyMessage(MSG_OPEN_TEST_URL);
+					if(mTestHandler != null){
+						mTestHandler.sendEmptyMessageDelayed(MSG_OPEN_TEST_URL, 5000);// 5s?
+
+					}
+					if (Integer.parseInt(Build.VERSION.SDK) >= 16)
+
+						if(textView != null && !TextUtils.isEmpty(view.getTitle())){
+							textView.setText(view.getTitle());
+						}
+
+					/* mWebView.showLog("test Log"); */
+				}
+			});
+
+			this.setWebChromeClient(new WebChromeClient() {
+				@Override
+				public void onProgressChanged(WebView webView, int i) {
+					super.onProgressChanged(webView, i);
+					if(mPageLoadingProgressBar != null){
+						mPageLoadingProgressBar.setProgress(i);
+					}
+				}
+
+				@Override
+				public boolean onJsConfirm(WebView arg0, String arg1, String arg2,
+										   JsResult arg3) {
+					return super.onJsConfirm(arg0, arg1, arg2, arg3);
+				}
+
+				View myVideoView;
+				View myNormalView;
+				IX5WebChromeClient.CustomViewCallback callback;
+
+				// /////////////////////////////////////////////////////////
+				//
+
 				/**
-				 * 这里写入你自定义的window alert
+				 * 全屏播放配置
 				 */
-				return super.onJsAlert(null, arg1, arg2, arg3);
-			}
-		});
+				@Override
+				public void onShowCustomView(View view,
+											 IX5WebChromeClient.CustomViewCallback customViewCallback) {
+					//				FrameLayout normalView = (FrameLayout) findViewById(R.id.web_filechooser);
+					//				ViewGroup viewGroup = (ViewGroup) normalView.getParent();
+					//				viewGroup.removeView(normalView);
+					//				viewGroup.addView(view);
+					//				myVideoView = view;
+					//				myNormalView = normalView;
+					//				callback = customViewCallback;
+				}
 
-		this.setDownloadListener(new DownloadListener() {
+				@Override
+				public void onHideCustomView() {
+					if (callback != null) {
+						callback.onCustomViewHidden();
+						callback = null;
+					}
+					if (myVideoView != null) {
+						ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
+						viewGroup.removeView(myVideoView);
+						viewGroup.addView(myNormalView);
+					}
+				}
 
-			@Override
-			public void onDownloadStart(final String arg0, String arg1, String arg2,
-										String arg3, long arg4) {
- 				new AlertDialog.Builder(context)
-						.setTitle("是否进行下载？")
-						.setPositiveButton("是",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-														int which) {
-										// TODO: 2017-5-6 处理下载事件
-										Intent intent = new Intent(Intent.ACTION_VIEW);
-										intent.addCategory(Intent.CATEGORY_BROWSABLE);
-										intent.setData(Uri.parse(arg0));
-										context.startActivity(intent);
-									}
-								})
-						.setNegativeButton("否",
-								new DialogInterface.OnClickListener() {
+				@Override
+				public boolean onJsAlert(WebView arg0, String arg1, String arg2,
+										 JsResult arg3) {
+					/**
+					 * 这里写入你自定义的window alert
+					 */
+					return super.onJsAlert(null, arg1, arg2, arg3);
+				}
+			});
 
-									@Override
-									public void onClick(DialogInterface dialog,
-														int which) {
+			this.setDownloadListener(new DownloadListener() {
 
-									}
-								})
-						.setOnCancelListener(
-								new DialogInterface.OnCancelListener() {
+				@Override
+				public void onDownloadStart(final String arg0, String arg1, String arg2,
+											String arg3, long arg4) {
+					new AlertDialog.Builder(context)
+							.setTitle("是否进行下载？")
+							.setPositiveButton("是",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+															int which) {
+											// TODO: 2017-5-6 处理下载事件
+											Intent intent = new Intent(Intent.ACTION_VIEW);
+											intent.addCategory(Intent.CATEGORY_BROWSABLE);
+											intent.setData(Uri.parse(arg0));
+											context.startActivity(intent);
+										}
+									})
+							.setNegativeButton("否",
+									new DialogInterface.OnClickListener() {
 
-									@Override
-									public void onCancel(DialogInterface dialog) {
-										// TODO Auto-generated method stub
-										Toast.makeText(
-												context,
-												"fake message: refuse download...",
-												Toast.LENGTH_SHORT).show();
-									}
-								}).show();
-			}
-		});
+										@Override
+										public void onClick(DialogInterface dialog,
+															int which) {
+
+										}
+									})
+							.setOnCancelListener(
+									new DialogInterface.OnCancelListener() {
+
+										@Override
+										public void onCancel(DialogInterface dialog) {
+											// TODO Auto-generated method stub
+											Toast.makeText(
+													context,
+													"fake message: refuse download...",
+													Toast.LENGTH_SHORT).show();
+										}
+									}).show();
+				}
+			});
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	public X5WebView(Context arg0) {
 		super(arg0);
-		setBackgroundColor(85621);
+//		setBackgroundColor(85621);
 	}
 
 

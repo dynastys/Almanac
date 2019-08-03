@@ -21,7 +21,7 @@ public class RomUtils {
     private static final String KEY_EMUI_API_LEVEL = "ro.build.hw_emui_api_level";
     private static final String KEY_EMUI_VERSION = "ro.build.version.emui";
     private static final String KEY_EMUI_CONFIG_HW_SYS_VERSION = "ro.confg.hw_systemversion";
-
+    public static boolean take_a_look = true; //看一看
     public static boolean isMiUIV6OrAbove() {
         try {
             final Properties properties = new Properties();

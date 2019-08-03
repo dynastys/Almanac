@@ -2,9 +2,13 @@ package com.xy.xylibrary.config;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
  import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextPaint;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import com.constellation.xylibrary.R;
 import com.xy.xylibrary.base.BaseFragment;
 import com.xy.xylibrary.ui.adapter.FragmentPagerAdapter;
+import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import com.xy.xylibrary.view.AutoHeightViewPager;
 import com.xy.xylibrary.view.ColumnHorizontalScrollView;
@@ -26,7 +31,7 @@ import java.util.List;
  * */
 public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListener{
 
-    private Activity context;
+    private AppCompatActivity context;
     /**
      * 屏幕宽度
      */
@@ -43,17 +48,24 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
     private ArrayList<BaseFragment> fragments = new ArrayList<>();
     private ColumnHorizontalScrollView mColumnHorizontalScrollView;
     private CustomScrollViewPager viewpagerColumn;
+    private ViewPager viewPager;
     private ViewGroup mRadioGroup_content;
     private List<T> columnClassify = new ArrayList<>();
     private BaseFragment fragment;
+    private boolean ISreset;
 
-    public ColumnHorizontalPackage(Activity context, ColumnHorizontalScrollView mColumnHorizontalScrollView,CustomScrollViewPager viewpagerColumn){
+    public ColumnHorizontalPackage(AppCompatActivity context, ColumnHorizontalScrollView mColumnHorizontalScrollView,CustomScrollViewPager viewpagerColumn,boolean ISreset){
         this.context = context;
         this.mColumnHorizontalScrollView = mColumnHorizontalScrollView;
         this.viewpagerColumn = viewpagerColumn;
+        this.ISreset = ISreset;
+    }
+    public ColumnHorizontalPackage(AppCompatActivity context, ColumnHorizontalScrollView mColumnHorizontalScrollView,ViewPager viewpagerColumn){
+        this.context = context;
+        this.mColumnHorizontalScrollView = mColumnHorizontalScrollView;
+        this.viewPager = viewpagerColumn;
 
     }
-
 
     public void initData(BaseFragment fragment, ViewGroup mRadioGroup_content,ArrayList<BaseFragment> fragments,List<T> columnClassify) {
 //        try {
@@ -95,37 +107,64 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
         try {
             mColumnHorizontalScrollView.setHorizontalScrollBarEnabled(false);
             //适配器的加载
-            FragmentPagerAdapter mAdapetr = new FragmentPagerAdapter(fragment.getChildFragmentManager(), fragments);
-            viewpagerColumn.setAdapter(mAdapetr);
-            ////    关闭预加载
-            viewpagerColumn.setOffscreenPageLimit(columnClassify.size());
+            FragmentPagerAdapter mAdapetr;
+            if(fragment != null){
+                mAdapetr = new FragmentPagerAdapter(fragment.getChildFragmentManager(), fragments);
+            }else{
+               mAdapetr = new FragmentPagerAdapter(context.getSupportFragmentManager(), fragments);
+            }
+
+            if(viewPager != null){
+                viewPager.setAdapter(mAdapetr);
+                ////    关闭预加载
+                viewPager.setOffscreenPageLimit(columnClassify.size());
+                viewPager.setOffscreenPageLimit(fragments.size());
+                viewPager.setOnPageChangeListener(this);
+            }else{
+                viewpagerColumn.setAdapter(mAdapetr);
+                ////    关闭预加载
+                viewpagerColumn.setOffscreenPageLimit(columnClassify.size());
 //            mVp.setOffscreenPageLimit(mSelectedDatas.size());
-            viewpagerColumn.setOnPageChangeListener(this);
-            // 如果不设置，可能第三个页面以后就显示不出来了，因为offset就是默认值1了
-            viewpagerColumn.setOffscreenPageLimit(mAdapetr.getCount());
-            viewpagerColumn.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewpagerColumn.setOnPageChangeListener(this);
+                // 如果不设置，可能第三个页面以后就显示不出来了，因为offset就是默认值1了
+                viewpagerColumn.setOffscreenPageLimit(mAdapetr.getCount());
+                viewpagerColumn.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                }
+                    }
 
-                @Override
-                public void onPageSelected(final int position) {
-//                    // 切换到当前页面，重置高度
-                    viewpagerColumn.resetHeight(position);
-                }
+                    @Override
+                    public void onPageSelected(final int position) {
+                        if(ISreset){
+                            // 切换到当前页面，重置高度
+                            viewpagerColumn.resetHeight(position);
+                        }
+//
+                    }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
 
-                }
-            });
+                    }
+                });
+            }
+
             initTabColumn(mRadioGroup_content);
         } catch (Exception e) {
+            Log.e("onNext", "initData: "+e.getMessage());
             e.printStackTrace();
         }
     }
 
+    private int selectcolor = R.color.main_bg4;
+    private int noselectcolor = R.color.nb_text_common_h2;
+    private int draw = R.drawable.ic_remove;
+    public void TextviewColor(int selectcolor,int noselectcolor,int draw){
+        this.selectcolor = selectcolor;
+        this.noselectcolor = noselectcolor;
+        this.draw = draw;
+    }
     /**
      * 初始化Column栏目项
      */
@@ -145,8 +184,8 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                 columnTextView = new TextView(context);
                 columnTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
                 columnTextView.setTextScaleX(1);
-                columnTextView.setTextSize(15);
-
+                columnTextView.setTextSize(16);
+                columnTextView.setGravity(Gravity.CENTER_HORIZONTAL);
                 columnTextView.setLayoutParams(params);
                 columnTextView.setPadding(5, 5, 5, 5);
                 try {
@@ -160,12 +199,13 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                 if (i == 0) {
                     TextPaint p = columnTextView.getPaint();
                     p.setFakeBoldText(true);//中文英文都可以粗体
-                    columnTextView.setTextColor(context.getResources().getColor(R.color.main_bg4));
-                    columnTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(R.drawable.ic_remove));
+                    columnTextView.setTextColor(context.getResources().getColor(selectcolor));
+                    columnTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(draw));
                 } else {
+
                     TextPaint p = columnTextView.getPaint();
                     p.setFakeBoldText(false);//中文英文都可以粗体
-                    columnTextView.setTextColor(context.getResources().getColor(R.color.nb_text_common_h2));
+                    columnTextView.setTextColor(context.getResources().getColor(noselectcolor));
                     columnTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
                 }
                 //点击变化逻辑
@@ -175,18 +215,23 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                         for (int i = 0; i < mRadioGroup_content.getChildCount(); i++) {
                             TextView localView = (TextView) mRadioGroup_content.getChildAt(i);
                             if (localView != v) {
-                                localView.setTextColor(context.getResources().getColor(R.color.nb_text_common_h2));
+                                localView.setTextColor(context.getResources().getColor(noselectcolor));
                                 localView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
                                 localView.setSelected(false);
                                 TextPaint p = localView.getPaint();
                                 p.setFakeBoldText(false);//中文英文都可以粗体
                             } else {
-                                localView.setTextColor(context.getResources().getColor(R.color.main_bg4));
-                                localView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(R.drawable.ic_remove));
+                                localView.setTextColor(context.getResources().getColor(selectcolor));
+                                localView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(draw));
                                 localView.setSelected(true);
                                 TextPaint p = localView.getPaint();
                                 p.setFakeBoldText(true);//中文英文都可以粗体
-                                viewpagerColumn.setCurrentItem(i);
+                                if(viewPager != null){
+                                    viewPager.setCurrentItem(i);
+                                }else{
+                                    viewpagerColumn.setCurrentItem(i);
+                                }
+                                SaveShare.saveValue(context, "ColumnName", columnClassify.get(i)+"");
                             }
                         }
                     }
@@ -207,9 +252,9 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
             for (int i = 0; i < mRadioGroup_content.getChildCount(); i++) {
                 TextView checkView = (TextView) mRadioGroup_content.getChildAt(tab_postion);
                 if (i == tab_postion) {
-                    checkView.setTextColor(context.getResources().getColor(R.color.main_bg4));
-                    checkView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(R.drawable.ic_remove));
-                    checkView.setTextSize(15);
+                    checkView.setTextColor(context.getResources().getColor(selectcolor));
+                    checkView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(draw));
+                    checkView.setTextSize(16);
                     TextPaint p = checkView.getPaint();
                     p.setFakeBoldText(true);//中文英文都可以粗体
                     int k = checkView.getMeasuredWidth();
@@ -222,8 +267,8 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                     checkView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
                     TextPaint p = checkView.getPaint();
                     p.setFakeBoldText(false);//中文英文都可以粗体
-                    checkView.setTextColor(context.getResources().getColor(R.color.nb_text_common_h2));
-                    checkView.setTextSize(15);
+                    checkView.setTextColor(context.getResources().getColor(noselectcolor));
+                    checkView.setTextSize(16);
                     mRadioGroup_content.getChildAt(i).setSelected(i == tab_postion);
                 }
             }
@@ -243,7 +288,12 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
             //根据滑动改变栏目
             selectTab(position);
             //viewpager切换
-            viewpagerColumn.setCurrentItem(position);
+            if(viewPager != null){
+                viewPager.setCurrentItem(position);
+            }else{
+                viewpagerColumn.setCurrentItem(position);
+            }
+            SaveShare.saveValue(context, "ColumnName", columnClassify.get(position)+"");
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

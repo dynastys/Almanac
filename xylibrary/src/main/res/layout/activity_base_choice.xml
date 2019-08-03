@@ -22,18 +22,14 @@
     <!--app:tabSelectedTextColor="@color/common_gray"-->
     <!--&gt; android:background="@drawable/bg_gradienttabstrip_tab"-->
     <!--</android.support.design.widget.TabLayout>-->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0.4dp"
-        android:background="@color/nb_divider_narrow"
-        />
+
     <am.widget.gradienttabstrip.GradientTabStrip
         android:id="@+id/gts_gts_tabs"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:textColor="@color/color_gradienttabstrip_tab"
         android:textSize="12sp"
-        app:gtsBackground="@color/white"
+        app:gtsBackground="@color/tab_color"
         app:gtsDrawablePadding="4dp"
         app:gtsTagPaddingLeft="4dp"
         app:gtsTagPaddingRight="4dp" />

@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="#FFFFFF"
-    android:minHeight="40dp"
-    android:orientation="horizontal"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp"
-    tools:ignore="HardcodedText">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/search15"
+        android:minHeight="30dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        tools:ignore="HardcodedText"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/sun"
+            android:textColor="#888888"
+            android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/sun"
-        android:textColor="#333333"
-        android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mon"
+            android:textColor="#323232"
+            android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/mon"
-        android:textColor="#333333"
-        android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/tue"
+            android:textColor="#323232"
+            android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/tue"
-        android:textColor="#333333"
-        android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/wed"
+            android:textColor="#323232"
+            android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/wed"
-        android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/thu"
+            android:textColor="#323232"
+            android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/thu"
-        android:textColor="#333333"
-        android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/fri"
+            android:textColor="#323232"
+            android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/fri"
-        android:textColor="#333333"
-        android:textSize="12sp" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/sat"
-        android:textColor="#333333"
-        android:textSize="12sp" />
-</merge>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/sat"
+            android:textColor="#888888"
+            android:textSize="14sp" />
+    </LinearLayout>

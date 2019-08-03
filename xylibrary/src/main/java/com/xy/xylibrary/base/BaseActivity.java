@@ -9,12 +9,15 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.xy.xylibrary.Interface.PermissionListener;
 import com.xy.xylibrary.utils.ApplyForPermissions;
 import com.xy.xylibrary.utils.LoadingDialog;
 import com.xy.xylibrary.utils.StatusBarUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
 
 
     protected static Activity mContext;
-
+    protected boolean IsModel = false;
     protected void process(Bundle savedInstanceState) {
         try {
             // 华为,OPPO机型在StatusBarUtil.setLightStatusBar后布局被顶到状态栏上去了
@@ -88,9 +92,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
 
     // 是否改变状态栏文字颜色为黑色，默认为黑色
     protected boolean isUserLightMode() {
-        return true;
+        return IsModel;
     }
 
+    public void setIsUserLightMode(boolean b){
+        IsModel = b;
+        setStatusBar();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +112,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         initView(savedInstanceState);
     }
 
+    @Override
+    public void setContentView(View view) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        // 设置一个exit transition
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Explode());
+        }
+        super.setContentView(view);
+    }
 
     protected abstract Activity getContext();
 
@@ -114,7 +131,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
     protected void onDestroy() {
         super.onDestroy();
     }
-
 
     /**
      * 初始化界面
@@ -188,6 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+
     /**
      * 申请后的处理
      */
@@ -198,23 +215,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         if (grantResults.length > 0) {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!shouldShowRequestPermissionRationale(Manifest.permission_group.LOCATION)) {
-                        granted();
-                    }else{
-    //                    List<String> deniedList = new ArrayList<>();
-    //                    // 遍历所有申请的权限，把被拒绝的权限放入集合
-    //                    for (int i = 0; i < grantResults.length; i++) {
-    //                        int grantResult = grantResults[i];
-    //                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
-    //
-    //                        } else {
-    //                            deniedList.add(permissions[i]);
-    //                        }
-    //                    }
-    //                    if (deniedList.isEmpty()) {
-    //                        denied(deniedList);
-    //                    }
-                    }
+                        List<String> deniedList = new ArrayList<>();
+                        // 遍历所有申请的权限，把被拒绝的权限放入集合
+                        for (int i = 0; i < grantResults.length; i++) {
+                            int grantResult = grantResults[i];
+                            if (grantResult == PackageManager.PERMISSION_GRANTED) {
+
+                            } else {
+                                deniedList.add(permissions[i]);
+                            }
+                        }
+                        if (!deniedList.isEmpty()) {
+                            denied(deniedList);
+                        }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -267,7 +281,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         return false;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -277,7 +290,5 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
     public void onPause() {
         super.onPause();
     }
-
-
 
 }

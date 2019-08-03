@@ -3,6 +3,11 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState />
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -18,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Program%20Files/Android/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_looks_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/android3.1.2/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_loyalty_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,13 +33,10 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="257fe8" />
-                            <entry key="height" value="34" />
-                            <entry key="opacityPercent" value="81" />
-                            <entry key="outputName" value="ic_looks" />
+                            <entry key="color" value="f9a95c" />
+                            <entry key="outputName" value="ic_loyalty_black" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\zhou" />
-                            <entry key="width" value="34" />
+                            <entry key="sourceFile" value="C:\Users\zhou\Downloads\irritability_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>

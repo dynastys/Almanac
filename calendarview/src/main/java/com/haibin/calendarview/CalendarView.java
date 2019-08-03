@@ -18,6 +18,7 @@ package com.haibin.calendarview;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -25,8 +26,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -84,7 +87,17 @@ public class CalendarView extends FrameLayout {
         mDelegate = new CalendarViewDelegate(context, attrs);
         init(context);
     }
+    public void setmWeekPagerVisibility(Context context,int y){
+        if(frameContent != null){
+//          if(y > 180){
+//              frameContent.setVisibility(GONE);
+//          }else{
+//              frameContent.setVisibility(VISIBLE);
+//          }
 
+        }
+    }
+    FrameLayout frameContent;
     /**
      * 初始化
      *
@@ -92,7 +105,7 @@ public class CalendarView extends FrameLayout {
      */
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.cv_layout_calendar_view, this, true);
-        FrameLayout frameContent = (FrameLayout) findViewById(R.id.frameContent);
+        frameContent = (FrameLayout) findViewById(R.id.frameContent);
         this.mWeekPager = (WeekViewPager) findViewById(R.id.vp_week);
         this.mWeekPager.setup(mDelegate);
 

@@ -62,7 +62,7 @@ public class ApplyForPermissions {
             "android.permission.ACCESS_NETWORK_STATE",
             "android.permission.ACCESS_WIFI_STATE",
             "android.permission.CHANGE_WIFI_STATE",
-            "android.permission.INTERNET",
+            "android.permission.ACCESS_COARSE_LOCATION",
             "android.permission.READ_PHONE_STATE",
             "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.ACCESS_LOCATION_EXTRA_COMMANDS",

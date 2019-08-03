@@ -5,19 +5,17 @@ import android.app.Activity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.KeyEvent;
-
+import android.util.Log;
+import android.view.View;
 
 import com.constellation.xylibrary.R;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.ui.adapter.GradientTabStripAdapter;
+import com.xy.xylibrary.utils.RomUtils;
+import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.view.ViewPagerSlide;
-
-import java.lang.reflect.Field;
-
 import am.widget.basetabstrip.BaseTabStrip;
 import am.widget.gradienttabstrip.GradientTabStrip;
-import butterknife.BindView;
 
 /**
  * zw
@@ -50,9 +48,19 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     protected void bindViews() {
         tabVp = findViewById(R.id.tab_vp);
         gtsGtsTabs = findViewById(R.id.gts_gts_tabs);
-
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        // TODO Auto-generated method stub
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && gtsGtsTabs != null)
+        {
+            SaveShare.saveValue(this,"Height",""+ gtsGtsTabs.getHeight());
+
+        }
+    }
     public abstract GradientTabStripAdapter setGradientTabStripAdapter(FragmentManager fragmentManager,ViewPagerSlide tabVp);
 
     /**
@@ -67,7 +75,11 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
                 tabVp.setSlide(false);
                 gtsGtsTabs.setAdapter(adapter);
                 tabVp.addOnPageChangeListener(this);
-                tabVp.setOffscreenPageLimit(4);
+                if(RomUtils.take_a_look){
+                    tabVp.setOffscreenPageLimit(4);
+                }else{
+                    tabVp.setOffscreenPageLimit(3);
+                }
                 gtsGtsTabs.bindViewPager(tabVp);
                 gtsGtsTabs.setOnItemClickListener(this);
             }
@@ -90,11 +102,11 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
     @Override
     public void onItemClick(int position) {
-    }
+     }
 
     @Override
     public void onSelectedClick(int position) {
-    }
+     }
 
     @Override
     public void onDoubleClick(int position) {
@@ -102,11 +114,11 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
+     }
 
     @Override
     public void onPageSelected(int position) {
-    }
+     }
 
     @Override
     public void onPageScrollStateChanged(int state) {

@@ -6,11 +6,16 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://dl.bintray.com/umsdk/release' }
+        // 这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/public"
+        }
+        maven {
+            url "http://maven.aliyun.com/nexus/content/repositories/releases"
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
-        
-
+        classpath 'com.android.tools.build:gradle:3.2.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -23,6 +28,17 @@ allprojects {
         maven { url 'https://dl.bintray.com/umsdk/release' }
         maven { url "https://jitpack.io" }
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        // 这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/public"
+        }
+        maven {
+            url "http://maven.aliyun.com/nexus/content/repositories/releases"
+        }
+        //添加一览 maven地址
+        maven {
+            url 'http://nexus.1lan.tv/repository/maven-releases/'
+        }
     }
 }
 
@@ -34,10 +50,10 @@ ext {
     configuration = [
             buildToolsVersion: "28.0.0",
             compileVersion   : 28,
-            minSdk           : 19,
+            minSdk           : 17,
             targetSdk        : 28,
-            version_code     : 2,
-            version_name     : "1.0.1",
+            version_code     : 11,
+            version_name     : "1.1.1",
     ]
 
     libraries = [

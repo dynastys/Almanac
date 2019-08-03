@@ -4,12 +4,28 @@
     <color name="nb_text_common_h1">#212121</color>
     <!--通用二级标题的颜色-->
     <color name="nb_text_common_h2">#727272</color>
-    <color name="main_bg4">#257FE8</color>
+    <color name="main_bg4">#469DF9</color>
     <color name="divider">#727272</color>
     <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
     <color name="subscribe_item_normal_bg">#fff5f5f5</color>
     <!--通用分割线细-->
     <color name="nb_divider_narrow">#E3E3E3</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#ffffffff</color>
+    <color name="white_3">#5fffffff</color>
     <color name="main_bg2">#F93322</color>
+    <color name="broken_line_s">#FEAF50</color>
+    <color name="broken_line_x">#469DF9</color>
+    <color name="tab_color">#1F1F1F</color>
+    <color name="tab_tv">#8E8E8E</color>
+    <color name="calendar_title">#323232</color>
+    <color name="date_tv">#ffe05c53</color>
+    <color name="chanxiangli">#ffa2a2a2</color>
+    <color name="dxl">#ff4b4b4b</color>
+    <color name="chanxiangli_tv">#ffe0e0e0</color>
+    <color name="suitable_tv">#ffcaa47f</color>
+    <color name="halving_line">#ffededed</color>
+    <color name="ji_tv">#ff888888</color>
+    <color name="image_loading_bg">#fff6f6f6</color>
+    <color name="service_tv">#ff212121</color>
+    <color name="tv24">#ffb2b9c3</color>
 </resources>

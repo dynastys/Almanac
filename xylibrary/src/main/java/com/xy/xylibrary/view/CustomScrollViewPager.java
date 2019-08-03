@@ -46,7 +46,6 @@ public class CustomScrollViewPager extends ViewPager {
     public void resetHeight(int current) {
         this.current = current;
         if (mChildrenViews.size() > current) {
-
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) getLayoutParams();
             if (layoutParams == null) {
                 layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);

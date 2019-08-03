@@ -274,6 +274,12 @@ public abstract class MonthView extends BaseView {
      * @return return
      */
     protected Calendar getIndex() {
+        if(mItemWidth == 0){
+            mItemWidth = 1;
+        }
+        if(mItemHeight == 0){
+            mItemHeight = 1;
+        }
         int indexX = (int) mX / mItemWidth;
         if (indexX >= 7) {
             indexX = 6;

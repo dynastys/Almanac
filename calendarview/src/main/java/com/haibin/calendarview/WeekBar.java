@@ -58,7 +58,7 @@ public class WeekBar extends LinearLayout {
      */
     protected void setTextColor(int color) {
         for (int i = 0; i < getChildCount(); i++) {
-            ((TextView) getChildAt(i)).setTextColor(color);
+//            ((TextView) getChildAt(i)).setTextColor(color);
         }
     }
 
@@ -70,7 +70,7 @@ public class WeekBar extends LinearLayout {
      */
     protected void setTextSize(int size) {
         for (int i = 0; i < getChildCount(); i++) {
-            ((TextView) getChildAt(i)).setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+//            ((TextView) getChildAt(i)).setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
         }
     }
 
@@ -95,7 +95,7 @@ public class WeekBar extends LinearLayout {
             return;
         }
         for (int i = 0; i < getChildCount(); i++) {
-            ((TextView) getChildAt(i)).setText(getWeekString(i, weekStart));
+//            ((TextView) getChildAt(i)).setText(getWeekString(i, weekStart));
         }
     }
 

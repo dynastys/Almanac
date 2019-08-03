@@ -114,7 +114,6 @@ public class SuperEasyRefreshLayout extends ViewGroup {
         }
     };
 
-
     /*
     * 重置，回到初始状态
     * */
@@ -143,8 +142,6 @@ public class SuperEasyRefreshLayout extends ViewGroup {
     }
 
 
-
-
     /**
      * Simple constructor to use when creating a SwipeRefreshLayout from code.
      *
@@ -166,10 +163,8 @@ public class SuperEasyRefreshLayout extends ViewGroup {
         /**触发移动事件的最小距离，自定义View处理touch事件的时候，有的时候需要判断用户是否真的存在movie，
          * 系统提供了这样的方法。表示滑动的时候，手的移动要大于这个返回的距离值才开始移动控件。*/
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
         setWillNotDraw(false);
         mDecelerateInterpolator = new DecelerateInterpolator(2f);
-
         final TypedArray a = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
         setEnabled(a.getBoolean(0, true));
         a.recycle();
@@ -181,17 +176,12 @@ public class SuperEasyRefreshLayout extends ViewGroup {
         mTarget = getChildAt(0);//得到显示数据的View
         mRefreshView = new SuperEasyRefreshHeadView(getContext());//刷新的headerview
         addView(mRefreshView);
-
         mFooterView = new SuperEasyRefreshFootView(getContext());//加载更多的底部view
         addView(mFooterView);
-
         mRefreshViewHeight = mRefreshView.headViewHeight;
         mFootViewHeight = mFooterView.footViewHeight;
-
         mRefreshOffset = (int) (mRefreshViewHeight * 1.5f);
-
         ViewCompat.setChildrenDrawingOrderEnabled(this, true);
-
         mOriginalOffsetTop = mCurrentTargetOffsetTop = -mRefreshViewHeight;
         moveToStart();
     }
@@ -437,7 +427,6 @@ public class SuperEasyRefreshLayout extends ViewGroup {
         if (mRefreshView.getVisibility() != View.VISIBLE) {
             mRefreshView.setVisibility(View.VISIBLE);
         }
-
         setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop);
         if (overscrollTop > mRefreshOffset) {
             mRefreshView.setRefreshText("松开刷新");
@@ -458,7 +447,6 @@ public class SuperEasyRefreshLayout extends ViewGroup {
             animateOffsetFromToTarget(mCurrentTargetOffsetTop,mOriginalOffsetTop, null);
         }
     }
-
 
 
     /**
@@ -577,7 +565,6 @@ public class SuperEasyRefreshLayout extends ViewGroup {
      * 移动动画
      * */
     private class AnimateFromToTarget extends Animation {
-
         public int mFromPosition;
         public int mTargetPosition;
         public  AnimateFromToTarget(int fromPosition,int targetPosition){

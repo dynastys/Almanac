@@ -214,8 +214,8 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mCurDayLunarTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSelectedPaint.setAntiAlias(true);
-        mSelectedPaint.setStyle(Paint.Style.FILL);
-        mSelectedPaint.setStrokeWidth(2);
+        mSelectedPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mSelectedPaint.setStrokeWidth(1);
 
         setOnClickListener(this);
         setOnLongClickListener(this);
@@ -255,7 +255,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         this.mOtherMonthLunarTextPaint.setTextSize(delegate.getLunarTextSize());
         this.mSchemeLunarTextPaint.setTextSize(delegate.getLunarTextSize());
 
-        this.mSelectedPaint.setStyle(Paint.Style.FILL);
+        this.mSelectedPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         this.mSelectedPaint.setColor(delegate.getSelectedThemeColor());
         setItemHeight(delegate.getCalendarItemHeight());
     }
