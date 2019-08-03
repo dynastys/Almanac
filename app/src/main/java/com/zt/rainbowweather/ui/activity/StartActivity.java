@@ -512,7 +512,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
     @Override
     public void onADExposure() {
         showToast("开屏广告展示");
-//        Log.e("CS", "onADExposure: ");
+        Log.e("CS", "onADExposure: ");
         if (nativelogicDd != null) {
             nativelogicDd.AdShow(container);
         }
