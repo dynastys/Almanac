@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 
 public class UpdateDialog extends Dialog {

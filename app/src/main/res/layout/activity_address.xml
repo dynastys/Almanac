@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+     >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,15 +13,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/list_bar"
+            android:background="@drawable/gradual_change"
             />
         <include layout="@layout/title_bar"></include>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_address"
+        <RelativeLayout
+            android:id="@+id/address_wether_bg_rel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title_bar"
-            android:fadingEdge="none" />
+            android:background="@mipmap/weather_bg">
+            <TextView
+                android:id="@+id/address_wether_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#7f000000"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/title_bar"
+                android:fadingEdge="none" />
+        </RelativeLayout>
+
     </LinearLayout>
 
 
@@ -33,5 +48,6 @@
         android:layout_marginBottom="18dp"
         android:layout_marginRight="18dp"
         android:src="@mipmap/icon_add"
-         app:rippleColor="@color/colorPrimary" />
+        android:background="@color/lucency"
+        app:rippleColor="@color/colorPrimary" />
 </FrameLayout>

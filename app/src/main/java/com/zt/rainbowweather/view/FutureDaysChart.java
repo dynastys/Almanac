@@ -1,6 +1,7 @@
 package com.zt.rainbowweather.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,9 +14,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
-
+import com.zt.weather.R;
 import com.zt.rainbowweather.entity.OutLookWeather;
-
 import java.util.List;
 
 
@@ -26,14 +26,18 @@ import java.util.List;
 
 public class FutureDaysChart extends View {
     private static final String TAG = "FutureDaysChart";
+    private static int DEFAULT_BULE = 0XFF469DF9;
+    private static int DEFAULT_Y = 0XFFFEAF50;
+
+
     /**
      * 图表的具体高度（单位：dp）
      */
-    public static final int CHART_HEIGHT = 140;
+    public static final int CHART_HEIGHT = 130;
     /**
      * 曲线的平滑系数
      */
-    private static final float LINE_SMOOTHNESS = 0.16f;
+    private static final float LINE_SMOOTHNESS = 0.2f;
     /**
      * 具体绘制图表的时候每个图表所占的实际高度
      */
@@ -86,7 +90,7 @@ public class FutureDaysChart extends View {
      * 绘制曲线的路径
      */
     private Path path = new Path();
-
+    private int backgroundColor;
     public FutureDaysChart(Context context) {
         this(context, null);
     }
@@ -104,6 +108,9 @@ public class FutureDaysChart extends View {
     public FutureDaysChart(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int
             defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MiuiWeatherView);
+
+        backgroundColor = ta.getColor(R.styleable.MiuiWeatherView_background_color, Color.WHITE);
         init(context);
     }
 
@@ -119,14 +126,14 @@ public class FutureDaysChart extends View {
         linePaint.setShader(null);
         linePaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.5f,
                 getResources().getDisplayMetrics()));
-        linePaint.setColor(Color.GRAY);
+        linePaint.setColor(DEFAULT_Y);
 
         pointPaint.setAntiAlias(true);
-        pointPaint.setStyle(Paint.Style.STROKE);
-        pointPaint.setColor(Color.GRAY);
+        pointPaint.setStyle(Paint.Style.FILL);
+        pointPaint.setColor(DEFAULT_Y);
 
         labelPaint.setAntiAlias(true);
-        labelPaint.setColor(Color.BLACK);
+        labelPaint.setColor(Color.WHITE);
         labelPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15,
                 getResources().getDisplayMetrics()));
 
@@ -171,8 +178,8 @@ public class FutureDaysChart extends View {
         }
 
         //转换比例，找出最大和最小进行换算每个梯度所占像素
-        perHeightTop = eachChartHeight / (maxHigh - minHigh);
-        perHeightBottom = eachChartHeight / (maxLow - minLow);
+        perHeightTop = (eachChartHeight / (maxHigh - minHigh)==0?1:(maxHigh - minHigh));
+        perHeightBottom = (eachChartHeight / (maxLow - minLow))==0?1:(maxLow - minLow);
 
         postInvalidate();
     }
@@ -204,7 +211,16 @@ public class FutureDaysChart extends View {
         for (int i = 0; i < lineSize; i++) {
             float x = eachWidth / 2f + i * eachWidth;
             float y = chartHeight / 2f - padding / 2 - (datas.get(i).getHighTemperature() -
-                    minHigh) * perHeightTop;
+                    minHigh) * perHeightTop + 50;
+             linePaint.setColor(DEFAULT_Y);
+            //先画一个颜色为背景颜色的实心园覆盖掉折线拐角
+            pointPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            pointPaint.setColor(backgroundColor);
+            canvas.drawCircle(x, y,
+                    pointRaidus + dp2pxF(getContext(), 1),
+                    pointPaint);
+            pointPaint.setColor(DEFAULT_Y);
+            pointPaint.setStyle(Paint.Style.FILL);
             canvas.drawCircle(x, y, pointRaidus, pointPaint);
 
 
@@ -212,7 +228,7 @@ public class FutureDaysChart extends View {
                 if (Float.isNaN(currentPointX)) {
                     currentPointX = eachWidth / 2f + i * eachWidth;
                     currentPointY = chartHeight / 2f - padding / 2 - (datas.get(i)
-                            .getHighTemperature() - minHigh) * perHeightTop;
+                            .getHighTemperature() - minHigh) * perHeightTop + 50;
                 }
                 if (Float.isNaN(previousPointX)) {
                     if (i > 0) {
@@ -248,6 +264,8 @@ public class FutureDaysChart extends View {
 
                 if (i == 0) {
                     // Move to start point.
+//                    currentPointY = chartHeight / 2f - padding / 2 - (datas.get(i)
+//                            .getHighTemperature() - minHigh) * perHeightTop;
                     path.moveTo(currentPointX, currentPointY);
                 } else {
                     // Calculate control points.
@@ -263,8 +281,9 @@ public class FutureDaysChart extends View {
                             secondDiffX);
                     final float secondControlPointY = currentPointY - (LINE_SMOOTHNESS *
                             secondDiffY);
-                    path.cubicTo(firstControlPointX, firstControlPointY, secondControlPointX,
-                            secondControlPointY, currentPointX, currentPointY);
+
+                    path.cubicTo(firstControlPointX, firstControlPointY+50, secondControlPointX,
+                            secondControlPointY+50, currentPointX, currentPointY+50);
                 }
 
                 // Shift values by one back to prevent recalculation of values that have
@@ -303,7 +322,17 @@ public class FutureDaysChart extends View {
         for (int i = 0; i < lineSize; i++) {
             float x = eachWidth / 2f + i * eachWidth;
             float y = chartHeight - padding / 2 - (datas.get(i).getLowTemperature() - minLow) *
-                    perHeightBottom;
+                    perHeightBottom - 50;
+
+            linePaint.setColor(DEFAULT_BULE);
+            //先画一个颜色为背景颜色的实心园覆盖掉折线拐角
+            pointPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            pointPaint.setColor(backgroundColor);
+            canvas.drawCircle(x, y,
+                    pointRaidus + dp2pxF(getContext(), 1),
+                    pointPaint);
+            pointPaint.setColor(DEFAULT_BULE);
+            pointPaint.setStyle(Paint.Style.FILL);
             canvas.drawCircle(x, y, pointRaidus, pointPaint);
 
 
@@ -311,7 +340,7 @@ public class FutureDaysChart extends View {
                 if (Float.isNaN(currentPointX)) {
                     currentPointX = eachWidth / 2f + i * eachWidth;
                     currentPointY = chartHeight - padding / 2 - (datas.get(i).getLowTemperature()
-                            - minLow) * perHeightBottom;
+                            - minLow) * perHeightBottom - 50;
                 }
                 if (Float.isNaN(previousPointX)) {
                     if (i > 0) {
@@ -362,8 +391,8 @@ public class FutureDaysChart extends View {
                             secondDiffX);
                     final float secondControlPointY = currentPointY - (LINE_SMOOTHNESS *
                             secondDiffY);
-                    path.cubicTo(firstControlPointX, firstControlPointY, secondControlPointX,
-                            secondControlPointY, currentPointX, currentPointY);
+                    path.cubicTo(firstControlPointX, firstControlPointY -50, secondControlPointX,
+                            secondControlPointY -50, currentPointX, currentPointY -50);
                 }
 
                 // Shift values by one back to prevent recalculation of values that have
@@ -389,5 +418,9 @@ public class FutureDaysChart extends View {
                     labelPaint);
         }
         canvas.drawPath(path, linePaint);
+    }
+    public static float dp2pxF(Context c, float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, c.getResources()
+                .getDisplayMetrics());
     }
 }

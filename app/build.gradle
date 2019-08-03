@@ -4,7 +4,7 @@ def cfg = rootProject.ext.configuration //配置
 android {
     compileSdkVersion cfg.targetSdk
     defaultConfig {
-        applicationId "com.chenguang.weather"
+        applicationId "com.zt.weather"
         minSdkVersion cfg.minSdk
         targetSdkVersion cfg.targetSdk
         versionCode cfg.version_code
@@ -14,7 +14,13 @@ android {
         flavorDimensions "versionCode"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+        //使用renderscript 兼容包
+        renderscriptTargetApi 25
+        renderscriptSupportModeEnabled true
+        ndk {
+            abiFilters "x86", "armeabi", "arm64-v8a", 'armeabi-v7a', 'armeabi-v8a', "mips"
 
+        }
     }
 
     //多渠道打包
@@ -42,9 +48,10 @@ android {
             }
         }
     }
+    //keytool -list -v -keystore C:\Users\zhou\weather.jks
     signingConfigs {
         config {
-            storeFile file("C:\\Users\\zhou\\weather.jks")//指定keystore文件的位置，在这里引用的是相对地址
+            storeFile file("C:\\Users\\zhou\\weather_XY.jks")//指定keystore文件的位置，在这里引用的是相对地址
             storePassword "123456" //指定密码
             keyAlias "key0"//指定别名
             keyPassword "123456"//指定别名密码
@@ -53,6 +60,9 @@ android {
 
     buildTypes {
         release {
+            ndk {
+                abiFilters "x86", "armeabi", "arm64-v8a", 'armeabi-v7a', 'armeabi-v8a', "mips"
+            }
             // 是否进行混淆
             minifyEnabled true
             debuggable true
@@ -67,7 +77,11 @@ android {
         sourceCompatibility 1.8
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -88,6 +102,10 @@ dependencies {
     implementation 'com.timmy.tdialog:tdialog:2.1.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.umeng.umsdk:analytics:8.0.0'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-3'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-3'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.kyleduo.switchbutton:library:2.0.0'
     //PushSDK必须依赖基础组件库，所以需要加入对应依赖
     implementation 'com.umeng.umsdk:common:2.0.0'
     //PushSDK必须依赖utdid库，所以需要加入对应依赖
@@ -95,9 +113,44 @@ dependencies {
     //PushSDK
     implementation 'com.umeng.umsdk:push:5.0.2'
     implementation files('libs/xuanyin.jar')
-    implementation files('libs/xy001-linguard.jar')
-    implementation files('libs/lock.jar')
     //推啊广告 Android SDK
     implementation 'com.tuia:sdk:2.3.9-release'
-    implementation files('libs/wg.jar')
+    //即时通讯
+    implementation 'cn.leancloud.android:chatkit:1.0.6'
+    //    // LeanCloud 基础包
+    //    implementation ('cn.leancloud.android:avoscloud-sdk:4.7.10')
+    //    // 推送与即时通讯需要的包
+    //    implementation ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
+    implementation('com.afollestad.material-dialogs:core:0.9.4.3') {
+        exclude group: 'com.android.support'
+    }
+    implementation 'com.android.support:multidex:1.0.1'
+    //    implementation files('libs/GDTUnionSDK.TBS.4.28.902.min.jar')
+//    implementation files('libs/GDTSDK.union.4.40.910.jar')
+    implementation files('libs/GDTSDK.union.4.63.933.jar')
+    implementation files('libs/android-query-full.0.26.7.jar')
+    implementation(name: 'open_ad_sdk', ext: 'aar')
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+//    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.8'
+//    implementation files('libs/accs_sdk_taobao-3.3.7.2-open.jar')
+//    implementation files('libs/alicloud-android-sdk-httpdns-1.1.3.1.jar')
+//    implementation files('libs/networksdk-3.5.5-open.jar')
+//    implementation files('libs/tlog_adapter-3.0.0.17.jar')
+//    implementation files('libs/tnet4android-3.1.14.9.jar')
+//    implementation files('libs/umeng-push-6.0.1.jar')
+    implementation(name: 'alicloud-android-hotfix-3.2.8', ext: 'aar')
+    //小米Push通道
+    implementation 'com.umeng.umsdk:xiaomi-push:3.6.17'
+    implementation 'com.umeng.umsdk:xiaomi-umengaccs:1.1.0'
+    //魅族Push通道
+    implementation 'com.umeng.umsdk:meizu-push:3.8.1'
+    implementation 'com.umeng.umsdk:meizu-umengaccs:1.0.6'
+
+    //华为Push通道
+    implementation 'com.umeng.umsdk:huawei-basetb:2.6.0.301'
+    implementation 'com.umeng.umsdk:huawei-pushtb:2.6.0.301'
+    implementation 'com.umeng.umsdk:huawei-umengaccs:1.1.3'
+    //Oppo Push通道
+    implementation 'com.umeng.umsdk:oppo-push:1.0.1'
+    implementation 'com.umeng.umsdk:oppo-umengaccs:1.0.3'
 }

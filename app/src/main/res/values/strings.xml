@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">彩虹天气</string>
+    <string name="app_name">星云天气</string>
     <string name="hour_24">24小时天气</string>
     <string-array name="indicator_string_array">
         <item>公历</item>
@@ -23,7 +23,46 @@
     <string name="load_more">加载更多</string>
     <string name="share_the_weather">分享天气</string>
     <string name="serve_txt">服务</string>
-    <string name="instrument">工具</string>
+    <string name="instrument">本地服务</string>
     <string name="version_updating">1.添加反馈以后联系方式的填写\n2.添加初步的登录注册功能\n3.优化用户体验</string>
-
+    <string name="index_of_living">生活指数</string>
+    <string name="forecast_7">7天预报</string>
+    <string name="wallpaper_cut">壁纸切换</string>
+    <string name="sunrise_and_sunset">日出日落</string>
+    <string name="open_notification_bar">开启天气通知栏</string>
+    <string name="skin_is_set">皮肤设置</string>
+    <string name="clear_cache">清理缓存</string>
+    <string name="message_feedback">留言反馈</string>
+    <string name="about_us">关于我们</string>
+    <string name="temperature">温度</string>
+    <string name="wind_power">风力</string>
+    <string name="air_quality">空气质量</string>
+    <string name="almanac">黄历</string>
+    <string name="about_tv">美好的心情\n在星空下\n从星云天气开始</string>
+    <string name="about_xingyun">星云天气 版权所有</string>
+    <string name="shape">星云天气,有趣的天气APP，推荐使用星云天气查看天气，准确、方便！下载链接：http://media.xuanad.com/apk/xy/xytq-release.apk</string>
+    <string name="even_more">更多>></string>
+    <string name="widget">桌面小部件设置</string>
+    <string name="share">分享</string>
+    <string name="drawer_open">open</string>
+    <string name="close">close</string>
+    <string name="add_city">添加城市</string>
+    <string name="wind_power_popup_tv">零级无风炊烟上；一级软风烟稍斜；\n二级轻风树叶响；三级微风树枝晃；\n
+                 四级和风灰尘起；五级清风水起波；\n
+                 六级强风大树摇；七级疾风步难行；\n
+                 八级大风树枝折；九级烈风烟囱毁；\n
+                 十级狂风树根拔；十一级暴风陆罕见；\n
+                 十二级飓风浪滔天。</string>
+    <string name="popup_tv">室内空气质量标准（GB/T18883）:\n 夏季制冷时，相对湿度以40%—80%为宜。\n 冬季采暖时，应控制在30%—60%。\n 老人和小孩适合的室内湿度为45%—50%。\n 哮喘等呼吸道系统疾病的患者适宜的室内湿度在40%—50%之间。</string>
+    <string name="chanxiangli">单向历</string>
+    <string name="distance">在一定的距离之外，每个人都可能是我们要找的那一个。</string>
+    <string name="poet">诗人 余秀华</string>
+    <string name="book_title">《月光落在左手上》</string>
+    <string name="unar_calendar_year">己亥年 【猪年】己巳月 戊午日</string>
+    <string name="dxl_month">一月</string>
+    <string name="dxiangli_tv">DANXIANGLI</string>
+    <string name="dxiangli_week">周四</string>
+    <string name="dxiangli_NongLiMonthDay">十七</string>
+    <string name="dxiangli_text">宜远观</string>
+    <string name="type_note">注解：</string>
 </resources>

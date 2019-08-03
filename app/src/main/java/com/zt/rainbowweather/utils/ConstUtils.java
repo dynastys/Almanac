@@ -10,7 +10,7 @@ public class ConstUtils {
     private ConstUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
-
+    public static int[] appWidgetIds;
     /******************** 存储相关常量 ********************/
     /**
      * Byte与Byte的倍数
@@ -41,7 +41,16 @@ public class ConstUtils {
     // sd开路径
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
 
+    /*公共的市场*/
+    public static String app_market_code = "360";
 
+    /*模块控制*/
+    public static boolean home_news = true; //首页底部资讯
+    public static boolean almanac_icon = true; //黄历icon
+    public static boolean almanac_news = true; //黄历资讯
+    public static boolean take_a_look = true; //看一看
+    public static boolean personal_center_icon1 = true; //个人中心icon1
+    public static boolean personal_center_icon2 = true; //个人中心icon2
     /******************** 时间相关常量 ********************/
     /**
      * 毫秒与毫秒的倍数
@@ -64,6 +73,9 @@ public class ConstUtils {
      */
     public static final int DAY  = 86400000;
 
+    public static final String LOCATE_FAILED = "定位失败";
+
+    public static boolean ISBG = false;
     public enum TimeUnit {
         MSEC,
         SEC,
@@ -122,5 +134,4 @@ public class ConstUtils {
      * 正则：IP地址
      */
     public static final String REGEX_IP            = "((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)";
-    public static final String LOCATE_FAILED = "定位失败";
-}
+ }

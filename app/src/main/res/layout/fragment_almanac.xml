@@ -5,204 +5,618 @@
     android:id="@+id/calendar_lin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-   >
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_bg4"
-        />
+        android:background="@drawable/gradual_change" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_bg4"
+        android:background="@drawable/gradual_change">
 
-        >
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:layout_centerInParent="true"
-            >
+
+            android:orientation="horizontal">
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/to_left_icon"
                 android:id="@+id/the_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:padding="10dp"
-                />
+                android:src="@mipmap/to_left_icon"
+                android:visibility="gone" />
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:text="2018年5月"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:id="@+id/data"
-                />
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/to_right_icon"
+                android:layout_margin="17dp"
+                android:drawableRight="@mipmap/drop_icon"
+                android:text="2018年5月"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <ImageView
                 android:id="@+id/the_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:padding="10dp"
-                />
+                android:src="@mipmap/to_right_icon"
+                android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_weight="1">
 
-        <RelativeLayout
-            android:id="@+id/rl_tool"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@color/main_bg4">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_month_day"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                tools:ignore="RtlSymmetry" />
+            <RelativeLayout
+                android:id="@+id/rl_tool"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@color/main_bg4"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_month_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    tools:ignore="RtlSymmetry" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/tv_month_day"
+                    android:orientation="vertical"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="12dp"
+                    tools:ignore="RelativeOverlap">
+
+                    <TextView
+                        android:id="@+id/tv_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_lunar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        tools:ignore="SmallSp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_current"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/bg_ripple"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/menu_action_calendar_mvp"
+                        android:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_current_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text="13"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+                </FrameLayout>
+            </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/replace_lin"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/tv_month_day"
+                android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingBottom="12dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:paddingTop="12dp"
-                tools:ignore="RelativeOverlap">
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/tv_year"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/tv_lunar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    tools:ignore="SmallSp" />
             </LinearLayout>
 
-            <FrameLayout
-                android:id="@+id/fl_current"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/bg_ripple">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/white" />
 
-                <ImageView
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/linearView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/app_name"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/menu_action_calendar_mvp"
-                    android:tint="@color/white" />
+                    android:background="@color/white_A30"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    tools:ignore="KeyboardInaccessibleWidget">
 
-                <TextView
-                    android:id="@+id/tv_current_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="2dp"
-                    android:gravity="center"
-                    android:text="13"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </FrameLayout>
+                    <com.haibin.calendarview.CalendarView
+                        android:id="@+id/calendarView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        app:calendar_padding="10dp"
+                        app:current_month_lunar_text_color="#CFCFCF"
+                        app:current_month_text_color="#333333"
+                        app:max_year="2020"
+                        app:min_year="2004"
+                        app:month_view="com.zt.rainbowweather.custom.CustomMonthView"
+                        app:month_view_show_mode="mode_fix"
+                        app:other_month_lunar_text_color="#e1e1e1"
+                        app:other_month_text_color="#e1e1e1"
+                        app:scheme_text="假"
+                        app:scheme_text_color="#333"
+                        app:scheme_theme_color="#128c4b"
+                        app:selected_lunar_text_color="#fff"
+                        app:selected_text_color="#fff"
+                        app:selected_theme_color="#E05C53"
+                        app:week_background="#fff"
+                        app:week_start_with="sun"
+                        app:week_view="com.zt.rainbowweather.custom.CustomWeekView"
+                        app:week_view_scrollable="true"
+                        app:year_view_day_text_color="#333333"
+                        app:year_view_day_text_size="9sp"
+                        app:year_view_month_text_color="#ff0000"
+                        app:year_view_month_text_size="20sp"
+                        app:year_view_scheme_color="#f17706" />
 
-        </RelativeLayout>
+
+                    <com.zt.rainbowweather.view.InfiniteViewPager
+                        android:id="@+id/myViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="380dp"
+                        >
+
+                    </com.zt.rainbowweather.view.InfiniteViewPager>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_margin="8dp"
+                        android:background="@mipmap/almanac_bg">
+
+                        <LinearLayout
+                            android:id="@+id/year_lin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="1dp"
+                                android:background="@color/almanac_tv" />
+
+                            <TextView
+                                android:id="@+id/sui_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="己亥年 【猪年】己巳月 戊午日"
+                                android:textColor="@color/almanac_tv"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="1dp"
+                                android:background="@color/almanac_tv" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/year_lin"
+                            android:layout_marginTop="30dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/NongLiMonthDay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="四月(小)十七"
+                                android:textColor="@color/date_tv"
+                                android:textSize="29sp" />
+
+                            <TextView
+                                android:id="@+id/shengxiao"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:text="6天后小满"
+                                android:textColor="@color/date_tv"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/yi_ji_lin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingBottom="30dp">
+
+                            <LinearLayout
+                                android:id="@+id/suitable_lin"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/selector_lin_c"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/suitable"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@mipmap/suitable_icon" />
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/suitable_content"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:padding="@dimen/dp_4" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="0.4dp"
+                                android:layout_height="76dp"
+                                android:layout_marginTop="15dp"
+                                android:background="@color/almanac_tv" />
+
+                            <LinearLayout
+                                android:id="@+id/avoid_lin"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/selector_lin_c"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/avoid"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@mipmap/avoid_icon" />
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/avoid_content"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:padding="@dimen/dp_4" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/dynamic_state_rel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/selector_lin_c1">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:background="@mipmap/cultivate_calendar_img"
+                            android:focusableInTouchMode="true">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:padding="14dp"
+                                android:text="单向历"
+                                android:textColor="@color/chanxiangli"
+                                android:textSize="15sp" />
+
+                            <com.zt.rainbowweather.view.ChangeTextViewSpace
+                                android:id="@+id/chanxiangli_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="18dp"
+                                android:text="DANXIANGLI"
+                                android:textColor="@color/dxl"
+                                android:textSize="9sp" />
+
+                            <TextView
+                                android:id="@+id/danxiangli_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:drawableLeft="@mipmap/left_decorate_icon"
+                                android:drawableRight="@mipmap/right_decorate_icon"
+                                android:text="宜期待"
+                                android:textColor="@color/dxl"
+                                android:textSize="29sp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentRight="true"
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/dxl"
+                                    android:textSize="12sp"
+                                    android:layout_weight="1"
+                                    android:maxLines="1"
+                                    android:lines="1"
+                                    android:ellipsize="end"
+                                    android:paddingLeft="10dp"
+                                    android:id="@+id/danxiangli_tv_details"
+                                    />
+                                <ImageView
+                                    android:layout_width="80dp"
+                                    android:layout_height="15dp"
+                                    android:id="@+id/dynamic_state"
+
+                                    android:layout_marginBottom="@dimen/dp_10"
+                                    />
+                            </LinearLayout>
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/banner_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/almanac_GDT_ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                    </RelativeLayout>
+
+                    <include layout="@layout/ad_item" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@mipmap/crazy_dream_bg"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_10">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginBottom="10dp"
+                                android:text="周公解梦"
+                                android:textColor="@color/soothsaying"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/even_more"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginBottom="10dp"
+                                android:text="@string/even_more"
+                                android:textColor="@color/selector"
+                                android:textSize="15sp" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_10"
+                            android:background="@drawable/search_w"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:orientation="horizontal">
+
+                            <com.zt.rainbowweather.view.MyEditText
+                                android:id="@+id/novel_input_box"
+                                android:layout_width="match_parent"
+                                android:layout_height="37dp"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginRight="@dimen/dp_10"
+                                android:background="@null"
+                                android:drawableLeft="@mipmap/seek_icon"
+                                android:drawablePadding="@dimen/dp_4"
+                                android:drawableRight="@mipmap/list_detail_icon"
+                                android:hint="美女"
+                                android:imeOptions="actionSearch"
+                                android:padding="5dp"
+                                android:singleLine="true"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="常用搜索"
+                            android:textColor="@color/soothsaying"
+                            android:textSize="13sp" />
+
+                        <com.zt.rainbowweather.view.FlowLayout
+                            android:id="@+id/used_search_rec"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/almanac_more"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_10">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="周易八卦"
+                            android:textColor="@color/soothsaying"
+                            android:textSize="15sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.4dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/nb_divider_narrow" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@color/white">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/almanac_list_recycler"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:overScrollMode="never" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/almanac_news_lin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="黄历资讯"
+                            android:textColor="@color/soothsaying"
+                            android:textSize="15sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.4dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/nb_divider_narrow" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/almanac_information_rec"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+
+        </LinearLayout>
 
         <com.haibin.calendarview.CalendarLayout
             android:id="@+id/calendarLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffff00"
             android:orientation="vertical"
-            android:background="#fff"
-            app:default_status="expand"
-            app:calendar_content_view_id="@+id/recyclerView">
+            app:calendar_content_view_id="@+id/nestedScrollView1"
+            app:calendar_show_mode="only_week_view"
+            app:default_status="shrink">
 
             <com.haibin.calendarview.CalendarView
-                android:id="@+id/calendarView"
+                android:id="@+id/calendarView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:background="#fff"
-                app:current_day_lunar_text_color="#ff0000"
-                app:current_day_text_color="#ff0000"
+                android:background="@color/white"
+                app:calendar_padding="10dp"
                 app:current_month_lunar_text_color="#CFCFCF"
                 app:current_month_text_color="#333333"
-                app:lunar_text_size="10sp"
-                app:max_year="2022"
-                app:max_year_month="12"
-                app:min_year="2016"
-                app:min_year_month="9"
-                app:month_view="com.zt.rainbowweather.view.MeiZuMonthView"
-                app:week_view="com.zt.rainbowweather.view.MeizuWeekView"
-                app:month_view_show_mode="mode_only_current"
+                app:max_year="2020"
+                app:min_year="2004"
+                app:month_view="com.zt.rainbowweather.custom.CustomMonthView"
+                app:month_view_show_mode="mode_fix"
                 app:other_month_lunar_text_color="#e1e1e1"
                 app:other_month_text_color="#e1e1e1"
-                app:scheme_lunar_text_color="#CFCFCF"
                 app:scheme_text="假"
                 app:scheme_text_color="#333"
                 app:scheme_theme_color="#128c4b"
-                app:selected_lunar_text_color="#128c4b"
-                app:selected_text_color="#128c4b"
-                app:selected_theme_color="#80cfcfcf"
+                app:selected_lunar_text_color="#fff"
+                app:selected_text_color="#fff"
+                app:selected_theme_color="#E05C53"
                 app:week_background="#fff"
-                app:week_bar_height="46dp"
-                app:week_line_background="#00000000"
-                app:week_start_with="mon"
-                app:week_text_size="14sp"
-                app:year_view_background="#f6f6f6"
+                app:week_start_with="sun"
+                app:week_view="com.zt.rainbowweather.custom.CustomWeekView"
+                app:week_view_scrollable="true"
                 app:year_view_day_text_color="#333333"
                 app:year_view_day_text_size="9sp"
                 app:year_view_month_text_color="#ff0000"
                 app:year_view_month_text_size="20sp"
                 app:year_view_scheme_color="#f17706" />
-            <LinearLayout
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nestedScrollView1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    />
+                android:layout_height="wrap_content">
 
-            </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
         </com.haibin.calendarview.CalendarLayout>
-
-
-    </LinearLayout>
-
-
-
+    </FrameLayout>
 </LinearLayout>

@@ -7,7 +7,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 
 /**

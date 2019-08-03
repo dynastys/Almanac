@@ -1,19 +1,17 @@
 package com.zt.rainbowweather.entity.news;
 
+import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.zt.rainbowweather.ui.adapter.AdviseDetailAdapter;
 import com.zt.xuanyin.controller.NativeAd;
 
 import java.util.List;
 
 public class Article {
-    public static final int TYPE_ONE = 1000010;
-    public static final int TYPE_THREE = 1000011;
-
-
     private int code;
     private Object msg;
-    private List<DateBean> date;
+    private List<DataBean> data;
 
     public int getCode() {
         return code;
@@ -31,23 +29,43 @@ public class Article {
         this.msg = msg;
     }
 
-    public List<DateBean> getDate() {
-        return date;
+    public List<DataBean> getData() {
+        return data;
     }
 
-    public void setDate(List<DateBean> date) {
-        this.date = date;
+    public void setData(List<DataBean> data) {
+        this.data = data;
     }
 
-    public static class DateBean implements MultiItemEntity {
-
-
-        private String title;
-        private String img;
-        private String url;
-        private String publishTime;
-        private String author;
+    public static class DataBean implements MultiItemEntity {
+ 
         public NativeAd nativelogic;
+        private String article_id;
+        private int article_no;
+        private String title;
+        private Object description;
+        private String html_url;
+        private int list_show_type;
+        private String from_name;
+        private List<String> article_imgs;
+        public TTFeedAd ttFeedAd;
+        public Object nativeExpressADView;
+
+        public String getArticle_id() {
+            return article_id;
+        }
+
+        public void setArticle_id(String article_id) {
+            this.article_id = article_id;
+        }
+
+        public int getArticle_no() {
+            return article_no;
+        }
+
+        public void setArticle_no(int article_no) {
+            this.article_no = article_no;
+        }
 
         public String getTitle() {
             return title;
@@ -57,36 +75,44 @@ public class Article {
             this.title = title;
         }
 
-        public String getImg() {
-            return img;
+        public Object getDescription() {
+            return description;
         }
 
-        public void setImg(String img) {
-            this.img = img;
+        public void setDescription(Object description) {
+            this.description = description;
         }
 
-        public String getUrl() {
-            return url;
+        public String getHtml_url() {
+            return html_url;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
+        public void setHtml_url(String html_url) {
+            this.html_url = html_url;
         }
 
-        public String getPublishTime() {
-            return publishTime;
+        public int getList_show_type() {
+            return list_show_type;
         }
 
-        public void setPublishTime(String publishTime) {
-            this.publishTime = publishTime;
+        public void setList_show_type(int list_show_type) {
+            this.list_show_type = list_show_type;
         }
 
-        public String getAuthor() {
-            return author;
+        public String getFrom_name() {
+            return from_name;
         }
 
-        public void setAuthor(String author) {
-            this.author = author;
+        public void setFrom_name(String from_name) {
+            this.from_name = from_name;
+        }
+
+        public List<String> getArticle_imgs() {
+            return article_imgs;
+        }
+
+        public void setArticle_imgs(List<String> article_imgs) {
+            this.article_imgs = article_imgs;
         }
 
         @Override

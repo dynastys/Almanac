@@ -8,10 +8,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.zt.rainbowweather.ui.activity.MainActivity;
-import com.zt.rainbowweather.ui.activity.SinglePixelActivity;
 import com.zt.rainbowweather.utils.SystemUtils;
 
 /**JobService，支持5.0以上forcestop依然有效
@@ -33,19 +30,23 @@ public class AliveJobService extends JobService {
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            // 具体任务逻辑
-            if(SystemUtils.isAppAlive(getApplicationContext())){
-//                Toast.makeText(getApplicationContext(), "APP活着的", Toast.LENGTH_SHORT)
-//                        .show();
-            }else{
-//                Intent intent = new Intent(getApplicationContext(), SinglePixelActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//                Toast.makeText(getApplicationContext(), "APP被杀死，重启...", Toast.LENGTH_SHORT)
-//                        .show();
+            try {
+                // 具体任务逻辑
+                if(SystemUtils.isAppAlive(getApplicationContext())){
+    //                Toast.makeText(getApplicationContext(), "APP活着的", Toast.LENGTH_SHORT)
+    //                        .show();
+                }else{
+    //                Intent intent = new Intent(getApplicationContext(), SinglePixelActivity.class);
+    //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    //                startActivity(intent);
+    //                Toast.makeText(getApplicationContext(), "APP被杀死，重启...", Toast.LENGTH_SHORT)
+    //                        .show();
+                }
+                // 通知系统任务执行结束
+                jobFinished( (JobParameters) msg.obj, false );
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            // 通知系统任务执行结束
-            jobFinished( (JobParameters) msg.obj, false );
             return true;
         }
     });

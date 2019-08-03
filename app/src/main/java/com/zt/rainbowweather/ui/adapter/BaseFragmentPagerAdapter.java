@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
 
 import com.xy.xylibrary.base.BaseFragment;
+import com.zt.rainbowweather.ui.fragment.WeatherFragment;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  *
  */
 public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
-    private List<BaseFragment> mFragmentList;
+    private List<WeatherFragment> mFragmentList;
     private FragmentManager mFragmentManager;
     /**
      * 下面两个值用来保存Fragment的位置信息，用以判断该位置是否需要更新
@@ -25,7 +26,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<String> mFragmentPositionMap;
     private SparseArray<String> mFragmentPositionMapAfterUpdate;
 
-    public BaseFragmentPagerAdapter(FragmentManager fm, List<BaseFragment> fragments) {
+    public BaseFragmentPagerAdapter(FragmentManager fm, List<WeatherFragment> fragments) {
         super(fm);
         mFragmentList = fragments;
         mFragmentManager = fm;
@@ -94,7 +95,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
      * @param oldFragment 旧Fragment
      * @param newFragment 新Fragment
      */
-    public void replaceFragment(BaseFragment oldFragment, BaseFragment newFragment) {
+    public void replaceFragment(BaseFragment oldFragment, WeatherFragment newFragment) {
         int position = mFragmentList.indexOf(oldFragment);
         if (position == -1) {
             return;
@@ -109,12 +110,12 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * 将指定位置的Fragment替换/更新为新的Fragment
-     * ，同{@link #replaceFragment(BaseFragment oldFragment, BaseFragment newFragment)}
+     * ，
      *
      * @param position    旧Fragment的位置
      * @param newFragment 新Fragment
      */
-    public void replaceFragment(int position, BaseFragment newFragment) {
+    public void replaceFragment(int position, WeatherFragment newFragment) {
         BaseFragment oldFragment = mFragmentList.get(position);
         removeFragmentInternal(oldFragment);
         mFragmentList.set(position, newFragment);
@@ -125,9 +126,12 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
      * 交换位置
      */
     public void moveFragmentPosition(int from, int to) {
-        BaseFragment fromFragment = mFragmentList.get(from);
-        mFragmentList.set(from, mFragmentList.get(to));
-        mFragmentList.set(to, fromFragment);
+        WeatherFragment fromFragment1 = mFragmentList.get(from);
+        WeatherFragment fromFragment2 = mFragmentList.get(to);
+        fromFragment1.Refresh();
+        fromFragment2.Refresh();
+        mFragmentList.set(from,fromFragment2);
+        mFragmentList.set(to, fromFragment1);
         notifyItemChanged();
     }
 
@@ -165,7 +169,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
      *
      * @param fragment 目标Fragment
      */
-    public void addFragment(BaseFragment fragment) {
+    public void addFragment(WeatherFragment fragment) {
         mFragmentList.add(fragment);
         notifyItemChanged();
     }
@@ -176,7 +180,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
      * @param position 插入位置
      * @param fragment 目标Fragment
      */
-    public void insertFragment(int position, BaseFragment fragment) {
+    public void insertFragment(int position, WeatherFragment fragment) {
         mFragmentList.add(position, fragment);
         notifyItemChanged();
     }
@@ -218,7 +222,7 @@ public class BaseFragmentPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.size();
     }
 
-    public List<BaseFragment> getFragments() {
+    public List<WeatherFragment> getFragments() {
         return mFragmentList;
     }
 }

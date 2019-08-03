@@ -7,8 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
-
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 public class SharePopupWindow extends PopupWindow {
 

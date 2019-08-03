@@ -4,12 +4,22 @@ import android.content.Context;
 
 import com.zt.rainbowweather.api.AppService;
 import com.zt.rainbowweather.api.RequestSyntony;
+import com.zt.rainbowweather.entity.Icons;
 import com.zt.rainbowweather.entity.city.HotCity;
 
+import com.zt.rainbowweather.entity.weather.AirThDay;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
 
 import com.zt.rainbowweather.utils.ConstUtils;
+import com.zt.rainbowweather.utils.NetUtils;
+import com.zt.rainbowweather.utils.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.http.Query;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -78,6 +88,49 @@ public class WeatherRequest {
                     @Override
                     public void onNext(HotCity hotCity) {
                         requestSyntony.onNext(hotCity);
+                    }
+                })
+        );
+    }
+
+    /**
+     * 看一看打点
+     * */
+    public void getLookAtData(Context context,final RequestSyntony<String> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("app", "星云天气");
+            requestData.put("page", "看一看");
+            requestData.put("content","进入视频");
+            requestData.put("app_ver", Util.getVersion(context));
+            requestData.put("imsi", Util.getIMSI(context));
+            requestData.put("network", NetUtils.getNetworkState(context));
+            requestData.put("os", "1");
+            requestData.put("os_ver",Util.getVersionString());
+            requestData.put("imei", Util.getIMEI(context));
+            requestData.put("brand",Util.getDeviceBrand());
+            requestData.put("model",Util.getDeviceModel());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
+        mSubscriptions.add(WeatherConnextor.getConnextor(context).getAppService(AppService.class,"http://api.xytq.qukanzixun.com/").LookAtRxJava(requestBody)
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        requestSyntony.onNext(s);
                     }
                 })
         );
@@ -374,32 +427,32 @@ public class WeatherRequest {
 //        );
 //    }
 
-//    /**
-//     * 空气质量7天预报
-//     * */
-//    public void getAirThDayData(Context context,String location,final RequestSyntony<AirThDay> requestSyntony){
-//        mSubscriptions.add(WeatherConnextor.getConnextor(context).getAppService(AppService.class).AirThDayRxJava(location, ConstUtils.KEY)
-//                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
-//                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
-//                .subscribe(new Observer<AirThDay>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        requestSyntony.onCompleted();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        requestSyntony.onError(e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(AirThDay airThDay) {
-//                        requestSyntony.onNext(airThDay);
-//                    }
-//                })
-//        );
-//    }
-//
+    /**
+     * 空气质量7天预报
+     * */
+    public void getAirThDayData(Context context,String location,final RequestSyntony<AirThDay> requestSyntony){
+        mSubscriptions.add(WeatherConnextor.getConnextor(context).getAppService(AppService.class).AirThDayRxJava(location, ConstUtils.KEY)
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<AirThDay>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(AirThDay airThDay) {
+                        requestSyntony.onNext(airThDay);
+                    }
+                })
+        );
+    }
+
 //    /**
 //     * 空气质量数据集合
 //     * */
@@ -425,4 +478,7 @@ public class WeatherRequest {
 //                })
 //        );
 //    }
+
+
+
 }

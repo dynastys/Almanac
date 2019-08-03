@@ -1,11 +1,47 @@
 package com.zt.rainbowweather.utils;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.RequiresApi;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+
 import com.zt.rainbowweather.presenter.ChineseCalendar;
 
+import java.lang.reflect.Method;
+import java.net.NetworkInterface;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-
+import java.util.List;
 
 
 public class Util {
@@ -25,12 +61,338 @@ public class Util {
                                                 "廿一","廿二","廿三","廿四","廿五","廿六","廿七","廿八","廿九","三十"};
 
     public static HashMap<Integer, String[]> twelveMonthWithLeapCache = new HashMap<Integer, String[]>();
+    private static final String UNKNOWN = "0";
 
+    private static final String DENIED = "denied";
 
     public static int getMonthLeapByYear(int year){
         return ChineseCalendar.getMonthLeapByYear(year);
     }
 
+    public static String getVersionString() {
+        String mVersionString = Build.VERSION.RELEASE;
+        return mVersionString;
+    }
+
+    public static String getDeviceBrand() {
+        String mDeviceBrand = Build.BRAND;
+        return mDeviceBrand;
+    }
+
+    public static String getDeviceModel() {
+        String mDeviceModel = Build.MODEL;
+        return mDeviceModel;
+    }
+
+    public static String getIMSI(Context context) {
+        String mIMSI = UNKNOWN;
+        if (context.checkCallingOrSelfPermission(
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return DENIED;
+        }
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            mIMSI = UNKNOWN;
+            return mIMSI;
+        }
+        String imsi = tm.getSubscriberId();
+        if (TextUtils.isEmpty(imsi)) {
+            mIMSI = UNKNOWN;
+            return mIMSI;
+        }
+        mIMSI = imsi.substring(0,5);
+        return mIMSI;
+    }
+    /**
+     * 获取版本号
+     * @return 当前应用的版本号
+     */
+    public static String getVersion(Context context) {
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    /**
+     * RecyclerView 移动到当前位置，
+     *
+     * @param manager   设置RecyclerView对应的manager
+     * @param mRecyclerView  当前的RecyclerView
+     * @param n  要跳转的位置
+     */
+    public static void MoveToPosition(LinearLayoutManager manager, RecyclerView mRecyclerView, int n) {
+
+
+        int firstItem = manager.findFirstVisibleItemPosition();
+        int lastItem = manager.findLastVisibleItemPosition();
+        if (n <= firstItem) {
+            mRecyclerView.scrollToPosition(n);
+        } else if (n <= lastItem) {
+            int top = mRecyclerView.getChildAt(n - firstItem).getTop();
+            mRecyclerView.scrollBy(0, top);
+        } else {
+            mRecyclerView.scrollToPosition(n);
+        }
+
+    }
+
+    /**
+     * 获取序列号
+     * */
+    public static void getPhoneSign(Context context){
+        //序列号（sn）
+      TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String sn = tm.getSimSerialNumber();
+        Log.e("sn", "getPhoneSign: "+sn );
+        String serial = null;
+        try {
+            Class<?> c =Class.forName("android.os.SystemProperties");
+            Method get =c.getMethod("get", String.class);
+            serial = (String)get.invoke(c, "ro.serialno");
+            Log.e("sn", "getPhoneSign: serial"+serial);
+            Log.e("sn", "getPhoneSign: serial aa"+ android.os.Build.SERIAL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String AddDay(String s,int i){
+        try {
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+            Date today = f.parse(s);
+            Calendar c = Calendar.getInstance();
+            c.setTime(today);
+            c.add(Calendar.DAY_OF_MONTH, i);// 今天+1天
+            Date tomorrow = c.getTime();
+            return f.format(tomorrow);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(i > 0){
+            return s.split("-")[0] + "-" + s.split("-")[1] + "-" + ((Integer.parseInt(s.split("-")[2]) + 1) > 30 ? 1 : (Integer.parseInt(s.split("-")[2]) + 1));
+        }else{
+            return s.split("-")[0] + "-" + s.split("-")[1] + "-" + ((Integer.parseInt(s.split("-")[2]) - 1) <= 0 ? 30 : (Integer.parseInt(s.split("-")[2]) - 1));
+        }
+    }
+    /**
+     * 获取mac
+     * */
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+    public static String getMACAddress(Context context) {
+        String mac = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            mac = getNewMac();
+        }
+        if(TextUtils.isEmpty(mac)){
+            // TODO:将结果保存起来；
+            mac = UNKNOWN;
+            if (context.checkCallingOrSelfPermission(
+                    Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
+                WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                WifiInfo info = manager.getConnectionInfo();
+                mac = info.getMacAddress();
+            } else {
+                mac = DENIED;
+            }
+        }
+        return mac ;
+    }
+    /**
+     * 通过网络接口取
+     * 记得添加网络权限
+     * <uses-permission android:name="android.permission.INTERNET" />
+     *
+     * @return mac 地址字符串
+     */
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+    private static String getNewMac() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = new byte[0];
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                    macBytes = nif.getHardwareAddress();
+                }
+                if (macBytes == null) {
+                    return null;
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:", b));
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    // androidID获取
+    public static String getAndroidId(Context context) {
+        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        return  androidId;
+    }
+    /**
+     * 获取imei
+     * */
+    public static String getIMEI(Context context) {
+        String mIMEI = UNKNOWN;
+        if (context.checkCallingOrSelfPermission(
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return DENIED;
+        }
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm == null) {
+            mIMEI = UNKNOWN;
+        }
+        String imei = tm.getDeviceId();
+        if (TextUtils.isEmpty(imei)) {
+            mIMEI = UNKNOWN;
+        }
+        mIMEI = imei;
+
+        return mIMEI;
+    }
+
+    /**
+     * 转数字
+     */
+    public static int TurnDigital(String digit){
+        if(digit.startsWith("0")){
+            if(digit.equals("00")){
+                return 0;
+            }
+            return Integer.parseInt(digit.replace("0",""));
+        }
+        return Integer.parseInt(digit);
+    }
+
+    /*月份转英文*/
+    public static String MonthEnglish(int month){
+        switch (month){
+            case 1:
+                return "JANUARY";
+            case 2:
+                return "FEBRUARY";
+            case 3:
+                return "MARCH";
+            case 4:
+                return "APRIL";
+            case 5:
+                return "MAY";
+            case 6:
+                return "JUNE";
+            case 7:
+                return "JULY";
+            case 8:
+                return "AUGUST";
+            case 9:
+                return "SEPTEMBER";
+            case 10:
+                return "OCTOBER";
+            case 11:
+                return "NOVEMBER";
+            case 12:
+                return "DECEMBER";
+        }
+        return "JANUARY";
+    }
+
+    /*农历大小月份*/
+    public static String LunarCalendarSize(String month){
+        String DX = "(小)";
+        switch (month) {
+            case "一月":
+            case "三月":
+            case "五月":
+            case "七月":
+            case "八月":
+            case "十月":
+            case "十二月":
+                DX = "(大)";
+                break;
+        }
+        return DX;
+    }
+    /**
+     * View渐现动画效果
+     */
+    public static void setShowAnimation(View view, int duration)
+    {
+        if (null == view || duration < 0)
+        {
+            return;
+        }
+        AlphaAnimation mShowAnimation = new AlphaAnimation(0.8f, 1.0f);
+        mShowAnimation.setDuration(duration);
+        mShowAnimation.setFillAfter(true);
+        view.startAnimation(mShowAnimation);
+    }
+
+    public static Bitmap rsBlur(Context context, Bitmap source, int radius){
+         int width = Math.round(source.getWidth()/4);
+        int height = Math.round(source.getHeight()/4);
+
+        Bitmap inputBmp = Bitmap.createScaledBitmap(source,width,height,false);
+
+        RenderScript renderScript =  RenderScript.create(context);
+
+        // Allocate memory for Renderscript to work with
+
+        final Allocation input = Allocation.createFromBitmap(renderScript,inputBmp);
+        final Allocation output = Allocation.createTyped(renderScript,input.getType());
+
+        // Load up an instance of the specific script that we want to use.
+        ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        scriptIntrinsicBlur.setInput(input);
+
+        // Set the blur radius
+        scriptIntrinsicBlur.setRadius(radius);
+
+        // Start the ScriptIntrinisicBlur
+        scriptIntrinsicBlur.forEach(output);
+
+        // Copy the output to the blurred bitmap
+        output.copyTo(inputBmp);
+
+        renderScript.destroy();
+
+
+        return inputBmp;
+    }
+
+    public static Bitmap drawable2Bitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        } else if (drawable instanceof NinePatchDrawable) {
+            Bitmap bitmap = Bitmap
+                    .createBitmap(
+                            drawable.getIntrinsicWidth(),
+                            drawable.getIntrinsicHeight(),
+                            drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                                    : Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        } else {
+            return null;
+        }
+    }
     /**
      * 通过月份的索引获取当月对应的天数
      * @param year
@@ -119,6 +481,14 @@ public class Util {
         return sb.toString();
     }
 
+    public static int ScreenHeight(Activity context){
+        WindowManager manager = context.getWindowManager();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        manager.getDefaultDisplay().getMetrics(outMetrics);
+        int width = outMetrics.widthPixels;
+        int height = outMetrics.heightPixels;
+        return height;
+    }
     /**
      * 获取月份的农历中文
      * @param month

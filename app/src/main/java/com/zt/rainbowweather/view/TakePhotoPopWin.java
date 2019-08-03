@@ -11,8 +11,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 import com.zt.rainbowweather.api.TakePhotoPopWinListener;
 import com.zt.rainbowweather.presenter.ChineseCalendar;
 

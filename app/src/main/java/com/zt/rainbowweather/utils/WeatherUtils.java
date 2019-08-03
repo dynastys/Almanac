@@ -2,7 +2,7 @@ package com.zt.rainbowweather.utils;
 
 
 import com.zt.rainbowweather.entity.WeatherUtilBean;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,11 +27,11 @@ public class WeatherUtils {
                 break;
             case 102:
                 bean.weather = "少云";
-                bean.iconRes = R.mipmap.a102;
+                bean.iconRes = R.mipmap.a101;
                 break;
             case 103:
                 bean.weather = "晴间多云";
-                bean.iconRes = R.mipmap.a103;
+                bean.iconRes = R.mipmap.a101;
                 break;
             case 104:
                 bean.weather = "阴";
@@ -42,30 +42,30 @@ public class WeatherUtils {
                 bean.iconRes = R.mipmap.a200;
             case 201:
                 bean.weather = "平静";
-                bean.iconRes = R.mipmap.a201;
+                bean.iconRes = R.mipmap.a200;
                 break;
             case 202:
                 bean.weather = "微风";
-                bean.iconRes = R.mipmap.a202;
+                bean.iconRes = R.mipmap.a200;
                 break;
             case 203:
                 bean.weather = "和风";
-                bean.iconRes = R.mipmap.a203;
+                bean.iconRes = R.mipmap.a200;
                 break;
             case 204:
                 bean.weather = "清风";
-                bean.iconRes = R.mipmap.a204;
+                bean.iconRes = R.mipmap.a200;
                 break;
             case 205:
                 bean.weather = "强风/劲风";
-                bean.iconRes = R.mipmap.a205;
+                bean.iconRes = R.mipmap.a200;
                 break;
             case 206:
                 bean.weather = "疾风";
-                bean.iconRes = R.mipmap.a206;
+                bean.iconRes = R.mipmap.a200;
             case 207:
                 bean.weather = "大风";
-                bean.iconRes = R.mipmap.a207;
+                bean.iconRes = R.mipmap.a200;
                 break;
             case 208:
                 bean.weather = "烈风";
@@ -73,22 +73,22 @@ public class WeatherUtils {
                 break;
             case 209:
                 bean.weather = "风暴";
-                bean.iconRes = R.mipmap.a209;
+                bean.iconRes = R.mipmap.a208;
                 break;
             case 210:
                 bean.weather = "狂爆风";
-                bean.iconRes = R.mipmap.a211;
+                bean.iconRes = R.mipmap.a208;
                 break;
             case 211:
                 bean.weather = "飓风";
-                bean.iconRes = R.mipmap.a211;
+                bean.iconRes = R.mipmap.a208;
                 break;
             case 212:
                 bean.weather = "龙卷风";
-                bean.iconRes = R.mipmap.a212;
+                bean.iconRes = R.mipmap.a208;
             case 213:
                 bean.weather = "热带风暴";
-                bean.iconRes = R.mipmap.a213;
+                bean.iconRes = R.mipmap.a208;
                 break;
             case 300:
                 bean.weather = "阵雨";
@@ -96,7 +96,7 @@ public class WeatherUtils {
                 break;
             case 301:
                 bean.weather = "强阵雨";
-                bean.iconRes = R.mipmap.a301;
+                bean.iconRes = R.mipmap.a300;
                 break;
             case 302:
                 bean.weather = "雷阵雨";
@@ -104,11 +104,11 @@ public class WeatherUtils {
                 break;
             case 303:
                 bean.weather = "强雷阵雨";
-                bean.iconRes = R.mipmap.a303;
+                bean.iconRes = R.mipmap.a302;
                 break;
             case 304:
                 bean.weather = "雷阵雨伴有冰雹";
-                bean.iconRes = R.mipmap.a304;
+                bean.iconRes = R.mipmap.a302;
             case 305:
                 bean.weather = "小雨";
                 bean.iconRes = R.mipmap.a305;
@@ -126,45 +126,45 @@ public class WeatherUtils {
                 bean.iconRes = R.mipmap.a307;
             case 309:
                 bean.weather = "毛毛雨/细雨";
-                bean.iconRes = R.mipmap.a309;
+                bean.iconRes = R.mipmap.a305;
                 break;
             case 310:
                 bean.weather = "暴雨";
-                bean.iconRes = R.mipmap.a310;
+                bean.iconRes = R.mipmap.a307;
                 break;
             case 311:
                 bean.weather = "大暴雨";
-                bean.iconRes = R.mipmap.a311;
+                bean.iconRes = R.mipmap.a307;
                 break;
             case 312:
                 bean.weather = "特大暴雨";
-                bean.iconRes = R.mipmap.a312;
+                bean.iconRes = R.mipmap.a307;
             case 313:
                 bean.weather = "冻雨";
                 bean.iconRes = R.mipmap.a313;
                 break;
             case 314:
                 bean.weather = "小到中雨";
-                bean.iconRes = R.mipmap.a314;
+                bean.iconRes = R.mipmap.a306;
                 break;
             case 315:
                 bean.weather = "中到大雨";
-                bean.iconRes = R.mipmap.a315;
+                bean.iconRes = R.mipmap.a307;
                 break;
             case 316:
                 bean.weather = "大到暴雨";
-                bean.iconRes = R.mipmap.a316;
+                bean.iconRes = R.mipmap.a307;
             case 317:
                 bean.weather = "暴雨到大暴雨";
-                bean.iconRes = R.mipmap.a317;
+                bean.iconRes = R.mipmap.a307;
                 break;
             case 318:
                 bean.weather = "大暴雨到特大暴雨";
-                bean.iconRes = R.mipmap.a318;
+                bean.iconRes = R.mipmap.a307;
                 break;
             case 399:
                 bean.weather = "雨";
-                bean.iconRes = R.mipmap.a399;
+                bean.iconRes = R.mipmap.a305;
                 break;
             case 400:
                 bean.weather = "小雪";
@@ -179,14 +179,14 @@ public class WeatherUtils {
                 break;
             case 403:
                 bean.weather = "暴雪";
-                bean.iconRes = R.mipmap.a403;
+                bean.iconRes = R.mipmap.a402;
                 break;
             case 404:
                 bean.weather = "雨夹雪";
                 bean.iconRes = R.mipmap.a404;
             case 405:
                 bean.weather = "雨雪天气";
-                bean.iconRes = R.mipmap.a405;
+                bean.iconRes = R.mipmap.a404;
                 break;
             case 406:
                 bean.weather = "阵雨夹雪";
@@ -194,25 +194,25 @@ public class WeatherUtils {
                 break;
             case 407:
                 bean.weather = "阵雪";
-                bean.iconRes = R.mipmap.a407;
+                bean.iconRes = R.mipmap.a400;
                 break;
             case 408:
                 bean.weather = "小到中雪";
-                bean.iconRes = R.mipmap.a408;
+                bean.iconRes = R.mipmap.a401;
             case 409:
                 bean.weather = "中到大雪";
-                bean.iconRes = R.mipmap.a409;
+                bean.iconRes = R.mipmap.a402;
                 break;
             case 410:
                 bean.weather = "大到暴雪";
-                bean.iconRes = R.mipmap.a410;
+                bean.iconRes = R.mipmap.a402;
             case 499:
                 bean.weather = "雪";
-                bean.iconRes = R.mipmap.a499;
+                bean.iconRes = R.mipmap.a400;
                 break;
             case 500:
                 bean.weather = "薄雾";
-                bean.iconRes = R.mipmap.a500;
+                bean.iconRes = R.mipmap.a501;
             case 501:
                 bean.weather = "雾";
                 bean.iconRes = R.mipmap.a501;
@@ -236,28 +236,28 @@ public class WeatherUtils {
                 bean.iconRes = R.mipmap.a508;
             case 509:
                 bean.weather = "浓雾";
-                bean.iconRes = R.mipmap.a509;
+                bean.iconRes = R.mipmap.a502;
                 break;
             case 510:
                 bean.weather = "强浓雾";
-                bean.iconRes = R.mipmap.a510;
+                bean.iconRes = R.mipmap.a502;
             case 511:
                 bean.weather = "中度霾";
-                bean.iconRes = R.mipmap.a511;
+                bean.iconRes = R.mipmap.a502;
                 break;
             case 512:
                 bean.weather = "重度霾";
-                bean.iconRes = R.mipmap.a512;
+                bean.iconRes = R.mipmap.a502;
             case 513:
                 bean.weather = "严重霾";
-                bean.iconRes = R.mipmap.a513;
+                bean.iconRes = R.mipmap.a502;
                 break;
             case 514:
                 bean.weather = "大雾";
-                bean.iconRes = R.mipmap.a514;
+                bean.iconRes = R.mipmap.a502;
             case 515:
                 bean.weather = "特强浓雾";
-                bean.iconRes = R.mipmap.a515;
+                bean.iconRes = R.mipmap.a502;
                 break;
             case 900:
                 bean.weather = "热";
@@ -267,12 +267,28 @@ public class WeatherUtils {
                 bean.weather = "冷";
                 bean.iconRes = R.mipmap.a901;
                 break;
+            case 1000:
+                bean.weather = "晴";
+                bean.iconRes = R.mipmap.a1000;
+                break;
+            case 1001:
+                bean.weather = "多云";
+                bean.iconRes = R.mipmap.a1000n;
+                break;
+            case 1002:
+                bean.weather = "少云";
+                bean.iconRes = R.mipmap.a1000n;
+                break;
+            case 1003:
+                bean.weather = "晴间多云";
+                bean.iconRes = R.mipmap.a1000n;
             case 999:
             default:
                 bean.weather = "未知";
                 bean.iconRes = R.mipmap.a999;
                 break;
         }
+//        bean.iconRes = R.mipmap.dy;
         return bean;
     }
 

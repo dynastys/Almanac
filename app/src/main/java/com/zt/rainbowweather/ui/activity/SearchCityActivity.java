@@ -2,7 +2,6 @@ package com.zt.rainbowweather.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chenguang.weather.R;
+import com.umeng.analytics.MobclickAgent;
+import com.zt.weather.R;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.Utils;
@@ -33,25 +33,26 @@ import com.zt.rainbowweather.entity.AddressBean;
 import com.zt.rainbowweather.entity.City;
 import com.zt.rainbowweather.entity.CityEvent;
 import com.zt.rainbowweather.entity.city.HotCity;
-import com.zt.rainbowweather.entity.weather.ConventionWeather;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
 import com.zt.rainbowweather.ui.adapter.HotCityAdapter;
 import com.zt.rainbowweather.ui.adapter.SearchCityAdapter;
 import com.zt.rainbowweather.utils.ActivityUtils;
 import com.zt.rainbowweather.utils.SizeUtils;
 import com.zt.rainbowweather.utils.ToastUtils;
-
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * @author zw
+ * @time 2019-3-8
+ * 城市搜索
+ * */
 public class SearchCityActivity extends BaseActivity {
 
     @BindView(R.id.iv_back)
@@ -79,8 +80,24 @@ public class SearchCityActivity extends BaseActivity {
 
     public static void startActivity(Context context, List<AddressBean> addressBeans) {
         Intent intent = new Intent(context, SearchCityActivity.class);
-        intent.putExtra("address", (Serializable) addressBeans);
+        if(addressBeans != null){
+            intent.putExtra("address", (Serializable) addressBeans);
+        }
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("SearchCityActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
+        MobclickAgent.onResume(this); //统计时长
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("SearchCityActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -95,12 +112,10 @@ public class SearchCityActivity extends BaseActivity {
 
             @Override
             public void onCompleted() {
-
             }
 
             @Override
             public void onError(Throwable e) {
-
             }
 
             @Override
@@ -116,7 +131,9 @@ public class SearchCityActivity extends BaseActivity {
                     city.status = 0;
                     city.isLocate = "0";
                     city.isChecked = "0";
-                    cities.add(city);
+//                    if(!city.name.contains(mAddresses.get(0).city.name)){
+                        cities.add(city);
+//                    }
                 }
                 showSearchData(cities);
             }
@@ -167,21 +184,34 @@ public class SearchCityActivity extends BaseActivity {
 
 
     private void addCityWeather(City city) {
-        showLoadingDialog("");
-        Log.e("TAG", "addCityWeather: "+LitePal.findAll(City.class).size());
-        if(LitePal.findAll(City.class).size() <= 9){
-            List<City> cities = LitePal.where("name=?", city.name).find(City.class);
-            ContentValues values=new ContentValues();
-            values.put("isChecked","0");
-            LitePal.updateAll(City.class, values, "isChecked = ?","1");
-            if(cities == null || cities.size() == 0){
-                city.isChecked = "1";
+        List<City> cityList = LitePal.findAll(City.class);
+         if(cityList.size() <= 9){
+            showLoadingDialog("");
+//            List<City> cities = LitePal.where("name=?", city.name).find(City.class);
+//            ContentValues values=new ContentValues();
+//            values.put("isChecked","0");
+//            LitePal.updateAll(City.class, values, "isChecked = ?","1");
+//            if(cities == null || cities.size() == 0){
+//                city.isChecked = "1";
+//                city.save();
+//            }
+            if(cityList.size() == 0){
                 city.save();
+                finish();
+                intentActivity(MainActivity.class);
+            }else{
+                if(mAddresses == null){
+                    finish();
+                    intentActivity(MainActivity.class);
+                }else{
+                    EventBus.getDefault().post(new CityEvent(city));
+                    ActivityUtils.finishToActivity(MainActivity.class, false);
+                }
+
             }
-            EventBus.getDefault().post(new CityEvent(city));
-            ActivityUtils.finishToActivity(MainActivity.class, false);
         }else{
             ToastUtils.showLong("只能添加9个城市哦！");
+
         }
     }
 
@@ -191,12 +221,10 @@ public class SearchCityActivity extends BaseActivity {
 
             @Override
             public void onCompleted() {
-
             }
 
             @Override
             public void onError(Throwable e) {
-
             }
 
             @Override
@@ -212,7 +240,15 @@ public class SearchCityActivity extends BaseActivity {
                     city.status = 0;
                     city.isLocate = "0";
                     city.isChecked = "0";
-                    cities.add(city);
+                    if(mAddresses == null){
+                        cities.add(city);
+                    }else{
+                        Log.e("mAddresses", "onNext: "+mAddresses.get(0).city.name );
+                        if(!mAddresses.get(0).city.name.contains(city.name)){
+                            cities.add(city);
+                        }
+                    }
+
                 }
                 showHotCityData(cities);
             }
@@ -235,22 +271,29 @@ public class SearchCityActivity extends BaseActivity {
             cities.add(0, locatedCity);
             locatedCity.isChecked = "0";
         }
-        for (City city : cities) {
-            for (AddressBean mAddress : mAddresses) {
-                if (city.affiliation.equals(mAddress.city.affiliation)) {
-                    city.isChecked = "1";
+        if(mAddresses != null){
+            for (City city : cities) {
+                for (AddressBean mAddress : mAddresses) {
+                    if (city.affiliation.equals(mAddress.city.affiliation)) {
+                        city.isChecked = "1";
+                    }
                 }
             }
         }
-
         mHotCityAdapter.setNewData(cities);
     }
-
+    private List<City> cities = new ArrayList<>();
     @OnClick({R.id.iv_back, R.id.iv_clear})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                finish();
+                cities = LitePal.findAll(City.class);
+                if(cities != null && cities.size() > 0){
+//                    intentActivity(MainActivity.class);
+                    finish();
+                } else {
+                    ToastUtils.showLong("请先选择城市哦！");
+                }
                 break;
             case R.id.iv_clear:
                 etSearch.setText("");
@@ -273,8 +316,6 @@ public class SearchCityActivity extends BaseActivity {
         ViewGroup.LayoutParams layoutParams = listBar.getLayoutParams();
         layoutParams.height = Utils.getStatusBarHeight(SearchCityActivity.this);
         listBar.setLayoutParams(layoutParams);
-        listBar.setBackgroundColor(getResources().getColor(R.color.blue_light));
-
     }
 
     @Override
@@ -292,7 +333,6 @@ public class SearchCityActivity extends BaseActivity {
                 .VERTICAL));
         mSearchCityAdapter = new SearchCityAdapter(null);
         mSearchCityAdapter.bindToRecyclerView(rvSearch);
-//        rvSearch.setAdapter(mSearchCityAdapter);
         mHotCityAdapter.setOnItemClickListener((adapter, view, position) -> {
             City city = (City) adapter.getData().get(position);
             addCityWeather(city);
@@ -302,21 +342,16 @@ public class SearchCityActivity extends BaseActivity {
             addCityWeather(city);
         });
         getHotCityData();
-
-
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-//        BarUtils.setStatusBarColor(SearchCityActivity.this, getResources().getColor(R.color.bar_color_1));
-//        BarUtils.addMarginTopEqualStatusBarHeight(rlRoot);
         locatedCity = BasicApplication.getLocatedCity();
         mAddresses = (List<AddressBean>) getIntent().getSerializableExtra
                 ("address");
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -341,31 +376,26 @@ public class SearchCityActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }
 
     @Override
     protected void setListener() {
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
         PushAgent.getInstance(this).onAppStart();
     }
 
     @Override
     public void granted() {
-
     }
 
     @Override
     public void denied(List<String> deniedList) {
-
     }
 }

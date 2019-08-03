@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.chenguang.weather">
+    package="com.zt.weather">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 用于进行网络定位 -->
@@ -28,62 +28,97 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.BIND_JOB_SERVICE"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
-    <uses-permission android:name="android.permission.MANAGE_USERS"
+    <uses-permission
+        android:name="android.permission.MANAGE_USERS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
-     <uses-permission
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-     <uses-permission android:name="android.permission.BATTERY_STATS"
-         tools:ignore="ProtectedPermissions" />
-     <uses-permission android:name="android.permission.WRITE_SETTINGS"
-         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission
+        android:name="android.permission.BATTERY_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOC" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
-
+    <!-- targetSdkVersion >= 26 时需要配置此权限，否则无法进行安装app的动作 -->
+    <!-- android:launchMode="singleInstance" -->
     <application
-        android:name="com.zt.rainbowweather.BasicApplication"
+        android:name="com.zt.rainbowweather.SophixStubApplication"
         android:allowBackup="true"
-        android:hardwareAccelerated="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
+        <meta-data
+            android:name="com.taobao.android.hotfix.IDSECRET"
+            android:value="27686139" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.APPSECRET"
+            android:value="62a38152b94219770d7b363a7b87ed0b" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.RSASECRET"
+            android:value="MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCXU/KDlecHJkS+g0sb1OoE/JcPlgrq2WDV/Jo6kOnINnxa9upWb9rsSXVOp9ZBp+i3EmV0576YyRLvtmq9Rm4bQ+7tUhcKZSv3nr/jwO8t+i3ruDvGilPcpCx1aLLUAHGx/qiSGHOOVfnqEXRUC0BV8OnBNUAcL/2Is6HD0VftW0BiQU/PMgDSEJEciMrlKijijrpkXkmE6JLKXaMlZ8LuuXnJDG0AwmMR98t/Oa5ncwzLY5/7zD2Z297bwIkoRjMj33o55MvgE+wFXBKvoZ1n5X9ofGSVHoq2u+KylfVw4mduPWkMRSf1CmWyTeFWXDukUjLyERpcK9EaxU0GFxX/AgMBAAECggEAWcjxBqmWHWPTPcXgdm7pOnQznIfFinnXPp9VUpJQYv4Q4lfFyesr1S3wb+6c7O+W36gGkko9h6Elnxx4UDzNb1frFtux1/UXFSAXciYywvDA9i6lKLNB9pNh3Xd1QtvQmW8izSu8xCK22O3qO0NBtLvvtTbHBvJiVw1dWTWIGcc0PnW9rgHnj1RODaAsjD43US358f2mrw0LuH5rmM8OaAcHgVSovE33UPlwU4gL6/eKorw9lIf+qgS/+pR3JOJuYXACVKX81gaxToN3yaOqXL6u7VTSkzaTTJW1c1iY4tqz4u0o5tpR1yXOq2GSzsDHuj2Kl58h5fKiXnLO5Fv64QKBgQDUPJOzHcXe3qy1pBTmDeSQvtrdqObs2j/LhjyCiGfbjqMg+O5gTlIDqrD0TQjzwKnLHluX52kT8xzPpTLKjqYrHVqTlRBiImORn4XuPHhor+NGYJiFox0sJDIVejT4Rm/+wj68OSQ7u0A4C7/3fNT2zPh+hjCbQt11F5D1RSd0rQKBgQC2iCgzCixW7Zjppvi2R0Fbd9wiQZd8ZTdjmvefjUKkJha3+/1u/449H2C+1H0n94gxTpo2r+I074oWTTLaHGtd4KkPYR77tt8Mi1u/7EBu47er2aXhKD9RitDJZQ4w5A6OSyD2zIYR5q38+eb2kTdGI1gXxlNOUd6eeWnR35Ie2wKBgCF0xye2Ksn+OiWMDwtQ51X18BR/Gp/9q47Ow10kWZLfwlFhTFp8HiubzbdFKYMbPOjbCT9B6GuPqFwHQ6FwqTskrnGTTvjZSO7cwcUTXTvLdj1S3tg6JVAfCJIgKJd2qxLy1ebf7xlHZFExcPp3gC7DkuyHBMSE3tolc+FmHFklAoGASCWpPgNXY0SmnDQTOnkPrEfECwZCCjk3m3c1SStcm+UyNaa0lZsNbbtpUgRLM/DzNAoNinAayTGlMwtwfiWdio2yRRHuXS/7Gco7ibCoByya/KIantR5spFb1T7MTSbXWgb4EJTmqUy0mLluQSdE4cQ2na8WXm6dv6Xd3cawyuECgYEA03Gg3/8Zm0EerBiOwyIg+9iSp/EEaJegOAYYvUiR+x9ayCWjb7Gfs+yrC5+se9dkua5LJbG2UWoYv3xgG2FgxVRDWxfMmtCBL3RmY0sBk973CAzkOyeJDTLN5GJNg1K0qkdTBcsxLKTD+6KrB2C/ReSf79NYbJvq4dpDCzVEclc=" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="eff85381e01a3b23cb1c98fa24ae6ea4" />
+            android:value="3af17746850fe4f6a1a92618182052af" />
         <!-- 推啊填写平台上申请到的 appkey -->
         <meta-data
             android:name="TUIA_APPKEY"
-            android:value="4VWs3be7m15KNxUnmPfNgbthKboN"/>
+            android:value="4VWs3be7m15KNxUnmPfNgbthKboN" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <activity
             android:name="com.zt.rainbowweather.ui.activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize|adjustPan" />
 
         <service android:name="com.zt.rainbowweather.ui.service.FloatingService" />
         <service android:name="com.amap.api.location.APSService" />
+
+        <receiver
+            android:name="com.zt.rainbowweather.presenter.WeatherWidget"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.seewo.homewidgets.action.CLICK" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
+        </receiver>
 
         <activity
             android:name="com.zt.rainbowweather.utils.PermissionUtils$PermissionActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.zt.rainbowweather.ui.activity.StartActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StartingWindowTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,9 +127,11 @@
         </activity>
         <activity
             android:name="com.zt.rainbowweather.ui.activity.SearchCityActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.zt.rainbowweather.ui.activity.AddressActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.zt.rainbowweather.ui.activity.AdviseMoreDetailActivity"
@@ -103,27 +140,50 @@
         <activity
             android:name="com.zt.rainbowweather.ui.activity.AdviseDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.zt.rainbowweather.ui.activity.IndexOfLivingActivity" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.IndexOfLivingActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.zt.xuanyin.view.AdLinkActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="XUANYIN_FileProvider"
-            android:value="com.chenguang.weather" />
-         <provider
-         android:name="android.support.v4.content.FileProvider"
-         android:authorities="com.chenguang.weather.fileProvider"
-         android:exported="false"
-         android:grantUriPermissions="true">
-         <!-- 元数据 -->
-         <meta-data
-         android:name="android.support.FILE_PROVIDER_PATHS"
-         android:resource="@xml/file_path" />
-         </provider>
+            android:value="com.zt.weather" />
+        <!-- 魅族push应用定义消息receiver声明 -->
+        <receiver android:name="com.zt.rainbowweather.presenter.receiver.MeizuTestReceiver">
+            <intent-filter>
+
+                <!-- 接收push消息 -->
+                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+                <!-- 接收register消息 -->
+                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+                <!-- 接收unregister消息 -->
+                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
+                <!-- 兼容低版本Flyme3推送服务配置 -->
+                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
+        <!-- <provider -->
+        <!-- android:name="android.support.v4.content.FileProvider" -->
+        <!-- android:authorities="com.chenguang.weather.fileProvider" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true"> -->
+
+
+        <!-- &lt;!&ndash; 元数据 &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/file_path" /> -->
+        <!-- </provider> -->
 
         <service android:name="com.zt.xuanyin.controller.DownService" />
-         <service android:name="com.zt.rainbowweather.ui.service.DownLoadService" />
+        <service android:name="com.zt.rainbowweather.ui.service.DownLoadService" />
 
         <receiver android:name="com.zt.rainbowweather.presenter.receiver.NotificationClickReceiver">
             <meta-data
@@ -142,8 +202,17 @@
             android:screenOrientation="landscape" />
 
         <provider
-            android:name="fdt.ipgteo.lnaidqp.oqv.cy.j.c"
-            android:authorities="com.chenguang.weather.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.zt.weather.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+            android:authorities="com.zt.weather.TTFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -151,20 +220,6 @@
                 android:resource="@xml/file_path" />
         </provider>
 
-        <activity
-            android:name="ki.a"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
-        <service android:name="com.vkx.wzs.Qus" />
-        <service
-            android:name="xdg.m.p.cehewys.b"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":Help" />
-        <service
-            android:name="xdg.m.p.cehewys.a"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":MindService" />
         <service
             android:name="com.zt.rainbowweather.ui.service.DaemonService"
             android:enabled="true"
@@ -176,19 +231,85 @@
             android:exported="true"
             android:process=":service" />
 
-        <activity android:name="com.zt.rainbowweather.ui.activity.SinglePixelActivity"
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.SinglePixelActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|navigation|keyboard"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="false"
-            android:launchMode="singleInstance"
-            android:theme="@style/SingleActivityStyle"
-            />
-     <!--  AliveJobService需要BIND_JOB_SERVICE权限 -->
+            android:theme="@style/SingleActivityStyle" />
+        <!-- AliveJobService需要BIND_JOB_SERVICE权限 -->
         <service
             android:name="com.zt.rainbowweather.ui.service.AliveJobService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.AtlasActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.ClassifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.YiJiActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.YiJiTypeDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.LCIMConversationActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.zt.rainbowweather.ui.activity.AboutActivity" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.WeatherDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.DXiangLiActivity"
+            android:screenOrientation="portrait" />
+        <!-- 即时通讯模块、推送（均需要加入以下声明） START -->
+        <!-- 即时通讯模块、推送都要使用 PushService -->
+        <service android:name="com.avos.avoscloud.PushService" />
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- GDT -->
+        <!-- 声明 SDK 所需要的组件 -->
+        <service
+            android:name="com.qq.e.comm.DownloadService"
+            android:exported="false" />
+        <!-- 请开发者注意字母的大小写，ADActivity，而不是 AdActivity -->
+        <activity
+            android:name="com.qq.e.ads.ADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.qq.e.ads.PortraitADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.qq.e.ads.LandscapeADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape" />
+
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="com.zt.weather.TTMultiProvider"
+            android:exported="false" />
+
+        <activity android:name="com.zt.rainbowweather.ui.activity.ShareActivity" />
+        <activity android:name="com.zt.rainbowweather.ui.activity.IndexDetailsActivity" />
+        <activity android:name="com.zt.rainbowweather.ui.activity.MipushTestActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
+            ></activity>
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="appid=100867491" />
     </application>
 
 </manifest>

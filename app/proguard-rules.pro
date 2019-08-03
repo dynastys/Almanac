@@ -51,16 +51,25 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep class com.zt.rainbowweather.entity.** { *; }
-#-keep class com.xy.xylibrary.** { *; }
-#-keep class com.zt.rainbowweather.ui.** { *; }
-#-keep class com.zt.rainbowweather.view.** { *; }
-#-keep class com.zt.rainbowweather.utils.** { *; }
-#-keep class com.zt.rainbowweather.presenter.** { *; }
-#-keep class com.zt.rainbowweather.api.** { *; }
+-keep class com.zt.rainbowweather.feedback.** { *; }
+-keep class com.xy.xylibrary.** { *; }
+-keep class com.zt.rainbowweather.ui.** { *; }
+-keep class com.zt.rainbowweather.view.** { *; }
+-keep class com.zt.rainbowweather.utils.** { *; }
+-keep class com.zt.rainbowweather.presenter.** { *; }
+-keep class com.zt.rainbowweather.api.** { *; }
+-keep class com.zt.rainbowweather.feedback.** { *; }
+-keep class com.zt.rainbowweather.custom.** { *; }
+-keep class com.kyleduo.switchbutton.** { *; }
+-keep class com.zt.rainbowweather.presenter.receiver.** { *; }
 ##ad
 -keep class com.zt.xuanyin.** {*;}
 -keep class com.vkx.wzs.** {*;}
+-keep class com.zt.noninductive.** {*;}
+-keep class com.check.ox.sdk.** {*;}
 
+-dontwarn com.lechuan.midunovel.view**
+-keep class com.lechuan.midunovel.view.** { *; }
  ##忽略警告
 -ignorewarnings
 -keepclasseswithmembernames class * { # 保持 native 方法不被混淆
@@ -252,14 +261,16 @@ public static final int *;
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
+
 # 友盟统计
 -keep class com.umeng.commonsdk.** {*;}
 -keepclassmembers class * {
    public <init> (org.json.JSONObject);
 }
--keep public class [com.zongxueguan.naochanle_android].R$*{
+-keep public class com.zt.weather.R$*{
 public static final int *;
 }
+
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
@@ -282,8 +293,7 @@ public static final int *;
 -keep class com.xiaomi.** {*;}
 -keep class com.huawei.** {*;}
 -keep class org.apache.thrift.** {*;}
-
--keep class com.alibaba.sdk.android.**{*;}
+-keep class com.zt.noninductive.** {*;}
 -keep class com.ut.**{*;}
 -keep class com.ta.**{*;}
 
@@ -318,3 +328,62 @@ public static final int *;
  }
 
 
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+-keep class com.qq.e.** {
+    public protected *;
+}
+-keep class android.support.v4.**{
+    public *;
+}
+-keep class android.support.v7.**{
+    public *;
+}
+
+-keep class com.bytedance.sdk.openadsdk.** { *; }
+-keep class com.androidquery.callback.** {*;}
+-keep public interface com.bytedance.sdk.openadsdk.downloadnew.** {*;}
+-keep class com.ss.sys.ces.* {*;}
+
+#基线包使用，生成mapping.txt
+-printmapping mapping.txt
+#生成的mapping.txt在app/build/outputs/mapping/release路径下，移动到/app路径下
+#修复后的项目使用，保证混淆结果一致
+#-applymapping mapping.txt
+#hotfix
+-keep class com.taobao.sophix.**{*;}
+-keep class com.ta.utdid2.device.**{*;}
+-dontwarn com.alibaba.sdk.android.utils.**
+#防止inline
+-dontoptimize
+-keepclassmembers class com.zt.rainbowweather.BasicApplication {
+    public <init>();
+}
+
+-keep class com.yilan.sdk.**{
+    *;
+}
+-dontwarn javax.annotation.**
+-dontwarn sun.misc.Unsafe
+-dontwarn org.conscrypt.*
+-dontwarn okio.**
+#-dontwarn okio.**
+-keep class com.tencent.smtt.**{*;}
+-keep class com.tencent.tbs.**{*;}
+###阿里云混淆
+-keep class com.alibaba.sdk.android.**{*;}
+-keep class com.ut.**{*;}
+-keep class com.ta.**{*;}
+
+# 如果不使用android.support.annotation.Keep则需加上此行
+-keep class com.zt.rainbowweather.SophixStubApplication$RealApplicationStub
+
+-keep public class * extends android.app.Service

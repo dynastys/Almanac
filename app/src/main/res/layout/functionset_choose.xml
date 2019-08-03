@@ -7,13 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/list_bar"
-        android:background="@color/blue_light"
+        android:background="@drawable/gradual_change"
         />
     <RelativeLayout
         android:id="@+id/head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blue_light">
+        android:background="@drawable/gradual_change">
 
         <ImageView
             android:id="@+id/select"

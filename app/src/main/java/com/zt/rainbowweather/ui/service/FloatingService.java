@@ -17,9 +17,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
 import com.bumptech.glide.Glide;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
 import com.zt.xuanyin.controller.NativeAd;
@@ -80,7 +79,7 @@ public class FloatingService extends Service {
                 // 获得开屏广告对象
                 nativelogic = new Ad().NativeAD(this, "0bdd768a-aad0-4105-ac66-95a27c0516de", "7127e520-1e95-4141-bb5c-ce96d6771186","CD028F25B3274D7F9AEA0BBE4F449F6A", new AdProtogenesisListener() {
                     @Override
-                    public void onADReady(Native url) {
+                    public void onADReady(Native url,NativeAd nativelogic) {
                         dialog.setVisibility(View.VISIBLE);
                         Glide.with(getApplicationContext()).load(url.src).into(interstitial);
                         nativelogic.AdShow(interstitialContainer);

@@ -33,16 +33,11 @@ public class ShowPopUtils {
 //        params[0].alpha = 0.7f;
 //        context.getWindow().setAttributes(params[0]);
         //设置Popupwindow关闭监听，当Popupwindow关闭，背景恢复1f
-        takePhotoPopWin.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-
-                params[0] = context.getWindow().getAttributes();
-                params[0].alpha = 1f;
-                context.getWindow().setAttributes(params[0]);
-            }
+        takePhotoPopWin.setOnDismissListener(() -> {
+            params[0] = context.getWindow().getAttributes();
+            params[0].alpha = 1f;
+            context.getWindow().setAttributes(params[0]);
         });
-
 //        takePhotoPopWin.lis
     }
 }

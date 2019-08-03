@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <dbname value="shop" />
-    <version value="1" />
+    <dbname value="weather" />
+    <version value="5" />
 
     <list>
         <mapping class="com.zt.rainbowweather.entity.City" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean$BasicBean" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean$NowBean" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean$UpdateBean" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean$DailyForecastBean" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean$HourlyBean" />
+        <mapping class="com.zt.rainbowweather.entity.weather.ConventionWeather$HeWeather6Bean$LifestyleBean" />
+        <mapping class="com.zt.rainbowweather.entity.background.DataBean" />
+        <mapping class="com.zt.rainbowweather.entity.news.NewColumn" />
+        <mapping class="com.zt.rainbowweather.entity.news.NewColumn$DataBean" />
 
+        <mapping class="com.zt.rainbowweather.entity.calendar.Festival$DataBean" />
     </list>
 </litepal>

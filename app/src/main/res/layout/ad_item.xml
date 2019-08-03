@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/ad_lin"
+    android:visibility="gone"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ad_bg"
+            android:id="@+id/ad_image_banner"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/dp_10"
+            android:id="@+id/ad_image_banner_clear"
+            android:src="@mipmap/close_icon" />
+
+        <TextView
+            android:id="@+id/tv_ad_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4d000000"
+            android:textSize="8sp"
+            android:text="AD"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,5 +1,8 @@
 package com.zt.rainbowweather.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
@@ -43,6 +46,31 @@ public class OutLookWeather implements Serializable {
      * 空气质量
      */
     public String airQuality;
+
+    /**
+     * 体感温度
+     * */
+    public String fl;
+
+    /**
+     * 紫外线强度
+     * */
+    public String uv_index;
+
+    /**
+     * 日出时间
+     * */
+    public String sr;
+
+    /**
+     * 	日落时间
+     * */
+    public String ss;
+
+    public OutLookWeather() {
+        super();
+    }
+
 
     public String getWeek() {
         return week;
@@ -99,4 +127,5 @@ public class OutLookWeather implements Serializable {
     public void setAirQuality(String airQuality) {
         this.airQuality = airQuality;
     }
+
 }

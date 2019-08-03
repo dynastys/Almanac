@@ -49,7 +49,7 @@ public class MeiZuMonthView extends MonthView {
         //兼容硬件加速无效的代码
         setLayerType(View.LAYER_TYPE_SOFTWARE, mSchemeBasicPaint);
         //4.0以上硬件加速会导致无效
-        mSchemeBasicPaint.setMaskFilter(new BlurMaskFilter(25, BlurMaskFilter.Blur.SOLID));
+        mSchemeBasicPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
     }
 
     /**

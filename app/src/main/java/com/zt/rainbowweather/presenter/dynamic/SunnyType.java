@@ -21,7 +21,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.zt.rainbowweather.utils.TimeUtils;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 
 /**

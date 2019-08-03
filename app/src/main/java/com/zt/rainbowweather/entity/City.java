@@ -21,7 +21,7 @@ public class City extends LitePalSupport implements Serializable {
      * timeZoneShift : 28800
      */
 
-    public String affiliation;
+    public String affiliation = "";
     public double latitude;
     public String locationKey;
     public double longitude;
@@ -31,4 +31,5 @@ public class City extends LitePalSupport implements Serializable {
     public int timeZoneShift;
     public String isChecked;
     public String isLocate;//是否是定位城市
+    public String weather;
 }

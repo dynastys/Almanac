@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/nb_divider_narrow"
+    android:color="#3f000000"
     tools:targetApi="lollipop">
+    <item>
+        <shape android:shape="rectangle">
+
+            <solid android:color="@color/lucency"/>
+
+            <corners
+                android:topLeftRadius="15dp"
+                android:topRightRadius="15dp" />
+
+        </shape>
+    </item>
     <item android:drawable="@drawable/ripple_bg_text" />
+
 </ripple>

@@ -8,9 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
         <item name="android:listDivider">@drawable/shape_divider_bg</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
 <!--
         <item name="android:windowIsTranslucent">true</item>//保证背景透明
 -->
+    </style>
+    <!--Activity进场。出场动画-->
+    <style name="AnimationActivity" parent="@android:style/Animation.Activity">
+        <!--用于设置打开新的Activity并进入新的Activity展示的动画-->
+        <item name="android:activityOpenEnterAnimation">@anim/in_from_right</item>
+        <!--用于设置打开新的Activity并销毁之前的Activity展示的动画-->
+        <item name="android:activityOpenExitAnimation">@anim/out_to_left</item>
+        <!--用于设置关闭当前Activity进入上一个Activity展示的动画-->
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <!--用于设置关闭当前Activity时展示的动画-->
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
     <style name="text_white">
         <item name="android:textSize">14sp</item>
@@ -18,7 +30,13 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-
+    <!-- 应用启动页(StartingWindow)的theme -->
+    <style name="AppTheme.StartingWindowTheme" parent="AppTheme">
+        <!-- 可以设置成纯颜色（设置一个和Activity UI相似的背景） -->
+        <!--<item name="android:windowBackground">@color/startingwindow_bgcolor</item>-->
+        <!--也可以设置成一张图片 -->
+        <item name="android:windowBackground">@mipmap/start_bg</item>
+    </style>
     <style name="take_photo_anim" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
@@ -27,7 +45,12 @@
         <item name="android:windowEnterAnimation">@anim/enter</item>
         <item name="android:windowExitAnimation">@anim/exit</item>
     </style>
-
+    <style name="SwitchButtonStyleMD"  >
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
     <style name="SingleActivityStyle" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 窗体背景颜色为透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -47,4 +70,10 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowNoDisplay">false</item>
     </style>
+    <declare-styleable name="MineRowView">
+        <attr name="mine_icon" format="color|reference"/>
+        <attr name="mine_title" format="string"/>
+        <attr name="mine_divider_visibility" format="boolean"/>
+        <attr name="mine_arrow_visibility" format="boolean"/>
+    </declare-styleable>
 </resources>

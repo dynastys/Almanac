@@ -14,6 +14,7 @@
 
     <include
         layout="@layout/title_bar"/>
+
     <com.zt.rainbowweather.view.MagicButton
         android:id="@+id/magic_btn"
         android:layout_marginTop="20dp"

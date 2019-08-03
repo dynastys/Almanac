@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <com.xy.xylibrary.refresh.SuperEasyRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_layout_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            />
+    </com.xy.xylibrary.refresh.SuperEasyRefreshLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/stick"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="40dp"
+        android:paddingRight="30dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/stick_commodity"
+        />
+</RelativeLayout>

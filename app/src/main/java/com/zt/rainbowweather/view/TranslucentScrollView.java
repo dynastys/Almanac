@@ -17,7 +17,7 @@ import android.widget.ScrollView;
 import android.widget.Scroller;
 
 import com.xy.xylibrary.utils.SizeUtils;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 
 /**

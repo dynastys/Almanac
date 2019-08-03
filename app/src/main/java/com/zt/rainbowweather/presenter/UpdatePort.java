@@ -49,38 +49,42 @@ public class UpdatePort implements RequestSyntony<LatestVersion> {
 
     @Override
     public void onNext(LatestVersion latestVersion) {
-        if(latestVersion.getDate().getVersion_code() > Utils.getVersionCode(mContext)){
-            SaveShare.saveValue(mContext,"version_code", ""+latestVersion.getDate().getVersion_code());
-            final UpdateDialog confirmDialog = new UpdateDialog(mContext, "有新版本啦！(V"+ latestVersion.getDate().getVersion_name()+")", "立即更新","以后再说", latestVersion.getDate().getRelease_notes());
-            confirmDialog.show();
-            confirmDialog.setClicklistener(new UpdateDialog.ClickListenerInterface() {
-                @Override
-                public void doConfirm() {
-                    DownLoadUtils downLoadUtils = new DownLoadUtils(mContext);
-                    confirmDialog.dismiss();
-                    ToastUtils.showLong("更新中。。。");
-                    String file = SaveShare.getValue(mContext, "file");
-                    if (TextUtils.isEmpty(file)) {
-                        utils.Download(mContext,   latestVersion.getDate().getSource_file_url());
-                     } else {
-                        if ("com.chenguang.weather".equals(downLoadUtils.getDownLoadPackageName(mContext, file))) {
-                            if (downLoadUtils.getVersion(mContext).equals(downLoadUtils.getVersionName(mContext, "com.chenguang.weather"))) {
-//                                downLoadUtils.checkIsAndroidO(mContext,file);
-                                utils.doApk(mContext,file);
-                            } else {
-                                utils.Download(mContext,   latestVersion.getDate().getSource_file_url());
-                            }
-                        } else {
+        try {
+            if(latestVersion.getDate().getVersion_code() > Utils.getVersionCode(mContext)){
+                SaveShare.saveValue(mContext,"version_code", ""+latestVersion.getDate().getVersion_code());
+                final UpdateDialog confirmDialog = new UpdateDialog(mContext, "有新版本啦！(V"+ latestVersion.getDate().getVersion_name()+")", "立即更新","以后再说", latestVersion.getDate().getRelease_notes());
+                confirmDialog.show();
+                confirmDialog.setClicklistener(new UpdateDialog.ClickListenerInterface() {
+                    @Override
+                    public void doConfirm() {
+                        DownLoadUtils downLoadUtils = new DownLoadUtils(mContext);
+                        confirmDialog.dismiss();
+                        ToastUtils.showLong("更新中。。。");
+                        String file = SaveShare.getValue(mContext, "file");
+                        if (TextUtils.isEmpty(file)) {
                             utils.Download(mContext,   latestVersion.getDate().getSource_file_url());
+                         } else {
+                            if ("com.chenguang.weather".equals(downLoadUtils.getDownLoadPackageName(mContext, file))) {
+                                if (downLoadUtils.getVersion(mContext).equals(downLoadUtils.getVersionName(mContext, "com.chenguang.weather"))) {
+    //                                downLoadUtils.checkIsAndroidO(mContext,file);
+                                    utils.doApk(mContext,file);
+                                } else {
+                                    utils.Download(mContext,latestVersion.getDate().getSource_file_url());
+                                }
+                            } else {
+                                utils.Download(mContext,latestVersion.getDate().getSource_file_url());
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void doCancel() {
-                    confirmDialog.dismiss();
-                }
-            });
+                    @Override
+                    public void doCancel() {
+                        confirmDialog.dismiss();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

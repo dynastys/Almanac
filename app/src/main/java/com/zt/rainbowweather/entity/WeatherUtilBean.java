@@ -1,5 +1,8 @@
 package com.zt.rainbowweather.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
@@ -10,4 +13,6 @@ public class WeatherUtilBean implements Serializable {
     public String weather;//晴
     public int iconRes;//icon_sunny
     public int weatherId;//0
+
+
 }

@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.chenguang.weather.R;
 
 /**前台Service，使用startForeground
  * 这个Service尽量要轻，不要占用过多的系统资源，否则
@@ -41,8 +40,8 @@ public class DaemonService extends Service {
 //            startForeground(NOTICE_ID,builder.build());
             // 如果觉得常驻通知栏体验不好
             // 可以通过启动CancelNoticeService，将通知移除，oom_adj值不变
-            Intent intent = new Intent(this,CancelNoticeService.class);
-            startService(intent);
+//            Intent intent = new Intent(this,CancelNoticeService.class);
+//            startService(intent);
         }else{
             startForeground(NOTICE_ID,new Notification());
         }

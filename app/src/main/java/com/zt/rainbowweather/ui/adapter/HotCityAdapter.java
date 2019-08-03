@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 import com.zt.rainbowweather.entity.City;
 
 import java.util.List;

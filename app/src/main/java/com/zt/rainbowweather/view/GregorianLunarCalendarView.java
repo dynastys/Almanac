@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 import com.zt.rainbowweather.presenter.ChineseCalendar;
 import com.zt.rainbowweather.utils.Util;
 

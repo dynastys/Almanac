@@ -10,9 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-
-
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 import java.util.ArrayList;
 

@@ -10,7 +10,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 import com.xy.xylibrary.utils.DensityUtil;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
 

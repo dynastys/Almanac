@@ -5,30 +5,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chenguang.weather.R;
+import com.umeng.analytics.MobclickAgent;
+import com.zt.weather.R;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.Utils;
 import com.zt.rainbowweather.entity.advise.AdviseTitleBean;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
 import com.zt.rainbowweather.ui.adapter.CustomAdapter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * @author zw
+ * @time 2019-3-8
+ * （弃用）
+ * */
 public class IndexOfLivingActivity extends BaseActivity {
 
     @BindView(R.id.select)
@@ -44,6 +46,18 @@ public class IndexOfLivingActivity extends BaseActivity {
     private int[] ID = new int[]{26,28,29,30,31,32,27,33,34,35,36,37,38,40,39,32};
     private int[] icon = new int[]{R.mipmap.comf,R.mipmap.drsg,R.mipmap.flu,R.mipmap.sport,R.mipmap.trav,R.mipmap.uv,R.mipmap.cw,R.mipmap.air,R.mipmap.ac,R.mipmap.ag,R.mipmap.gl,R.mipmap.mu,R.mipmap.airc,R.mipmap.ptfc,R.mipmap.fsh,R.mipmap.spi};
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("IndexOfLivingActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
+        MobclickAgent.onResume(this); //统计时长
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("IndexOfLivingActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
+        MobclickAgent.onPause(this);
+    }
     public static void startActivity(Context context, List<ConventionWeather.HeWeather6Bean.LifestyleBean> addressBeans) {
         Intent intent = new Intent(context, IndexOfLivingActivity.class);
         intent.putExtra("index", (Serializable) addressBeans);

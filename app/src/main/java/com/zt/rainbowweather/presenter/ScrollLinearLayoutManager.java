@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 public class ScrollLinearLayoutManager extends LinearLayoutManager {
 
-    private boolean isScrollEnable = false;
+    private boolean isScrollEnable = true;
     private double speedRatio;
     public ScrollLinearLayoutManager(Context context) {
         super(context);

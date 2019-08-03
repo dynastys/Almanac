@@ -26,5 +26,72 @@
         <attr name="super_bottomRightRadius" format="dimension"/>
 
     </declare-styleable>
+    <declare-styleable name="SunView">
+        <attr name="svTrackColor" format="color"/>
+        <attr name="svSunColor" format="color"/>
+        <attr name="svMainColor" format="color"/>
+        <attr name="svSunRadius" format="dimension"/>
+        <attr name="svTrackWidth" format="dimension"/>
+        <attr name="svTextSize" format="dimension"/>
+        <attr name="svTextOffset" format="dimension"/>
+        <attr name="svPadding" format="dimension"/>
+    </declare-styleable>
 
+    <declare-styleable name="SunAnimationView">
+        <attr name="sun_circle_color" format="color"></attr>
+        <attr name="sun_font_color" format="color"></attr>
+        <attr name="sun_font_size" format="dimension"></attr>
+        <attr name="sun_circle_radius" format="integer"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="MsgView">
+        <!-- 圆角矩形背景色 -->
+        <attr name="mv_backgroundColor" format="color"/>
+        <!-- 圆角弧度,单位dp-->
+        <attr name="mv_cornerRadius" format="dimension"/>
+        <!-- 圆角弧度,单位dp-->
+        <attr name="mv_strokeWidth" format="dimension"/>
+        <!-- 圆角边框颜色-->
+        <attr name="mv_strokeColor" format="color"/>
+        <!-- 圆角弧度是高度一半-->
+        <attr name="mv_isRadiusHalfHeight" format="boolean"/>
+        <!-- 圆角矩形宽高相等,取较宽高中大值-->
+        <attr name="mv_isWidthHeightEqual" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SegmentTabLayout">
+        <!-- indicator -->
+        <attr name="tl_indicator_color"/>
+        <attr name="tl_indicator_height"/>
+        <attr name="tl_indicator_margin_left"/>
+        <attr name="tl_indicator_margin_top"/>
+        <attr name="tl_indicator_margin_right"/>
+        <attr name="tl_indicator_margin_bottom"/>
+        <attr name="tl_indicator_corner_radius"/>
+        <attr name="tl_indicator_anim_enable"/>
+        <attr name="tl_indicator_anim_duration"/>
+        <attr name="tl_indicator_bounce_enable"/>
+
+        <!-- divider -->
+        <attr name="tl_divider_color"/>
+        <attr name="tl_divider_width"/>
+        <attr name="tl_divider_padding"/>
+
+        <!-- tab -->
+        <attr name="tl_tab_padding"/>
+        <attr name="tl_tab_space_equal"/>
+        <attr name="tl_tab_width"/>
+
+        <!-- title -->
+        <attr name="tl_textsize"/>
+        <attr name="tl_textSelectColor"/>
+        <attr name="tl_textUnselectColor"/>
+        <attr name="tl_textBold"/>
+        <attr name="tl_textAllCaps"/>
+
+        <attr name="tl_bar_color" format="color"/>
+        <attr name="tl_bar_stroke_color" format="color"/>
+        <attr name="tl_bar_stroke_width" format="dimension"/>
+
+    </declare-styleable>
 </resources>

@@ -16,7 +16,7 @@ import android.graphics.Shader;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 
 /**

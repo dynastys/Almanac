@@ -1,11 +1,18 @@
 package com.zt.rainbowweather.api;
 
+import com.zt.rainbowweather.entity.Icons;
+import com.zt.rainbowweather.entity.background.BackdropTheme;
+import com.zt.rainbowweather.entity.background.SkinTheme;
 import com.zt.rainbowweather.entity.city.HotCity;
 
+import com.zt.rainbowweather.entity.weather.AirThDay;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
 
 
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -19,13 +26,13 @@ public interface AppService {
 //    @GET("s6/air")
 //    Observable<AirQuality> AirQualityRxJava(@Query("location") String location, @Query("key") String key);//@Query参数定义
 //
-//    /**
-//     * 空气质量7天预报
-//     * @param location 需要查询的城市或地区
-//     * @param key 用户认证key
-//     * */
-//    @GET("s6/air/forecast")
-//    Observable<AirThDay> AirThDayRxJava(@Query("location") String location, @Query("key") String key);//@Query参数定义
+    /**
+     * 空气质量7天预报
+     * @param location 需要查询的城市或地区
+     * @param key 用户认证key
+     * */
+    @GET("s6/air/forecast")
+    Observable<AirThDay> AirThDayRxJava(@Query("location") String location, @Query("key") String key);//@Query参数定义
 //
 //    /**
 //     * 空气质量逐小时预报
@@ -145,6 +152,12 @@ public interface AppService {
      * */
     @GET("top")
     Observable<HotCity> HotCityRxJava(@Query("group") String group, @Query("key") String key, @Query("number") String number);//@Query参数定义
+
+    /**
+     * 看一看打点
+     * */
+    @POST("app/put-log")
+    Observable<String> LookAtRxJava(@Body RequestBody requestBody);
 
 
 }

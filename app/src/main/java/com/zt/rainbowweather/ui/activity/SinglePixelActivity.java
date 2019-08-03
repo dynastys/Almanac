@@ -12,6 +12,11 @@ import android.view.WindowManager;
 import com.zt.rainbowweather.presenter.ScreenManager;
 import com.zt.rainbowweather.utils.SystemUtils;
 
+/**
+ * @author zw
+ * @time 2019-3-8
+ * （保活测试弃用）
+ * */
 public class SinglePixelActivity extends AppCompatActivity {
 
     private static final String TAG = "DaemonService";

@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@drawable/ripple_bg2"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:background="@drawable/selector_lin_c"
     >
-    <RelativeLayout
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/icon"
+            android:id="@+id/recycler_image"
+            />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        >
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/popup_recycler_image"
-             />
+        android:text="******"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/sp_14"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:id="@+id/popup_recycler_tv"
+        />
         <TextView
             android:id="@+id/brf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp_10"
-             android:layout_centerInParent="true"
-            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:textColor="@color/index_tv"
             />
-    </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="******"
-         android:textSize="@dimen/sp_12"
-        android:textColor="@color/text_light_gray"
-        android:id="@+id/popup_recycler_tv"
-        />
 </LinearLayout>

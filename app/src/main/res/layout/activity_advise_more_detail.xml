@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
+    android:background="@drawable/gradual_change"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -16,7 +16,7 @@
             android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/gradual_change"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:titleTextColor="@android:color/white" />
@@ -32,10 +32,20 @@
         android:max="100"
         android:visibility="gone" />
 
-    <WebView
-        android:id="@+id/detail_web"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:id="@+id/webView_url"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            >
+        </FrameLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

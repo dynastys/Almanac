@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zt.rainbowweather.api.ActionBarClickListener;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 
 /**

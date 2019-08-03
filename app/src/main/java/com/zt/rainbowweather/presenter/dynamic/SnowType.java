@@ -13,7 +13,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

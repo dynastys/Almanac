@@ -1,17 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    >
-    <TextView
-        android:id="@+id/shop_list_bar"
-        android:layout_width="match_parent"
-        android:layout_height="12dp"
-        android:background="@drawable/gradual_change" />
+    android:orientation="vertical">
 
     <include layout="@layout/head"
-
         />
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -21,7 +13,7 @@
 
    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical" >
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.zt.rainbowweather.ui.activity.YiJiTypeDetailsActivity">
+    <include layout="@layout/head"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp" 
+        android:src="@mipmap/ad"
+        android:id="@+id/type_ad"
+        android:scaleType="fitXY"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10"
+        >
+        <TextView
+            android:id="@+id/type_note"
+            android:text="@string/type_note"
+            android:textColor="@color/broken_line_s"
+            android:textSize="@dimen/sp_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/type_note_tv"
+            android:text="男娶女嫁，举行结婚大典的吉日。"
+            android:textColor="@color/suitable_tv"
+            android:textSize="@dimen/sp_19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10"
+        >
+        <TextView
+            android:id="@+id/underlying_word"
+            android:text="原词："
+            android:textColor="@color/broken_line_s"
+            android:textSize="@dimen/sp_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/underlying_word_tv"
+            android:text="嫁娶"
+            android:textColor="@color/suitable_tv"
+            android:textSize="@dimen/sp_19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/type_details"
+        android:padding="@dimen/dp_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/suitable_tv"
+        android:textSize="@dimen/sp_16"
+        android:lineSpacingExtra="5dp"
+        android:text="表示额外的行间距数值，单位通常为dp，值可以为负数，小数和0。如果值为正数表示增加行间距；如果值为负数表示减少行间距；如果值为0，则没有      变化。"
+        />
+</LinearLayout>

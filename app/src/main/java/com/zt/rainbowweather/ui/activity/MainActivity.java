@@ -2,7 +2,6 @@ package com.zt.rainbowweather.ui.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -19,27 +18,29 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
-import com.chenguang.weather.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.umeng.analytics.MobclickAgent;
+import com.zt.rainbowweather.api.RequestSyntony;
+import com.zt.rainbowweather.presenter.request.WeatherRequest;
+import com.zt.rainbowweather.ui.fragment.HomeFragment;
+import com.zt.weather.R;
 import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
 import com.timmy.tdialog.listener.OnViewClickListener;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.ui.activity.BaseChoiceActivity;
 import com.xy.xylibrary.ui.adapter.GradientTabStripAdapter;
+import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.view.ViewPagerSlide;
 import com.zt.rainbowweather.entity.City;
 import com.zt.rainbowweather.entity.CityEvent;
+import com.zt.rainbowweather.entity.background.IsUserLight;
+import com.zt.rainbowweather.entity.city.CityX;
 import com.zt.rainbowweather.entity.city.Event;
 import com.zt.rainbowweather.presenter.ExtraFunction;
 import com.zt.rainbowweather.presenter.UpdatePort;
 import com.zt.rainbowweather.ui.adapter.MyGradientTabStripAdapter;
-import com.zt.rainbowweather.ui.fragment.NewsFragment;
-import com.zt.rainbowweather.ui.service.FloatingService;
+ import com.zt.rainbowweather.ui.service.FloatingService;
 import com.zt.rainbowweather.utils.ConstUtils;
-import com.zt.rainbowweather.utils.SPUtils;
-import com.zt.rainbowweather.utils.utils;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
 import com.zt.xuanyin.controller.NativeAd;
@@ -48,9 +49,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
+
+import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * @author zw
+ * @time 2019-3-8
+ * 主页面
+ * */
 public class MainActivity extends BaseChoiceActivity implements OnViewClickListener {
 
     private int position;
@@ -58,7 +65,28 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     private NativeAd nativelogic;
     private BindViewHolder MyviewHolder;
     private ExtraFunction extraFunction;
-    private double hourse;
+    private List<City> cities = new ArrayList<>();
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if(position == 2){
+            WeatherRequest.getWeatherRequest().getLookAtData(MainActivity.this, new RequestSyntony<String>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(String s) {
+
+                }
+            });
+        }
+    }
 
     @Override
     public GradientTabStripAdapter setGradientTabStripAdapter(FragmentManager fragmentManager, ViewPagerSlide tabVp) {
@@ -69,25 +97,27 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void loadViewLayout() {
-        DialogShow();
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        String ISAD = SaveShare.getValue(this, "ISAD");
+        if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
+//            DialogShow();
+        }
+        cities = LitePal.findAll(City.class);
+        if(cities == null || cities.size() == 0){
+            SearchCityActivity.startActivity(MainActivity.this, null);
+            finish();
+        }
         extraFunction = new ExtraFunction(MainActivity.this);
         extraFunction.AppListData();
-        extraFunction.KeepAlive();
+//        extraFunction.KeepAlive();
         extraFunction.NotificationBar();
         extraFunction.setNoninductive();
         UpdatePort.getUpdatePort().UpdateDialog(MainActivity.this);
-        new com.zt.noninductive.Ad().NativeAD(this);
     }
 
-    /*应用外弹窗*/
-    private void floatWindow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                extraFunction.FloatingWindow(MainActivity.this,MainActivity.this);
-            } else {
-
-            }
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setIsUserLight(IsUserLight isUserLight){
+        setIsUserLightMode(isUserLight.getMessage());
     }
 
     @Override
@@ -97,55 +127,57 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && position == 2) {
-            if (((NewsFragment) myGradientTabStripAdapter.getItem(position)).onKeyDown(keyCode, event)) {
-                return true;
+        try {
+            if(ConstUtils.take_a_look){
+                if (keyCode == KeyEvent.KEYCODE_BACK && position == 0) {
+                    if (((HomeFragment) myGradientTabStripAdapter.getItem(position)).onKeyDown(keyCode, event)) {
+                        return true;
+                    }
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return super.onKeyDown(keyCode, event);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setCityEvent(CityEvent cityEvent) {
-        EventBus.getDefault().post(new Event(cityEvent.city,cityEvent.isDelete));
+        EventBus.getDefault().post(new Event(cityEvent.city, cityEvent.isDelete));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setCity(City city) {
+        EventBus.getDefault().post(new CityX(city));
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
+        try {
+           List<City> citys = LitePal.findAll(City.class);
+            for (int i = 0; i < citys.size(); i++) {
+                Log.e("citys", "onDestroy: "+citys.get(i).name);
+            }
+            if (EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().unregister(this);
+            }
+            extraFunction.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        extraFunction.onDestroy();
-     }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        PushAgent.getInstance(this).onAppStart();
-
-
-
-        long starttime = System.currentTimeMillis();
-        SharedPreferences sharedPreferences =getSharedPreferences("TIME",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        //读取
-        long endtime =sharedPreferences.getLong("time",0);
-        //保存
-        editor.putLong("time",starttime);
-        editor.commit();
-        if (endtime != 0){
-            long timeDiff = starttime - endtime;
-            hourse = timeDiff / (1000 * 60 * 60 * 24);
-        }else {
-            floatWindow();
+        super.onCreate(savedInstanceState);
+        try {
+            EventBus.getDefault().register(this);
+            PushAgent.getInstance(this).onAppStart();
+//          floatWindow();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (hourse>7){
-            floatWindow();
-        }
-
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -161,36 +193,20 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
             }
         }
     }
-    private List<City> getCityFromSP() {
-        String json = SPUtils.getInstance(ConstUtils.SP_FILE_NAME).getString("addresses");
-        if (!TextUtils.isEmpty(json)) {
-            return new Gson().fromJson(json, new TypeToken<List<City>>() {
-            }.getType());
-        }
-        return null;
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
-         List<City> cities = getCityFromSP();
-         if (cities != null){
-             for (int j = 0; j < cities.size(); j++) {
-                 cities.get(j).save();
-             }
-         }
-        if(!utils.isForeground(MainActivity.this)){
-            startService(new Intent(MainActivity.this, FloatingService.class));
-        }
+        extraFunction.onStop(MainActivity.this);
     }
 
     private void DialogShow() {
         try {
             // 获得开屏广告对象
-            nativelogic = new Ad().NativeAD(this, "85890385-161e-4cfc-9d15-a2842ab86194", "7c6680c9-e304-49a6-a692-7efb2dd38224", "FA3967E6BBE243B6A3A6EAD8A42C98A4", new AdProtogenesisListener() {
+            nativelogic = new Ad().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "7c6680c9-e304-49a6-a692-7efb2dd38224", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
                 @Override
-                public void onADReady(final Native url) {
-                    if (url.src != null){
+                public void onADReady(final Native url,NativeAd nativelogic) {
+                    if (url.src != null) {
                         new TDialog.Builder(getSupportFragmentManager())
                                 .setLayoutRes(R.layout.dialog)    //设置弹窗展示的xml布局
                                 .setScreenWidthAspect(MainActivity.this, 0.6f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
@@ -210,8 +226,6 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                                 .create()   //创建TDialog
                                 .show();    //展示
                     }
-
-
                 }
 
                 @Override
@@ -255,4 +269,19 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     public void denied(List<String> deniedList) {
 
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
+        MobclickAgent.onResume(this); //统计时长
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
+        MobclickAgent.onPause(this);
+    }
+
 }

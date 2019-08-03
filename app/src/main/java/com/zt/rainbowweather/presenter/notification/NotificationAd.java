@@ -16,18 +16,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
-import com.chenguang.weather.R;
-import com.xy.xylibrary.utils.GlideUtil;
+import com.zt.weather.R;
+import com.xy.xylibrary.utils.SaveShare;
 import com.zt.rainbowweather.presenter.receiver.NotificationClickReceiver;
-import com.zt.rainbowweather.ui.activity.MainActivity;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
 import com.zt.xuanyin.controller.NativeAd;
@@ -36,7 +33,6 @@ import com.zt.xuanyin.entity.model.Native;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 通知栏
@@ -61,9 +57,16 @@ public class NotificationAd implements AdProtogenesisListener {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setAd(Context context) {
-        this.context = context;
-        // 获得通知栏广告对象
-        nativelogic = Ad.getAd().NativeAD(context, "98f8e423-02e0-49f5-989f-af46f5c59203", "28119d54-13f5-47df-855e-c3f92f1495ea", "67C53558D3E3485EA681EA21735A5003", this);
+        try {
+            this.context = context;
+            String ISAD = SaveShare.getValue(context, "ISAD");
+            if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
+                // 获得通知栏广告对象
+                nativelogic = Ad.getAd().NativeAD(context, "98f8e423-02e0-49f5-989f-af46f5c59203", "28119d54-13f5-47df-855e-c3f92f1495ea", "67C53558D3E3485EA681EA21735A5003", this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -74,9 +77,9 @@ public class NotificationAd implements AdProtogenesisListener {
     }
 
     @Override
-    public void onADReady(Native aNative) {
+    public void onADReady(Native aNative, NativeAd nativelogic) {
         this.aNative = aNative;
-        downloadImage(context,aNative.infoIcon.get(0));
+        downloadImage(context, aNative.infoIcon.get(0).toString());
     }
 
     @Override
@@ -94,14 +97,14 @@ public class NotificationAd implements AdProtogenesisListener {
 
         @Override
         protected File doInBackground(String... params) {
-            String imgUrl =  params[0];
+            String imgUrl = params[0];
             try {
                 return Glide.with(context)
                         .load(imgUrl)
                         .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                         .get();
             } catch (Exception ex) {
-                Log.e("result", "onPostExecute:ex "+ex.toString() );
+                Log.e("result", "onPostExecute:ex " + ex.toString());
                 return null;
             }
         }
@@ -123,28 +126,29 @@ public class NotificationAd implements AdProtogenesisListener {
                 RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.list_item);
                 rv.setTextViewText(R.id.commodity_name, aNative.title);//标题
                 rv.setTextViewText(R.id.commodity_details, aNative.desc);//描叙
-                rv.setOnClickPendingIntent(R.id.commodity_rel,contentIntent);
+                rv.setOnClickPendingIntent(R.id.commodity_rel, contentIntent);
                 Notification.Builder builder3 = new Notification.Builder(context);
                 builder3.setContentIntent(contentIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     builder3.setChannelId("001");
                 }
-                builder3.setSmallIcon(R.mipmap.ic_launcher);
+                builder3.setSmallIcon(R.mipmap.icon);
                 builder3.setLargeIcon(decodeFile(result.getPath()));
                 builder3.setAutoCancel(true);
-                builder3.setContentTitle( aNative.title);
+                builder3.setContentTitle(aNative.title);
                 builder3.setContentText(aNative.desc);
                 mNotificationManager.notify(1, builder3.build());
                 nativelogic.AdShow(null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.e("result", "onPostExecute: "+result.toString() );
+            Log.e("result", "onPostExecute: " + result.toString());
         }
     }
 
     /**
      * 根据 路径 得到 file 得到 bitmap
+     *
      * @param filePath
      * @return
      * @throws IOException
@@ -153,29 +157,33 @@ public class NotificationAd implements AdProtogenesisListener {
         Bitmap b = null;
         int IMAGE_MAX_SIZE = 600;
 
-        File f = new File(filePath);
-        if (f == null){
-            return null;
+        try {
+            File f = new File(filePath);
+            if (f == null) {
+                return null;
+            }
+            //Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+
+            FileInputStream fis = new FileInputStream(f);
+            BitmapFactory.decodeStream(fis, null, o);
+            fis.close();
+
+            int scale = 1;
+            if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+                scale = (int) Math.pow(2, (int) Math.round(Math.log(IMAGE_MAX_SIZE / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+            }
+
+            //Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            fis = new FileInputStream(f);
+            b = BitmapFactory.decodeStream(fis, null, o2);
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        //Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-
-        FileInputStream fis = new FileInputStream(f);
-        BitmapFactory.decodeStream(fis, null, o);
-        fis.close();
-
-        int scale = 1;
-        if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
-            scale = (int) Math.pow(2, (int) Math.round(Math.log(IMAGE_MAX_SIZE / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
-        }
-
-        //Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        fis = new FileInputStream(f);
-        b = BitmapFactory.decodeStream(fis, null, o2);
-        fis.close();
         return b;
     }
 

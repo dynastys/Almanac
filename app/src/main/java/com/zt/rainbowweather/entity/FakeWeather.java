@@ -2,7 +2,7 @@ package com.zt.rainbowweather.entity;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringDef;
-import com.chenguang.weather.R;
+import com.zt.weather.R;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
