@@ -353,7 +353,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     private void initView() {
         try {
-//            showToast("补丁加载成功两次");
+            showToast("补丁加载成功两次");
             tvVersionName = findViewById(R.id.tv_version_name);
             tvSkip = findViewById(R.id.tv_skip);
             container = findViewById(R.id.container);
@@ -511,8 +511,8 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void onADExposure() {
-        showToast("开屏广告展示");
-        Log.e("CS", "onADExposure: ");
+//        showToast("开屏广告展示");
+//        Log.e("CS", "onADExposure: ");
         if (nativelogicDd != null) {
             nativelogicDd.AdShow(container);
         }

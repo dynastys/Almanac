@@ -155,10 +155,10 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     protected void onDestroy() {
         super.onDestroy();
         try {
-           List<City> citys = LitePal.findAll(City.class);
-            for (int i = 0; i < citys.size(); i++) {
-                Log.e("citys", "onDestroy: "+citys.get(i).name);
-            }
+//           List<City> citys = LitePal.findAll(City.class);
+//            for (int i = 0; i < citys.size(); i++) {
+//                Log.e("citys", "onDestroy: "+citys.get(i).name);
+//            }
             if (EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().unregister(this);
             }
