@@ -1,16 +1,32 @@
 package com.zt.rainbowweather.presenter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.MainThread;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdConfig;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
+import com.check.ox.sdk.LionSDK;
+import com.tencent.smtt.sdk.QbSdk;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
+import com.xy.xylibrary.base.AppContext;
+import com.yilan.sdk.ui.YLUIInit;
+import com.zt.rainbowweather.BasicApplication;
+import com.zt.rainbowweather.feedback.CustomUserProvider;
 import com.zt.xuanyin.controller.NativeAd;
+
+import cn.leancloud.chatkit.LCChatKit;
+import cn.leancloud.chatkit.LCChatProfileProvider;
 
 public class StartAd {
     private static final String TAG = "SplashActivity";
@@ -32,7 +48,80 @@ public class StartAd {
         void onError(int code, String message);
         void onSplashAdLoad();
     }
+    public void Application(Context context){
+        if(BasicApplication.getBasicApplication() != null){
+            AppContext.getUserInfo(context,"","",null);
+            //穿山甲广告强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+            TTAdSdk.init(BasicApplication.getBasicApplication(),
+                    new TTAdConfig.Builder()
+                            .appId("5023044")
+                            .useTextureView(true) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
+                            .appName("星云天气")
+                            .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
+                            .allowShowNotify(true) //是否允许sdk展示通知栏提示
+                            .allowShowPageWhenScreenLock(true) //是否在锁屏场景支持展示广告落地页
+//                            .debug(true) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
+                            .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI, TTAdConstant.NETWORK_STATE_3G) //允许直接下载的网络状态集合
+                            .supportMultiProcess(false) //是否支持多进程，true支持
+                            .build());
+//            // 初始化SDK
+//            UMConfigure.init(context, "5d07585d3fc195c9ba001330", "tg_1", UMConfigure.DEVICE_TYPE_PHONE, null);
+//            UMConfigure.init(context, "5d07585d3fc195c9ba001330", "tg_1", UMConfigure.DEVICE_TYPE_PHONE, "e583e679267b3542c272b1b36337687b");
+//
+//            //获取消息推送代理示例
+//            PushAgent mPushAgent = PushAgent.getInstance(context);
+//            //注册推送服务，每次调用register方法都会回调该接口
+//            mPushAgent.register(new IUmengRegisterCallback() {
+//                @Override
+//                public void onSuccess(String deviceToken) {
+//                    //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+//                    Log.e("TAG", "注册成功：deviceToken：-------->  "+deviceToken );
+//                }
+//
+//                @Override
+//                public void onFailure(String s, String s1) {
+//                    Log.e("TAG", "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
+//                }
+//            });
+//            // 选用AUTO页面采集模式
+//            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+            LionSDK.init(context);
+            try {
+                QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
 
+                    @Override
+                    public void onViewInitFinished(boolean arg0) {
+                        //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                        Log.d("app", " onViewInitFinished is " + arg0);
+                    }
+
+                    @Override
+                    public void onCoreInitFinished() {
+                        // TODO Auto-generated method stub
+                    }
+                };
+                //x5内核初始化接口
+                QbSdk.initX5Environment(BasicApplication.getBasicApplication(), cb);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            LCChatKit.getInstance().setProfileProvider((LCChatProfileProvider) CustomUserProvider.getInstance());
+            LCChatKit.getInstance().init(BasicApplication.getBasicApplication(), "vnB7DYkxpxsC1Gz6nMpBcdYO-gzGzoHsz", "Nmpeus4pLkxx19cXD0jyyUtq");
+
+
+
+            //如果明确某个进程不会使用到广告SDK，可以只针对特定进程初始化广告SDK的content
+            //if (PROCESS_NAME_XXXX.equals(processName)) {
+            //   TTAdSdk.init(context, config);
+            //}
+            //一览广告初始化
+            YLUIInit.getInstance()
+                    .setApplication(BasicApplication.getBasicApplication())
+                    .setAccessKey("ylj9beit69ar")
+                    .setAccessToken("6x1k831m4yasqb458v5ilocvo1cmd9u8")
+                    .build();
+        }
+    }
     /*穿山甲*/
     public void PangolinAd(Activity baseContext, RelativeLayout mSplashContainer,TTSplashAd.AdInteractionListener adInteractionListener,NativeAd nativelogic,PangolinListener pangolinListener){
         try {
@@ -40,10 +129,12 @@ public class StartAd {
             TTAdNative mTTAdNative = TTAdSdk.getAdManager().createAdNative(baseContext);//baseContext建议为activity
             //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
             AdSlot adSlot = new AdSlot.Builder()
-                    .setCodeId("823044247")//"823044265"
+                    .setCodeId("823044533")//"823044265"
                     .setSupportDeepLink(true)
                     .setImageAcceptedSize(1080, 1920)
                     .build();
+            Log.e("Application", "initSophix:0000 "+System.currentTimeMillis());
+
             mTTAdNative.loadSplashAd(adSlot, new TTAdNative.SplashAdListener() {
                 @Override
                 @MainThread
@@ -92,6 +183,25 @@ public class StartAd {
         } catch (Exception e) {
             Log.d(TAG, "onAdTimeOver"+e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public void loadViewLayout() {
+        if(BasicApplication.getBasicApplication() != null){
+            //穿山甲广告强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+            TTAdSdk.init(BasicApplication.getBasicApplication(),
+                    new TTAdConfig.Builder()
+                            .appId("5023044")
+                            .useTextureView(true) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
+                            .appName("星云天气")
+                            .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
+                            .allowShowNotify(true) //是否允许sdk展示通知栏提示
+                            .allowShowPageWhenScreenLock(true) //是否在锁屏场景支持展示广告落地页
+//                            .debug(true) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
+                            .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI, TTAdConstant.NETWORK_STATE_3G) //允许直接下载的网络状态集合
+                            .supportMultiProcess(false) //是否支持多进程，true支持
+                            .build());
+
         }
     }
 }

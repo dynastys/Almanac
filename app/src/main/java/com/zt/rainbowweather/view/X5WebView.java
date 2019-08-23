@@ -12,6 +12,8 @@ import com.tencent.smtt.sdk.WebViewClient;
 
 public class X5WebView extends WebView {
 	TextView title;
+	private OnScrollChangedCallback mOnScrollChangedCallback;
+
 	private WebViewClient client = new WebViewClient() {
 		/**
 		 * 防止加载网页时调起系统浏览器
@@ -21,6 +23,39 @@ public class X5WebView extends WebView {
 			return true;
 		}
 	};
+	public OnScrollChangedCallback getOnScrollChangedCallback() {
+		return mOnScrollChangedCallback;
+	}
+
+	public void setOnScrollChangedCallback(
+			final OnScrollChangedCallback onScrollChangedCallback) {
+		mOnScrollChangedCallback = onScrollChangedCallback;
+	}
+
+	/**
+	 * Impliment in the activity/fragment/view that you want to listen to the webview
+	 */
+	public interface OnScrollChangedCallback {
+		void onScroll(int dx, int dy);
+	}
+	public int oldtsize = -1;
+	private int SlideDistance = -1;
+	@Override
+	protected void onScrollChanged(final int l, final int t, final int oldl,
+								   final int oldt) {
+		super.onScrollChanged(l, t, oldl, oldt);
+		if (mOnScrollChangedCallback != null && t > oldt) {
+			if(oldt > oldtsize){
+				if(oldtsize == -1 || t - oldtsize > 100){
+					SlideDistance = oldtsize;
+					oldtsize = oldt;
+					mOnScrollChangedCallback.onScroll(l - oldl, oldt);
+				}
+
+			}
+
+		}
+	}
 
 	@SuppressLint("SetJavaScriptEnabled")
 	public X5WebView(Context arg0, AttributeSet arg1) {

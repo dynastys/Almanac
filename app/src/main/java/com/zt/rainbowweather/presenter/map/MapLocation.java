@@ -26,8 +26,11 @@ import com.amap.api.location.AMapLocationListener;
 import com.xy.xylibrary.utils.SaveShare;
 import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.entity.City;
+import com.zt.rainbowweather.entity.weather.UserData;
+import com.zt.rainbowweather.presenter.request.NewsRequest;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.UpdateDialog;
+import com.zt.rainbowweather.utils.Util;
 
 import org.litepal.LitePal;
 
@@ -49,6 +52,7 @@ public class MapLocation implements AMapLocationListener {
     private Dismiss dismiss;
     private City locatedCity;
     private static List<City> citys = new ArrayList<>();
+    private LocationSucceed locationSucceed;
 
     public static MapLocation getMapLocation() {
         if (mapLocation == null) {
@@ -92,6 +96,14 @@ public class MapLocation implements AMapLocationListener {
         }
     }
 
+    public interface LocationSucceed{
+        void LocationSucceed(City locatedCity);
+    }
+
+    public void setLocationSucceed(LocationSucceed locationSucceed) {
+        this.locationSucceed = locationSucceed;
+    }
+
     public void startLocation() {
         if (mlocationClient != null) {
             mlocationClient.startLocation();
@@ -118,6 +130,16 @@ public class MapLocation implements AMapLocationListener {
                 } else {
                     locatedCity.affiliation = locatedCity.name = ConstUtils.LOCATE_FAILED;
                 }
+                UserData userData = new UserData();
+                userData.city = aMapLocation.getCity();
+                userData.latitude = aMapLocation.getLatitude();
+                userData.longitude = aMapLocation.getLongitude();
+                userData.province = aMapLocation.getProvince();
+                userData.county = aMapLocation.getDistrict();
+                userData.imei = Util.getIMEI(context);
+                userData.device_token = SaveShare.getValue(context,"deviceToken");
+                userData.user_id = SaveShare.getValue(context,"userId");
+                NewsRequest.getNewsRequest().getAppRegionData(context,userData);
                 locatedCity.isLocate = "1";
                 locatedCity.isChecked = "1";
                 assert aMapLocation != null;
@@ -151,10 +173,6 @@ public class MapLocation implements AMapLocationListener {
                 }
 
                 if (cities == null || cities.size() == 0) {
-//                    ContentValues values2 = new ContentValues();
-//                    values2.put("longitude", aMapLocation.getLongitude());
-//                    values2.put("latitude", aMapLocation.getLatitude());
-//                    values2.put("affiliation", aMapLocation.getDistrict() + " " + aMapLocation.getStreet());
                     City city = new City();
                     city.isChecked = "1";
                     city.longitude = aMapLocation.getLongitude();
@@ -180,6 +198,9 @@ public class MapLocation implements AMapLocationListener {
 ////                    LitePal.saveAll(cityList);
 //                }
                 Log.e("latitude", "onLocationChanged: ");
+                if(locationSucceed != null){
+                    locationSucceed.LocationSucceed(locatedCity);
+                }
                 BasicApplication.setLocatedCity(locatedCity);
             }else{
                 List<City> cities = LitePal.findAll(City.class);

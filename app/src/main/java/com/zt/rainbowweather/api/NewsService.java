@@ -8,7 +8,10 @@ import com.zt.rainbowweather.entity.news.NewColumn;
 import com.zt.rainbowweather.entity.news.Nnotice;
 import com.zt.rainbowweather.entity.news.Switch;
 
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -69,5 +72,11 @@ public interface NewsService {
      * */
     @GET("app/module-switch")
     Observable<AppSwitch> AppSwitchRxJava(@Query("app_market_code") String app_market_code,@Query("version_name") String version_name);//@Query参数定义
+
+    /**
+     * 同步用户当前地域信息
+     * */
+    @POST("sync-user-region")
+    Observable<AppSwitch> AppRegionRxJava(@Body RequestBody body);//@Query参数定义
 
 }

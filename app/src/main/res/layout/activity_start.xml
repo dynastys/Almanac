@@ -14,8 +14,8 @@
         android:layout_weight="1">
         <RelativeLayout
             android:id="@+id/container"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <ImageView
                 android:id="@+id/iv_image"
                 android:layout_width="match_parent"

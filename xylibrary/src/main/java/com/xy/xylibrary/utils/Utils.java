@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -56,7 +58,23 @@ import static android.content.Context.CLIPBOARD_SERVICE;
  * 基本的工具类
  */
 public class Utils {
+    @SuppressLint("StaticFieldLeak")
+    private static Application sApplication;
 
+    public static Application getContext() {
+        if (sApplication != null) return sApplication;
+        throw new NullPointerException("u should init first");
+    }
+
+    /**
+     * Init utils.
+     * <p>Init it in the class of Application.</p>
+     *
+     * @param app application
+     */
+    public static void init(@NonNull final Application app) {
+        Utils.sApplication = app;
+    }
     /**
      * 获取剪切板数据
      */
@@ -688,6 +706,22 @@ public class Utils {
      */
     public static void setStatusBarColor(Activity activity, int colorId) {
         StatusBarUtil.setStatusBarColor(activity, colorId);
+    }
+
+    /**
+     * 时间转换
+     * */
+    public static String times(String time){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = sdf.parse(time);
+            String createTime = sdf2.format(date);
+           return createTime;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }

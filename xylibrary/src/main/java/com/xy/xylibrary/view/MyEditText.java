@@ -1,4 +1,4 @@
-package com.zt.rainbowweather.view;
+package com.xy.xylibrary.view;
 
 
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 
-import com.zt.weather.R;
-import com.zt.rainbowweather.api.MyEdit;
+import com.constellation.xylibrary.R;
+import com.xy.xylibrary.Interface.MyEdit;
 
 
 public class MyEditText extends android.support.v7.widget.AppCompatEditText implements
@@ -50,7 +50,7 @@ public class MyEditText extends android.support.v7.widget.AppCompatEditText impl
         mClearDrawable = getCompoundDrawables()[2];
         if (mClearDrawable == null) {
 //        	throw new NullPointerException("You can add drawableRight attribute in XML");
-            mClearDrawable = getResources().getDrawable(R.mipmap.list_detail_icon);
+            mClearDrawable = getResources().getDrawable(R.drawable.list_detail_icon);
         }
         mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth()*2, mClearDrawable.getIntrinsicHeight()*2);
         //默认设置隐藏图标

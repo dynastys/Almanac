@@ -1,6 +1,8 @@
 package com.zt.rainbowweather.presenter.request;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
@@ -14,12 +16,17 @@ import com.zt.rainbowweather.entity.news.LatestVersion;
 import com.zt.rainbowweather.entity.news.NewColumn;
 import com.zt.rainbowweather.entity.news.Nnotice;
 import com.zt.rainbowweather.entity.news.Switch;
+import com.zt.rainbowweather.entity.weather.UserData;
 import com.zt.rainbowweather.ui.activity.StartActivity;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.LitePal;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -87,6 +94,46 @@ public class NewsRequest {
                     @Override
                     public void onNext(AppSwitch appSwitch) {
                         requestSyntony.onNext(appSwitch);
+                    }
+                })
+        );
+    }
+
+    /**
+     * 同步用户当前地域信息
+     * */
+    public void getAppRegionData(Context context, UserData userData){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("user_id", userData.user_id);
+            requestData.put("device_token", userData.device_token);
+            requestData.put("imei", userData.imei);
+            requestData.put("province", userData.province);
+            requestData.put("city", userData.city);
+            requestData.put("county", userData.county);
+            requestData.put("longitude", userData.longitude);
+            requestData.put("latitude", userData.latitude);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
+        Log.e("requestData", "getAppRegionData: "+requestData.toString() );
+        mSubscriptions.add(NewsConnextor.getConnextor(context).getAppService(NewsService.class,url).AppRegionRxJava(requestBody)
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<AppSwitch>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(AppSwitch appSwitch) {
+                        Log.e("requestData", "getAppRegionData: "+appSwitch.toString() );
                     }
                 })
         );

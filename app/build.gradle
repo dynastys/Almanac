@@ -100,7 +100,7 @@ dependencies {
     implementation 'cn.carbs.android:IndicatorView:1.0.2'
     implementation 'cn.carbswang.android:NumberPickerView:1.1.0'
     implementation 'com.timmy.tdialog:tdialog:2.1.1'
-    implementation 'org.greenrobot:eventbus:3.1.1'
+
     implementation 'com.umeng.umsdk:analytics:8.0.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-3'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-3'
@@ -129,7 +129,7 @@ dependencies {
 //    implementation files('libs/GDTSDK.union.4.40.910.jar')
     implementation files('libs/GDTSDK.union.4.63.933.jar')
     implementation files('libs/android-query-full.0.26.7.jar')
-    implementation(name: 'open_ad_sdk', ext: 'aar')
+
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
 //    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.8'
 //    implementation files('libs/accs_sdk_taobao-3.3.7.2-open.jar')

@@ -6,12 +6,15 @@
     <color name="nb_text_common_h2">#727272</color>
     <color name="main_bg4">#469DF9</color>
     <color name="divider">#727272</color>
+    <color name="show_bg">#4f000000</color>
     <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
     <color name="subscribe_item_normal_bg">#fff5f5f5</color>
+    <color name="lucency">#1fffffff</color>
     <!--通用分割线细-->
     <color name="nb_divider_narrow">#E3E3E3</color>
     <color name="white">#ffffffff</color>
     <color name="white_3">#5fffffff</color>
+    <color name="white_2">#2fffffff</color>
     <color name="main_bg2">#F93322</color>
     <color name="broken_line_s">#FEAF50</color>
     <color name="broken_line_x">#469DF9</color>
@@ -28,4 +31,14 @@
     <color name="image_loading_bg">#fff6f6f6</color>
     <color name="service_tv">#ff212121</color>
     <color name="tv24">#ffb2b9c3</color>
+    <color name="unfinished_color">#d5a872</color>
+    <color name="integral_color">#cccccc</color>
+    <color name="number_of_color">#736657</color>
+    <color name="text_assistant">#848484</color>//提示文字
+    <color name="white_A30">#F4F4F4</color>
+    <color name="dark_gray">#ff999999</color>
+    <color name="btn_bg">#479EF9</color>
+    <color name="segment">#FFE167</color>
+    <color name="undone_segment">#F7F7F7</color>
+    <color name="black_dft">#3c3c3c</color>
 </resources>

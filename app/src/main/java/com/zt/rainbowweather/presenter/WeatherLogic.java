@@ -86,7 +86,7 @@ public class WeatherLogic {
             refreshLayout.setPrimaryColorsId(R.color.blue_light2);
             refreshLayout.setEnableOverScrollDrag(false);
             refreshLayout.setEnableOverScrollBounce(false);
-            refreshLayout.autoRefresh();
+//            refreshLayout.autoRefresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class WeatherLogic {
                 //推啊
                 TMAw1.setAdListener(lionListener);
                 TMAw1.loadAd(273281);
-                Log.e("loadAd", "setAd: " + 273281);
+
             }
         } catch (Exception e) {
             e.printStackTrace();

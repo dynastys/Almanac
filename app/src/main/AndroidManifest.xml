@@ -99,9 +99,7 @@
         <service android:name="com.zt.rainbowweather.ui.service.FloatingService" />
         <service android:name="com.amap.api.location.APSService" />
 
-        <receiver
-            android:name="com.zt.rainbowweather.presenter.WeatherWidget"
-            >
+        <receiver android:name="com.zt.rainbowweather.presenter.WeatherWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.seewo.homewidgets.action.CLICK" />
@@ -259,7 +257,9 @@
         <activity
             android:name="com.zt.rainbowweather.ui.activity.LCIMConversationActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.zt.rainbowweather.ui.activity.AboutActivity" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.AboutActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.zt.rainbowweather.ui.activity.WeatherDetailsActivity"
             android:screenOrientation="portrait" />
@@ -301,15 +301,38 @@
             android:authorities="com.zt.weather.TTMultiProvider"
             android:exported="false" />
 
-        <activity android:name="com.zt.rainbowweather.ui.activity.ShareActivity" />
-        <activity android:name="com.zt.rainbowweather.ui.activity.IndexDetailsActivity" />
-        <activity android:name="com.zt.rainbowweather.ui.activity.MipushTestActivity"
-            android:launchMode="singleTask"
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.ShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.IndexDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.MipushTestActivity"
             android:exported="true"
-            ></activity>
+            android:launchMode="singleTask" />
+
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="appid=100867491" />
+            android:value="100867491" />
+        <!--<meta-data-->
+            <!--android:name="com.huawei.hms.client.appid"-->
+            <!--android:value="appid=100867491" />-->
+        <!-- 热更新去掉 -->
+        <activity
+            android:name="com.xy.xylibrary.ui.activity.task.SignInActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.xy.xylibrary.ui.activity.login.LoginTypeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.xy.xylibrary.ui.activity.login.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.zt.rainbowweather.ui.activity.IntegralWithdrawActivity"></activity>
     </application>
 
 </manifest>

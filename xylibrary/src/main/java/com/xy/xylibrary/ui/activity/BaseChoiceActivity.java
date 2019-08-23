@@ -11,9 +11,17 @@ import android.view.View;
 import com.constellation.xylibrary.R;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.ui.adapter.GradientTabStripAdapter;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.ToastUtils;
 import com.xy.xylibrary.view.ViewPagerSlide;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.LitePal;
+
 import am.widget.basetabstrip.BaseTabStrip;
 import am.widget.gradienttabstrip.GradientTabStrip;
 
@@ -21,14 +29,14 @@ import am.widget.gradienttabstrip.GradientTabStrip;
  * zw
  * 主页面
  */
-public abstract class BaseChoiceActivity extends BaseActivity implements ViewPager.OnPageChangeListener, BaseTabStrip.OnItemClickListener{
+public abstract class BaseChoiceActivity extends BaseActivity implements ViewPager.OnPageChangeListener, BaseTabStrip.OnItemClickListener {
 
 
     private ViewPagerSlide tabVp;
     private GradientTabStrip gtsGtsTabs;
     private GradientTabStripAdapter adapter;
     private String Clipboard;
-
+    private TaskType taskType;
 
     @Override
     protected Activity getContext() {
@@ -40,6 +48,23 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
         return R.layout.activity_base_choice;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setCityEvent(TaskType taskType) {
+        this.taskType = taskType;
+        if (taskType.tasktype == 1 || taskType.tasktype == 3 || taskType.tasktype == 2) {
+            if (tabVp != null) {
+                tabVp.setCurrentItem(0);
+            }
+        } else if (taskType.tasktype == 4) {
+            if (tabVp != null) {
+                tabVp.setCurrentItem(3);
+                SaveShare.saveValue(BaseChoiceActivity.this,"SP","4");
+             }
+        }
+
+
+//        EventBus.getDefault().post(new Event(cityEvent.city, cityEvent.isDelete));
+    }
 
     /**
      * find控件
@@ -51,17 +76,16 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus)
-    {
+    public void onWindowFocusChanged(boolean hasFocus) {
         // TODO Auto-generated method stub
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && gtsGtsTabs != null)
-        {
-            SaveShare.saveValue(this,"Height",""+ gtsGtsTabs.getHeight());
+        if (hasFocus && gtsGtsTabs != null) {
+            SaveShare.saveValue(this, "Height", "" + gtsGtsTabs.getHeight());
 
         }
     }
-    public abstract GradientTabStripAdapter setGradientTabStripAdapter(FragmentManager fragmentManager,ViewPagerSlide tabVp);
+
+    public abstract GradientTabStripAdapter setGradientTabStripAdapter(FragmentManager fragmentManager, ViewPagerSlide tabVp);
 
     /**
      * 处理数据
@@ -69,28 +93,28 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         try {
-            if(adapter == null){
-                adapter = setGradientTabStripAdapter(getSupportFragmentManager(),tabVp);
+            if (adapter == null) {
+                adapter = setGradientTabStripAdapter(getSupportFragmentManager(), tabVp);
                 tabVp.setAdapter(adapter);
                 tabVp.setSlide(false);
                 gtsGtsTabs.setAdapter(adapter);
                 tabVp.addOnPageChangeListener(this);
-                if(RomUtils.take_a_look){
+                if (RomUtils.take_a_look) {
                     tabVp.setOffscreenPageLimit(4);
-                }else{
+                } else {
                     tabVp.setOffscreenPageLimit(3);
                 }
                 gtsGtsTabs.bindViewPager(tabVp);
                 gtsGtsTabs.setOnItemClickListener(this);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 //        UpdateDialog();
     }
 
-    public GradientTabStripAdapter getAdapter(){
-       return adapter;
+    public GradientTabStripAdapter getAdapter() {
+        return adapter;
     }
 
     /**
@@ -102,11 +126,11 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
     @Override
     public void onItemClick(int position) {
-     }
+    }
 
     @Override
     public void onSelectedClick(int position) {
-     }
+    }
 
     @Override
     public void onDoubleClick(int position) {
@@ -114,14 +138,25 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-     }
+
+    }
 
     @Override
     public void onPageSelected(int position) {
-     }
+    }
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            EventBus.getDefault().register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private long exitTime = 0;
@@ -137,4 +172,4 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     }
 
 
- }
+}

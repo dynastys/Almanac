@@ -26,6 +26,7 @@ public class SophixStubApplication extends SophixApplication {
         initSophix();
     }
     private void initSophix() {
+        Log.e("Application", "initSophix: "+System.currentTimeMillis());
         String appVersion = "0.0.0";
         try {
             appVersion = this.getPackageManager()

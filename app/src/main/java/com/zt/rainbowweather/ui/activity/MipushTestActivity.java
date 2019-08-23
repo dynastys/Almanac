@@ -3,9 +3,12 @@ package com.zt.rainbowweather.ui.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.umeng.message.UmengNotifyClickActivity;
 import com.umeng.message.entity.UMessage;
+import com.zt.rainbowweather.BasicApplication;
 import com.zt.weather.R;
 
 import org.android.agoo.common.AgooConstants;
@@ -19,6 +22,7 @@ public class MipushTestActivity extends UmengNotifyClickActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_mipush_test);
+
     }
     @Override
     public void onMessage(Intent intent) {

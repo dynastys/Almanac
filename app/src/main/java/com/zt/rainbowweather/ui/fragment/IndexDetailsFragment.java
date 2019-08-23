@@ -137,7 +137,7 @@ public class IndexDetailsFragment extends BaseFragment  implements RequestSynton
                     if(position == 1 && nativelogic != null){
                         nativelogic.OnClick(null);
                     }else{
-                        AdviseMoreDetailActivity.startActivity(getActivity(), article.getData().get(position).getTitle(), article.getData().get(position).getHtml_url());
+                        AdviseMoreDetailActivity.startActivity(getActivity(), article.getData().get(position).getTitle(), article.getData().get(position).getHtml_url(),"1");
                     }
                 });
             }

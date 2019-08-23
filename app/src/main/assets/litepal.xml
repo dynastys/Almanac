@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="weather" />
-    <version value="5" />
+    <version value="11" />
 
     <list>
         <mapping class="com.zt.rainbowweather.entity.City" />
@@ -16,7 +16,8 @@
         <mapping class="com.zt.rainbowweather.entity.background.DataBean" />
         <mapping class="com.zt.rainbowweather.entity.news.NewColumn" />
         <mapping class="com.zt.rainbowweather.entity.news.NewColumn$DataBean" />
-
         <mapping class="com.zt.rainbowweather.entity.calendar.Festival$DataBean" />
+        <mapping class="com.xy.xylibrary.ui.activity.login.UserMessage"/>
+        <mapping class="com.xy.xylibrary.ui.fragment.task.TaskType"/>
     </list>
 </litepal>

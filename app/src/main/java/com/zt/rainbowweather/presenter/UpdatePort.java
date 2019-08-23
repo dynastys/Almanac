@@ -64,8 +64,8 @@ public class UpdatePort implements RequestSyntony<LatestVersion> {
                         if (TextUtils.isEmpty(file)) {
                             utils.Download(mContext,   latestVersion.getDate().getSource_file_url());
                          } else {
-                            if ("com.chenguang.weather".equals(downLoadUtils.getDownLoadPackageName(mContext, file))) {
-                                if (downLoadUtils.getVersion(mContext).equals(downLoadUtils.getVersionName(mContext, "com.chenguang.weather"))) {
+                            if ("com.zt.weather".equals(downLoadUtils.getDownLoadPackageName(mContext, file))) {
+                                if (downLoadUtils.getVersion(mContext).equals(downLoadUtils.getVersionName(mContext, "com.zt.weather"))) {
     //                                downLoadUtils.checkIsAndroidO(mContext,file);
                                     utils.doApk(mContext,file);
                                 } else {

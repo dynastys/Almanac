@@ -51,7 +51,6 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
 
@@ -68,12 +67,16 @@ public class AboutActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     @Override
     protected void loadViewLayout() {
-        ViewGroup.LayoutParams layoutParams = statusBarAbout.getLayoutParams();
-        layoutParams.height = Utils.getStatusBarHeight(AboutActivity.this);
-        statusBarAbout.setLayoutParams(layoutParams);
-        ToolbarHelper.initToolbar(this, R.id.toolbar, true, "关于星云");
-        TextView textView = findViewById(R.id.tv_version_name);
-        textView.setText(getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME);
+        try {
+            ViewGroup.LayoutParams layoutParams = statusBarAbout.getLayoutParams();
+            layoutParams.height = Utils.getStatusBarHeight(AboutActivity.this);
+            statusBarAbout.setLayoutParams(layoutParams);
+            ToolbarHelper.initToolbar(this, R.id.toolbar, true, "关于星云");
+            TextView textView = findViewById(R.id.tv_version_name);
+            textView.setText(getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,6 +102,10 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void denied(List<String> deniedList) {
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

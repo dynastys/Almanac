@@ -3,8 +3,12 @@
     package="com.constellation.xylibrary">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application>
-        <activity android:name="com.xy.xylibrary.ui.activity.BaseChoiceActivity"></activity>
+        <activity
+            android:name="com.xy.xylibrary.ui.activity.task.LookOverDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.xy.xylibrary.ui.fragment.task.WithdrawDepositActivity"></activity>
     </application>
 
 </manifest>

@@ -65,4 +65,9 @@
     <string name="dxiangli_NongLiMonthDay">十七</string>
     <string name="dxiangli_text">宜远观</string>
     <string name="type_note">注解：</string>
+    <string name="weather_forecast">天气预报</string>
+    <string name="rain_alarm_pro">天气预警</string>
+    <string name="setting">设置</string>
+    <string name="next_two_hours">未来两小时无雨</string>
+
 </resources>

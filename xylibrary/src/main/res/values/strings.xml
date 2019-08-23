@@ -1,5 +1,22 @@
 <resources>
     <string name="app_name">星云天气</string>
     <string name="share">分享</string>
+    <string name="auther">未登录</string>
+    <string name="task_center">任务中心</string>
+    <string name="cash_amount">金币账户</string>
+    <string name="sign_in_rules">签到规则\n1.每天连续签到完成，即可好的当日金币。\n2.连续签到15天一个周期，连续签到天数越多获得金币越多。\n3.断签回到第一天重新记录。</string>
+    <string name="check_the_details">查看明细</string>
+    <string name="_22_57">约22.57元</string>
+    <string name="_22563">22563</string>
+    <string name="task_list">任务列表</string>
+    <string name="my_wallet">我的钱包</string>
+    <string name="withdraw_deposit">提现</string>
+    <string name="my_gold">当前金币</string>
+    <string name="detail">明细</string>
+    <string name="quit_login">退出登录</string>
 
+    <string name="versions">版本</string>
+    <string name="phone_login">手机登录</string>
+
+    <string name="withdrawal_instructions">1.提现到账时间：\n通常情况下提交后三个工作日到账，请用户耐心等待哦\n2.提现额度限制：\n提现金额需要满足一定条件才能提现哦\n3.具体提现到账时间按提现申请后的提示时间为准哦~</string>
 </resources>

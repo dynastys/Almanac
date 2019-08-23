@@ -40,7 +40,7 @@ import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
-import com.zt.rainbowweather.entity.news.ViewPageEvent;
+import com.xy.xylibrary.view.MyEditText;
 import com.zt.rainbowweather.presenter.PangolinBannerAd;
 import com.zt.weather.R;
 import com.haibin.calendarview.Calendar;
@@ -63,25 +63,20 @@ import com.zt.rainbowweather.ui.activity.AdviseMoreDetailActivity;
 import com.zt.rainbowweather.ui.activity.YiJiActivity;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.SizeUtils;
-import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.utils.utils;
 import com.zt.rainbowweather.view.FlowLayout;
-import com.zt.rainbowweather.view.MyEditText;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
 import com.zt.xuanyin.controller.NativeAd;
 import com.zt.xuanyin.entity.model.Native;
 
-import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, RequestSyntony<Article>, AdProtogenesisListener,NativeExpressAD.NativeExpressADListener {
 
@@ -228,12 +223,11 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
             if (article.getData() != null && article.getData().size() > 0) {
                 AdSize = article.getData().size();
                 if (beans.size() == 0) {
-                    pageindex = 1;
                     listbaseAdapter.setNewData(article.getData());
                 } else {
-                    pageindex++;
                     listbaseAdapter.addData(article.getData());
                 }
+                pageindex++;
                 beans.addAll(article.getData());
 
                 new Handler().postDelayed(new Runnable() {
@@ -600,7 +594,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                             if(list1.size() == 7){
                                 break;
                             }
-                            for (int j = 0; j < 7; j++) {
+                            for (int j = 0; j < 7 - list1.size(); j++) {
                                 list1.add(huangLi.getData().getYi().get(i).getValues().get(j));
                             }
                         } else {
@@ -618,6 +612,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                     for (int i = 0; i < (8 - size1); i++) {
                         list1.add(" ");
                     }
+
                     recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
                     BaseAdapter  baseAdapter2 = new BaseAdapter<>(R.layout.yi_ji_item, list1, (viewHolder, item) -> {
                         viewHolder.setText(R.id.yi_ji_tv, item);
@@ -625,9 +620,9 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                     baseAdapter2.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            if(huangLis != null){
+                            if(huangLi != null){
                                 Intent intent = new Intent(context, YiJiActivity.class);
-                                intent.putExtra("huangLis", huangLis);
+                                intent.putExtra("huangLis", huangLi);
                                 intent.putExtra("yi_ji","宜");
                                 context.overridePendingTransition(com.constellation.xylibrary.R.anim.in_from_right, com.constellation.xylibrary.R.anim.out_to_left);
                                 context.startActivity(intent);
@@ -643,7 +638,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                             if(list.size() == 7){
                                 break;
                             }
-                            for (int j = 0; j < 7; j++) {
+                            for (int j = 0; j < 7 - list.size(); j++) {
                                 list.add(huangLi.getData().getJi().get(i).getValues().get(j));
                             }
                         } else {
@@ -667,9 +662,9 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                     baseAdapter1.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                            if(huangLis != null){
+                            if(huangLi != null){
                                 Intent intent = new Intent(context, YiJiActivity.class);
-                                intent.putExtra("huangLis", huangLis);
+                                intent.putExtra("huangLis", huangLi);
                                 intent.putExtra("yi_ji","忌");
                                 context.overridePendingTransition(com.constellation.xylibrary.R.anim.in_from_right, com.constellation.xylibrary.R.anim.out_to_left);
                                 context.startActivity(intent);
@@ -740,18 +735,26 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                                 if (item.ttFeedAd.getImageList() != null && !item.ttFeedAd.getImageList().isEmpty()) {
                                     TTImage image = item.ttFeedAd.getImageList().get(0);
                                     if (image != null && image.isValid()) {
+                                        viewHolder.getView(R.id.iv_title).setVisibility(View.VISIBLE);
                                         GlideUtil.getGlideUtil().setImages(context, item.ttFeedAd.getIcon().getImageUrl(), viewHolder.getView(R.id.iv_title), 0);
                                     }
+                                }else{
+                                    viewHolder.getView(R.id.iv_title).setVisibility(View.GONE);
                                 }
                             }else{
-                                GlideUtil.getGlideUtil().setImages(context, item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_title), 0);
+                                if(item.getArticle_imgs() != null && item.getArticle_imgs().size() > 0){
+                                    viewHolder.getView(R.id.iv_title).setVisibility(View.VISIBLE);
+                                    GlideUtil.getGlideUtil().setImages(context, item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_title), 0);
+                                }
                             }
                             viewHolder.setText(R.id.tv_title, item.getTitle())
                                     .setText(R.id.tv_from, item.getFrom_name());
                             break;
                         case 2:
                             viewHolder.getView(R.id.iv_title_r_rel).setVisibility(View.VISIBLE);
-                            GlideUtil.getGlideUtil().setImages(context,item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_title_r), 0);
+                            if(item.getArticle_imgs() != null && item.getArticle_imgs().size() > 0){
+                                GlideUtil.getGlideUtil().setImages(context,item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_title_r), 0);
+                            }
                             viewHolder.setText(R.id.tv_title_r, item.getTitle())
                                     .setText(R.id.tv_from_r, item.getFrom_name());
                             break;
@@ -776,9 +779,11 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                                         }
                                     }
                                 }else{
-                                    GlideUtil.getGlideUtil().setImages(context,item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_image_x1), 0);
-                                    GlideUtil.getGlideUtil().setImages(context, item.getArticle_imgs().get(1), viewHolder.getView(R.id.iv_image_x2), 0);
-                                    GlideUtil.getGlideUtil().setImages(context, item.getArticle_imgs().get(2), viewHolder.getView(R.id.iv_image_x3), 0);
+                                    if(item.getArticle_imgs() != null && item.getArticle_imgs().size() > 0){
+                                        GlideUtil.getGlideUtil().setImages(context,item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_image_x1), 0);
+                                        GlideUtil.getGlideUtil().setImages(context, item.getArticle_imgs().get(1), viewHolder.getView(R.id.iv_image_x2), 0);
+                                        GlideUtil.getGlideUtil().setImages(context, item.getArticle_imgs().get(2), viewHolder.getView(R.id.iv_image_x3), 0);
+                                    }
 
                                 }
                                 viewHolder.setText(R.id.tv_title_x, item.getTitle())
@@ -870,7 +875,9 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                                             }
                                             ((NativeExpressADView)item.nativeExpressADView).render();
                                         }else{
-                                            GlideUtil.getGlideUtil().setImages(context,item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_image_d), 0);
+                                            if(item.getArticle_imgs() != null && item.getArticle_imgs().size() > 0){
+                                                GlideUtil.getGlideUtil().setImages(context,item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_image_d), 0);
+                                            }
                                             viewHolder.setText(R.id.tv_title_d, item.getTitle())
                                                     .setText(R.id.tv_from_d, item.getFrom_name());
                                             Log.e("toutiao", "initData: "+item.getFrom_name() );
@@ -900,7 +907,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                     if (beans.get(position) != null && beans.get(position).getFrom_name().equals("广告")) {
                         beans.get(position).nativelogic.OnClick(null);
                     } else {
-                        AdviseMoreDetailActivity.startActivity(context, beans.get(position).getTitle(), beans.get(position).getHtml_url());
+                        AdviseMoreDetailActivity.startActivity(context, beans.get(position).getTitle(), beans.get(position).getHtml_url(),"1");
                     }
                 });
                 // 滑动最后一个Item的时候回调onLoadMoreRequested方法
@@ -951,7 +958,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
      */
     private void initEvents(final TextView tv, final MyEditText novelInputBox) {
         tv.setOnClickListener(v -> {
-            AdviseMoreDetailActivity.startActivity(context, "周公解梦", "http://121.199.42.243:8001/zgjm/search?keyword=" + tv.getText().toString());
+            AdviseMoreDetailActivity.startActivity(context, "周公解梦", "http://121.199.42.243:8001/zgjm/search?keyword=" + tv.getText().toString(),"0");
 //            novelInputBox.setText(tv.getText().toString());
 //                InitData(types,tv.getText().toString(), sort, ISload, type, column_id);
         });
@@ -961,9 +968,9 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
     //保存搜索记录，并进行搜索
     private void RequestData(MyEditText novelInputBox) {
         if (!TextUtils.isEmpty(novelInputBox.getText().toString())) {
-            AdviseMoreDetailActivity.startActivity(context, "周公解梦", "http://121.199.42.243:8001/zgjm/search?keyword=" + novelInputBox.getText().toString());
+            AdviseMoreDetailActivity.startActivity(context, "周公解梦", "http://121.199.42.243:8001/zgjm/search?keyword=" + novelInputBox.getText().toString(),"0");
         } else {
-            AdviseMoreDetailActivity.startActivity(context, "周公解梦", "http://121.199.42.243:8001/zgjm/search?keyword=美女");
+            AdviseMoreDetailActivity.startActivity(context, "周公解梦", "http://121.199.42.243:8001/zgjm/search?keyword=美女","0");
 //            ToastUtils.showLong("输入内容为空哦！");
         }
     }
@@ -1008,7 +1015,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                 baseAdapter.setOnItemClickListener((adapter, view, position) -> {
                     switch (linksBeans.get(position).getIcon_type_id()) {
                         case 0://跳转
-                            AdviseMoreDetailActivity.startActivity(context, linksBeans.get(position).getTitle(), linksBeans.get(position).getLink());
+                            AdviseMoreDetailActivity.startActivity(context, linksBeans.get(position).getTitle(), linksBeans.get(position).getLink(),"0");
                             break;
                         case 1://下载
                             utils.Download(context, linksBeans.get(position).getLink());

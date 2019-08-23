@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/toast_bg"
+    android:gravity="center_vertical"
+    android:padding="20dp"
+    >
+
+   <ImageView
+       android:layout_width="80dp"
+       android:layout_height="80dp"
+       android:src="@drawable/pq"
+       android:padding="@dimen/dp_10"
+       />
+
+    <TextView
+        android:id="@+id/add_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+100"
+        android:textColor="@color/broken_line_s"
+        android:textSize="28sp"
+        />
+</LinearLayout>

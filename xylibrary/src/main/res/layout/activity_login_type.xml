@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/status_bar_type"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/subscribe_item_normal_bg"
+        />
+    <com.xy.xylibrary.view.MagicButton
+        android:layout_below="@+id/status_bar_type"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:id="@+id/magic_btn"
+        android:layout_marginTop="@dimen/dp_10"
+        />
+
+      <include layout="@layout/layout_about_header"
+          android:layout_below="@+id/magic_btn"
+          android:layout_height="wrap_content"
+          android:layout_width="match_parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:layout_centerHorizontal="true"
+        >
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:src="@drawable/wechat_login"
+            android:id="@+id/wechat_login"
+            />
+        <TextView
+            android:id="@+id/phone_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/dp_10"
+            android:drawableRight="@drawable/skip_icon"
+            android:padding="10dp"
+            android:text="@string/phone_login"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/text_assistant"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sp_15" />
+    </LinearLayout>
+
+</RelativeLayout>

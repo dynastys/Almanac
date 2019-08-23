@@ -3,6 +3,7 @@ package com.zt.rainbowweather.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,7 +49,10 @@ public class SPUtils {
     }
 
     private SPUtils(String spName) {
-        sp = utils.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        if(!TextUtils.isEmpty(spName)){
+            sp = utils.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        }
+
     }
 
     /**

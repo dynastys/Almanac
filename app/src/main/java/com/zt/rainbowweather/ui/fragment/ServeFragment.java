@@ -30,7 +30,11 @@ import com.qq.e.ads.banner2.UnifiedBannerADListener;
 import com.qq.e.ads.banner2.UnifiedBannerView;
 import com.qq.e.comm.util.AdError;
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.base.BaseFragment;
+import com.xy.xylibrary.ui.activity.login.LoginTypeActivity;
+import com.xy.xylibrary.ui.activity.login.UserMessage;
+import com.xy.xylibrary.utils.GlideUtil;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import com.xy.xylibrary.view.CustomScrollViewPager;
@@ -46,6 +50,7 @@ import com.zt.rainbowweather.presenter.request.AlmanacRequest;
 import com.zt.rainbowweather.ui.activity.AboutActivity;
 import com.zt.rainbowweather.ui.activity.AdviseMoreDetailActivity;
 import com.zt.rainbowweather.ui.activity.AtlasActivity;
+import com.zt.rainbowweather.ui.activity.IntegralWithdrawActivity;
 import com.zt.rainbowweather.ui.activity.LCIMConversationActivity;
 import com.zt.rainbowweather.ui.service.CancelNoticeService;
 import com.zt.rainbowweather.utils.ConstUtils;
@@ -58,6 +63,7 @@ import com.zt.xuanyin.controller.NativeAd;
 import com.zt.xuanyin.entity.model.Native;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.LitePal;
 
 import java.util.Objects;
 
@@ -139,8 +145,13 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     TextView tvAdFlag;
     @BindView(R.id.ad_lin)
     LinearLayout adLin;
+    @BindView(R.id.binding_weChat)
+    TextView bindingWeChat;
 
+    private UserMessage phoneDta;
+    private String phone;
     private ServerManager serverManager;
+    private AppCompatActivity compatActivity;
 
     @Override
     protected int getLayoutRes() {
@@ -151,6 +162,8 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     @Override
     protected void initData(View view) {
         try {
+            compatActivity = (AppCompatActivity) getActivity();
+            phone = SaveShare.getValue(getActivity(), "Phone");
             ViewGroup.LayoutParams layoutParams = serviceBar.getLayoutParams();
             layoutParams.height = Utils.getStatusBarHeight(getActivity());
             serviceBar.setLayoutParams(layoutParams);
@@ -182,6 +195,7 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         try {
+            IsWeChat();
             if (isVisibleToUser) {
                 MobclickAgent.onEvent(getActivity(), "my");
             }
@@ -239,9 +253,42 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
         unbinder.unbind();
     }
 
+    private void IsWeChat() {
+        try {
+            phone = SaveShare.getValue(getActivity(), "Phone");
+            phoneDta = LitePal.findLast(UserMessage.class);
+            if (!TextUtils.isEmpty(phone) && phoneDta != null && tvName != null && !TextUtils.isEmpty(phoneDta.openid)) {
+                bindingWeChat.setVisibility(View.GONE);
+                tvName.setText("已登录");
+                tvFans.setVisibility(View.VISIBLE);
+                tvFans.setText(phoneDta.nickname);
+                if (!TextUtils.isEmpty(phoneDta.headimgurl)) {
+                    GlideUtil.getGlideUtil().setImages(getActivity(),phoneDta.headimgurl, imgAvatar);
+                }
+            } else {
+                if (tvName != null) {
+                    if (TextUtils.isEmpty(phone)) {
+                        bindingWeChat.setVisibility(View.GONE);
+                        tvName.setText("未登录");
+                        tvFans.setVisibility(View.GONE);
+//                        imgAvatar.setImageResource(R.mipmap.head_portrait);
+                    } else {
+                        bindingWeChat.setVisibility(View.VISIBLE);
+                        tvName.setText("已登录");
+                        tvFans.setText(phoneDta.name);
+                        tvFans.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        IsWeChat();
         MobclickAgent.onPageStart("ServiceFragment"); //统计页面("MainScreen"为页面名称，可自定义)
     }
 
@@ -375,13 +422,13 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
         });
         //设置广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
         banner.setRefresh(30);
-
         relatAd.addView(banner);
         /* 发起广告请求，收到广告数据后会展示数据     */
         banner.loadAD();
 
         return banner;
     }
+
     @Override
     public void onCompleted() {
 
@@ -421,7 +468,7 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     public void onAdExposure() {
     }
 
-    @OnClick({R.id.sw_night_mode, R.id.open_notification_bar, R.id.skin_is_set, R.id.clear_cache, R.id.message_feedback, R.id.about_us, R.id.widget})
+    @OnClick({R.id.sw_night_mode, R.id.open_notification_bar, R.id.skin_is_set, R.id.clear_cache, R.id.message_feedback, R.id.about_us, R.id.widget, R.id.img_avatar,R.id.binding_weChat,R.id.setting})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sw_night_mode:
@@ -459,7 +506,6 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
                 break;
             case R.id.clear_cache:
                 ServerManager.getServerManager().showIOSActionSheetDialog(getActivity(), cacheTv);
-
                 break;
             case R.id.message_feedback:
                 try {
@@ -485,12 +531,28 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
                 }
                 break;
             case R.id.about_us:
-                Intent intent2 = new Intent(getActivity(), AboutActivity.class);
-                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-                startActivity(intent2);
+                Intent intentAbout = new Intent(compatActivity, AboutActivity.class);
+                Objects.requireNonNull(compatActivity).overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+                compatActivity.startActivity(intentAbout);
                 break;
             case R.id.widget:
-                AdviseMoreDetailActivity.startActivity(getActivity(), "小部件开启设置", "http://api.xytq.qukanzixun.com/XinGYunTianQi.html");
+                AdviseMoreDetailActivity.startActivity(getActivity(), "小部件开启设置", "http://api.xytq.qukanzixun.com/XinGYunTianQi.html", "0");
+                break;
+            case R.id.img_avatar:
+                if (TextUtils.isEmpty(phone)) {
+                    Intent intent1 = new Intent(getActivity(), LoginTypeActivity.class);
+                    startActivity(intent1);
+                } else {
+                    ToastUtils.showLong("亲，已经登录了哦");
+                }
+                break;
+            case R.id.binding_weChat:
+                AppContext.ISLOGIN = false;
+                AppContext.wxLogin();
+                break;
+            case R.id.setting:
+                Intent intent2 = new Intent(getActivity(), IntegralWithdrawActivity.class);
+                startActivity(intent2);
                 break;
         }
     }

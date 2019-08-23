@@ -20,29 +20,40 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bytedance.sdk.openadsdk.TTAdConfig;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
+import com.check.ox.sdk.LionSDK;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
+import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.DisplayUtil;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
+import com.yilan.sdk.ui.YLUIInit;
+import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.api.RequestSyntony;
 import com.zt.rainbowweather.entity.background.AppSpread;
 import com.zt.rainbowweather.entity.news.Switch;
+import com.zt.rainbowweather.feedback.CustomUserProvider;
 import com.zt.rainbowweather.presenter.PangolinBannerAd;
 import com.zt.rainbowweather.presenter.StartAd;
 import com.zt.rainbowweather.presenter.almanac.AlmanacLogic;
 import com.zt.rainbowweather.presenter.map.MapLocation;
 import com.zt.rainbowweather.presenter.request.BackgroundRequest;
 import com.zt.rainbowweather.presenter.request.NewsRequest;
+import com.zt.rainbowweather.presenter.request.WeatherRequest;
 import com.zt.rainbowweather.utils.RxCountDown;
 import com.zt.rainbowweather.utils.SizeUtils;
 import com.zt.rainbowweather.utils.ToastUtils;
+import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.view.ShapeTextView;
 import com.zt.weather.R;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
@@ -65,13 +76,13 @@ import rx.Subscription;
  * 开屏
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class StartActivity extends BaseActivity implements RequestSyntony<Switch>, MapLocation.Dismiss, SplashADListener,TTSplashAd.AdInteractionListener {
+public class StartActivity extends BaseActivity implements RequestSyntony<Switch>, MapLocation.Dismiss, SplashADListener, TTSplashAd.AdInteractionListener {
 
     private ImageView ivImage;
     private TextView tvVersionName;
     private TextView splash_skip_tv;
     private ShapeTextView tvSkip;
-    private RelativeLayout container,ad_relative;
+    private RelativeLayout container, ad_relative;
     private Subscription subscription;
     private float ClickX;
     private float ClickY;
@@ -85,8 +96,6 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
     @Override
     public void onPause() {
         super.onPause();
-//        SaveShare.saveValue(StartActivity.this, "skip", "skip");
-//        SaveShare.saveValue(StartActivity.this, "finish", "finish");
         MobclickAgent.onPageEnd("StartActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
         MobclickAgent.onPause(this);
     }
@@ -102,7 +111,6 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
             params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
             _window.setAttributes(params);
             PushAgent.getInstance(this).onAppStart();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,71 +129,72 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     private void loadAd() {
         try {
-//            // 获得开屏对象
-//            Ad.getAd().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "9432a40d-9fa7-4d1a-b760-58a32edc9465", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
-//                @SuppressLint("ClickableViewAccessibility")
-//                @Override
-//                public void onADReady(final Native url, NativeAd nativelogic) {
-//                    src = url.src;
-//                    nativelogicDd = nativelogic;
-//                    if (!TextUtils.isEmpty(nativelogic.nativeObject.sdk_code)) {
-//                        if(nativelogic.nativeObject.sdk_code.equals("GDT_SDK")) {
-//                            fetchSplashAD(StartActivity.this, container, tvSkip, nativelogic.nativeObject.appid, nativelogic.nativeObject.posid, StartActivity.this, 0);
-//                        }else if(nativelogic.nativeObject.sdk_code.equals("TOUTIAO_SDK")) {
+            // 获得开屏对象
+            Ad.getAd().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "9432a40d-9fa7-4d1a-b760-58a32edc9465", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
+                @SuppressLint("ClickableViewAccessibility")
+                @Override
+                public void onADReady(final Native url, NativeAd nativelogic) {
+                    src = url.src;
+                    nativelogicDd = nativelogic;
+                    if (!TextUtils.isEmpty(nativelogic.nativeObject.sdk_code)) {
+                        if (nativelogic.nativeObject.sdk_code.equals("GDT_SDK")) {
+                            fetchSplashAD(StartActivity.this, container, tvSkip, nativelogic.nativeObject.appid, nativelogic.nativeObject.posid, StartActivity.this, 0);
+                        } else if (nativelogic.nativeObject.sdk_code.equals("TOUTIAO_SDK")) {
                             //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
                             TTAdSdk.getAdManager().requestPermissionIfNecessary(StartActivity.this);
-
+                            WeatherRequest.getWeatherRequest().getLookAtData(StartActivity.this, "广告", "请求");
                             StartAd.getStartAd().PangolinAd(StartActivity.this, container, StartActivity.this, null, new StartAd.PangolinListener() {
                                 @Override
                                 public void onError(int code, String message) {
                                     ImageBg();
                                 }
 
+                                @SuppressLint("ResourceAsColor")
                                 @Override
                                 public void onSplashAdLoad() {
                                     ad_relative.setVisibility(View.GONE);
                                     tvSkip.setTextColor(R.color.white);
                                     splash_skip_tv.setVisibility(View.VISIBLE);
-
+                                    Log.e("Application", "initSophix:222 " + System.currentTimeMillis());
                                 }
                             });
-//                        }
-//                    } else {
-//                        tvSkip.setOnClickListener(v -> skip());
-//                        findViewById(R.id.tv_ad_flag).setVisibility(View.VISIBLE);
-//                        Glide.with(StartActivity.this).load(url.src).into(ivImage);
-//                        nativelogic.AdShow(container);
-//                        ivImage.setOnTouchListener((v, event) -> {
-//                            switch (event.getAction()) {
-//                                case MotionEvent.ACTION_DOWN:
-//                                    ClickX = event.getRawX();
-//                                    ClickY = event.getRawY();
-//                                    break;
-//                                case MotionEvent.ACTION_MOVE:
-//                                    break;
-//                                case MotionEvent.ACTION_UP:
-//                                    if (Math.abs(event.getRawX() - ClickX) < 20 && Math.abs(event.getRawY() - ClickY) < 20) {
-//                                        skip();
-//                                        if (subscription != null) {
-//                                            subscription.unsubscribe();
-//                                        }
-//                                        // 点击开屏广告处理
-//                                        nativelogic.OnClick(container);
-//                                    }
-//                                    break;
-//                            }
-////                            return true;
-//                        });
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onAdFailedToLoad(String error) {
-//                    ImageBg();
-//                    tvSkip.setOnClickListener(v -> skip());
-//                }
-//            });
+                        }
+                    } else {
+                        tvSkip.setOnClickListener(v -> skip());
+                        findViewById(R.id.tv_ad_flag).setVisibility(View.VISIBLE);
+                        Glide.with(StartActivity.this).load(url.src).into(ivImage);
+                        nativelogic.AdShow(container);
+                        ivImage.setOnTouchListener((v, event) -> {
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    ClickX = event.getRawX();
+                                    ClickY = event.getRawY();
+                                    break;
+                                case MotionEvent.ACTION_MOVE:
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                    if (Math.abs(event.getRawX() - ClickX) < 20 && Math.abs(event.getRawY() - ClickY) < 20) {
+                                        skip();
+                                        if (subscription != null) {
+                                            subscription.unsubscribe();
+                                        }
+                                        // 点击开屏广告处理
+                                        nativelogic.OnClick(container);
+                                    }
+                                    break;
+                            }
+                            return true;
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onAdFailedToLoad(String error) {
+                    ImageBg();
+                    tvSkip.setOnClickListener(v -> skip());
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,9 +211,12 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                     .subscribe(new Subscriber<Integer>() {
                         @Override
                         public void onCompleted() {
-                            if (ISGDTSKIP) {
-                                Log.e("skip", "onADPresent: 4");
-                                skip();
+                            if(BasicApplication.getLocatedCity() != null && !TextUtils.isEmpty(BasicApplication.getLocatedCity().name)){
+                                intentActivity(MainActivity.class);
+                                 finish();
+                            }
+                             if (ISGDTSKIP) {
+                                 skip();
                             }
                         }
 
@@ -226,21 +238,15 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     private void skip() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                //做一些处理
-            } else {
-                SaveShare.saveValue(StartActivity.this, "location", "location");
-                SaveShare.saveValue(StartActivity.this, "skip", "");
-                SaveShare.saveValue(StartActivity.this, "finish", "finish");
-            }
             if (!TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "location")) && TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "skip"))) {
                 if (mapLocation != null)
                     //启动定位
                     mapLocation.startLocation();
-                intentActivity(MainActivity.class);
+                 intentActivity(MainActivity.class);
 //                mapLocation.setData();
                 this.finish();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -249,7 +255,6 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
     private void fetchSplashAD(Activity activity, ViewGroup adContainer, View skipContainer,
                                String appId, String posId, SplashADListener adListener, int fetchDelay) {
         splashAD = new SplashAD(activity, skipContainer, appId, posId, adListener, fetchDelay);
-//        splashAD = new SplashAD(activity, adContainer, skipContainer, appId, posId, adListener, fetchDelay);
         splashAD.fetchAndShowIn(adContainer);
     }
 
@@ -260,7 +265,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     protected void loadViewLayout() {
-
+        StartAd.getStartAd().loadViewLayout();
     }
 
     @Override
@@ -268,26 +273,26 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
         try {
             ivImage = findViewById(R.id.iv_image);
             initView();
-            mapLocation = MapLocation.getMapLocation();
-            mapLocation.locate(StartActivity.this);
-            startCountDown();
 //            String AppOpenBg = SaveShare.getValue(StartActivity.this, "AppOpenBg");
 //            String Click_url = SaveShare.getValue(StartActivity.this, "Click_url");
 //            if(!TextUtils.isEmpty(AppOpenBg) && !TextUtils.isEmpty(Click_url)){
 //                AppOpenBg();
 //            }
             AlmanacLogic.getAlmanacLogic().getAlmanacData(StartActivity.this, Utils.getDayOfWeekByDate());
-//            NewsRequest.getNewsRequest().getSwitchData(mContext, StartActivity.this);
             NewsRequest.getNewsRequest().NewsData(mContext);
             String ISAD = SaveShare.getValue(mContext, "ISAD");
             if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
                 loadAd();
             }
-//            if (TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "AppOpenBg"))) {
-//            } else {
-//                AppOpenBg();
-//            }
-
+            mapLocation = MapLocation.getMapLocation();
+            mapLocation.locate(StartActivity.this);
+            startCountDown();
+            StartAd.getStartAd().Application(StartActivity.this);
+            if(!TextUtils.isEmpty(BasicApplication.url)){
+                AdviseMoreDetailActivity.startActivity(this, "资讯", BasicApplication.url,"1");
+                Log.e("getNotification", "getNotification: ");
+                BasicApplication.url = "";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -353,7 +358,18 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     private void initView() {
         try {
-            showToast("补丁加载成功两次");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Util.isRoot()) {
+                //做一些处理
+                if (TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "location"))) {
+                    ISGDTSKIP = false;
+                }
+            } else {
+                SaveShare.saveValue(StartActivity.this, "location", "location");
+                SaveShare.saveValue(StartActivity.this, "skip", "");
+                SaveShare.saveValue(StartActivity.this, "finish", "finish");
+            }
+
             tvVersionName = findViewById(R.id.tv_version_name);
             tvSkip = findViewById(R.id.tv_skip);
             container = findViewById(R.id.container);
@@ -405,6 +421,11 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
             if (mapLocation != null)
                 //启动定位
                 mapLocation.startLocation();
+            ISGDTSKIP = true;
+            SaveShare.saveValue(StartActivity.this, "location", "location");
+            if (size == 0) {
+                skip();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -412,8 +433,8 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void denied(List<String> deniedList) {
-//        mapLocation.setData();
         try {
+            ISGDTSKIP = false;
             for (int i = 0; i < deniedList.size(); i++) {
                 if ("android.permission.ACCESS_FINE_LOCATION".equals(deniedList.get(i)) && TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "location"))) {
                     mapLocation.checkLocationPermission(StartActivity.this, StartActivity.this);
@@ -423,14 +444,16 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
             if (mapLocation != null)
                 //启动定位
                 mapLocation.startLocation();
+
             if (size == 0) {
                 skip();
+            } else {
+                ISGDTSKIP = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onCompleted() {
@@ -463,7 +486,6 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void dismiss() {
-//        showToast("开屏广告跳过");
         SaveShare.saveValue(StartActivity.this, "skip", "");
         if (size == 0) {
             skip();
@@ -472,24 +494,22 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void onADDismissed() {
-//        showToast("开屏广告跳过");
         skip();
     }
 
     @Override
     public void onNoAD(AdError adError) {
         if (nativelogicDd != null) {
-            nativelogicDd.OnRequest(adError.getErrorCode()+"",adError.getErrorMsg());
+            nativelogicDd.OnRequest(adError.getErrorCode() + "", adError.getErrorMsg());
         }
         ImageBg();
-        Log.e("CS", "onNoAD: "+adError.getErrorCode());
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onADPresent() {
         if (nativelogicDd != null) {
-            Log.e("CS", "onADPresent: ");
-            nativelogicDd.OnRequest("0","msg");
+            nativelogicDd.OnRequest("0", "msg");
         }
         tvSkip.setTextColor(R.color.white);
         splash_skip_tv.setVisibility(View.VISIBLE);
@@ -506,13 +526,10 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void onADTick(long l) {
-
     }
 
     @Override
     public void onADExposure() {
-//        showToast("开屏广告展示");
-//        Log.e("CS", "onADExposure: ");
         if (nativelogicDd != null) {
             nativelogicDd.AdShow(container);
         }
@@ -520,11 +537,10 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void onAdClicked(View view, int type) {
-
         if (nativelogicDd != null) {
             nativelogicDd.OnClick(container);
         }
-        if(type == 3){
+        if (type == 3) {
             SaveShare.saveValue(StartActivity.this, "skip", "skip");
             SaveShare.saveValue(StartActivity.this, "finish", "finish");
         }
@@ -532,24 +548,26 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     @Override
     public void onAdShow(View view, int type) {
-//        showToast("开屏广告展示");
-        if (nativelogicDd != null) {
-            nativelogicDd.AdShow(container);
+        try {
+            WeatherRequest.getWeatherRequest().getLookAtData(StartActivity.this, "广告", "展示");
+            if (nativelogicDd != null) {
+                nativelogicDd.AdShow(container);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onAdSkip() {
-//        showToast("开屏广告跳过");
         skip();
         if (nativelogicDd != null) {
-            nativelogicDd.OnRequest( "开屏广告跳过","开屏广告跳过");
+            nativelogicDd.OnRequest("开屏广告跳过", "开屏广告跳过");
         }
     }
 
     @Override
     public void onAdTimeOver() {
-//        showToast("开屏广告倒计时结束");
         skip();
     }
 }

@@ -468,7 +468,7 @@
                             android:focusableInTouchMode="true"
                             android:orientation="horizontal">
 
-                            <com.zt.rainbowweather.view.MyEditText
+                            <com.xy.xylibrary.view.MyEditText
                                 android:id="@+id/novel_input_box"
                                 android:layout_width="match_parent"
                                 android:layout_height="37dp"

@@ -127,7 +127,7 @@ public class NativeColumnFragment extends BaseFragment implements SwipeRefreshLi
             if (adMap.get(position) != null) {
                 adMap.get(position).nativelogic.OnClick(null);
             } else {
-                AdviseMoreDetailActivity.startActivity(getActivity(), beans.get(position).getTitle(), beans.get(position).getHtml_url());
+                AdviseMoreDetailActivity.startActivity(getActivity(), beans.get(position).getTitle(), beans.get(position).getHtml_url(),"1");
             }
         });
         // 滑动最后一个Item的时候回调onLoadMoreRequested方法

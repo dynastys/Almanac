@@ -42,8 +42,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-
-
     protected static Activity mContext;
     protected boolean IsModel = false;
     protected void process(Bundle savedInstanceState) {
@@ -78,7 +76,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     // 是否设置成透明状态栏，即就是全屏模式
@@ -139,7 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         try {
             loadViewLayout();
             bindViews();
-            //权限申请通过
+//            //权限申请通过
             processLogic(savedInstanceState);
             setListener();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -227,7 +224,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
                         }
                         if (!deniedList.isEmpty()) {
                             denied(deniedList);
+                        }else{
+                          granted();
                         }
+
 
                 }
             } catch (Exception e) {

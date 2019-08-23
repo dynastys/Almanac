@@ -62,6 +62,7 @@
 -keep class com.zt.rainbowweather.custom.** { *; }
 -keep class com.kyleduo.switchbutton.** { *; }
 -keep class com.zt.rainbowweather.presenter.receiver.** { *; }
+-keep class com.zt.rainbowweather.view.MyVideoView.** { *; }
 ##ad
 -keep class com.zt.xuanyin.** {*;}
 -keep class com.vkx.wzs.** {*;}
@@ -387,3 +388,15 @@ public static final int *;
 -keep class com.zt.rainbowweather.SophixStubApplication$RealApplicationStub
 
 -keep public class * extends android.app.Service
+
+##微信登录
+-keep class com.tencent.mm.opensdk.** {
+*;
+}
+-keep class com.tencent.wxop.** {
+*;
+}
+
+-keep class com.tencent.mm.sdk.** {
+*;
+}

@@ -5,11 +5,13 @@ import android.content.Context;
 import com.zt.rainbowweather.api.AppService;
 import com.zt.rainbowweather.api.RequestSyntony;
 import com.zt.rainbowweather.entity.Icons;
+import com.zt.rainbowweather.entity.city.CityEarlyWarning;
 import com.zt.rainbowweather.entity.city.HotCity;
 
 import com.zt.rainbowweather.entity.weather.AirThDay;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
 
+import com.zt.rainbowweather.entity.weather.WeatherVideo;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.NetUtils;
 import com.zt.rainbowweather.utils.Util;
@@ -94,14 +96,66 @@ public class WeatherRequest {
     }
 
     /**
+     * 获取最新天气视频
+     * */
+    public void getWeatherVideoData(Context context,final RequestSyntony<WeatherVideo> requestSyntony){
+        mSubscriptions.add(WeatherConnextor.getConnextor(context).getAppService(AppService.class,"http://api.xytq.qukanzixun.com/").WeatherVideoRxJava()
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<WeatherVideo>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(WeatherVideo weatherVideo) {
+                        requestSyntony.onNext(weatherVideo);
+                    }
+                })
+        );
+    }
+
+    /**
+     * 获取最新城市预警
+     * */
+    public void getCityEarlyWarningData(Context context,String province,String city,String county,final RequestSyntony<CityEarlyWarning> requestSyntony){
+        mSubscriptions.add(WeatherConnextor.getConnextor(context).getAppService(AppService.class,"http://api.xytq.qukanzixun.com/").CityEarlyWarningRxJava(province,city,county)
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<CityEarlyWarning>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(CityEarlyWarning cityEarlyWarning) {
+                        requestSyntony.onNext(cityEarlyWarning);
+                    }
+                })
+        );
+    }
+
+    /**
      * 看一看打点
      * */
-    public void getLookAtData(Context context,final RequestSyntony<String> requestSyntony){
+    public void getLookAtData(Context context,String page,String content){
         JSONObject requestData = new JSONObject();
         try {
             requestData.put("app", "星云天气");
-            requestData.put("page", "看一看");
-            requestData.put("content","进入视频");
+            requestData.put("page", page);
+            requestData.put("content",content);
             requestData.put("app_ver", Util.getVersion(context));
             requestData.put("imsi", Util.getIMSI(context));
             requestData.put("network", NetUtils.getNetworkState(context));
@@ -120,20 +174,21 @@ public class WeatherRequest {
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onCompleted() {
-                        requestSyntony.onCompleted();
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        requestSyntony.onError(e);
+
                     }
 
                     @Override
                     public void onNext(String s) {
-                        requestSyntony.onNext(s);
+
                     }
                 })
         );
+
     }
 
 //    /**
@@ -452,6 +507,8 @@ public class WeatherRequest {
                 })
         );
     }
+
+
 
 //    /**
 //     * 空气质量数据集合

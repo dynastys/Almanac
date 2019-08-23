@@ -67,7 +67,7 @@ public class TabServiceFragment extends BaseFragment {
             baseAdapter.setOnItemClickListener((adapter, view1, position) -> {
                 switch (iconsBeanList.get(position).getIcon_type_id()) {
                     case 0://跳转
-                        AdviseMoreDetailActivity.startActivity(getActivity(), iconsBeanList.get(position).getTitle(), iconsBeanList.get(position).getLink());
+                        AdviseMoreDetailActivity.startActivity(getActivity(), iconsBeanList.get(position).getTitle(), iconsBeanList.get(position).getLink(),"0");
                         break;
                     case 1://下载
                         utils.Download(getActivity(), iconsBeanList.get(position).getLink());

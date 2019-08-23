@@ -77,13 +77,11 @@ public abstract class GradientTabStripAdapter extends FragmentPagerAdapter imple
 
     @Override
     public boolean isTagEnable(int position) {
-
          return isTabTagEnable(position);
     }
 
     @Override
     public String getTag(int position) {
-
        return getTabTag(position);
     }
 }

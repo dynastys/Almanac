@@ -3,6 +3,7 @@ package com.zt.rainbowweather.ui.adapter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -26,10 +27,17 @@ public class HotCityAdapter extends BaseQuickAdapter<City, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, City item) {
         TextView tvName = helper.getView(R.id.tv_name);
         if (item.isLocate.equals("1")) {
-            tvName.setText("定位");
-            tvName.setTextColor(Color.parseColor("#2397f0"));
-            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.icon_locate);
-            tvName.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+            if(TextUtils.isEmpty(item.name)){
+                tvName.setText("点击重新定位");
+                tvName.setTextColor(mContext.getResources().getColor(R.color.selector));//selector
+                Drawable drawable = mContext.getResources().getDrawable(R.mipmap.icon_locate);
+                tvName.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+            }else{
+                tvName.setText("定位");
+                tvName.setTextColor(Color.parseColor("#2397f0"));
+                Drawable drawable = mContext.getResources().getDrawable(R.mipmap.icon_locate);
+                tvName.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+            }
         } else {
             tvName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             tvName.setText(item.name);

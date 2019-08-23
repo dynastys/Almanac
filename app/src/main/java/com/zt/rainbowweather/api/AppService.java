@@ -3,10 +3,12 @@ package com.zt.rainbowweather.api;
 import com.zt.rainbowweather.entity.Icons;
 import com.zt.rainbowweather.entity.background.BackdropTheme;
 import com.zt.rainbowweather.entity.background.SkinTheme;
+import com.zt.rainbowweather.entity.city.CityEarlyWarning;
 import com.zt.rainbowweather.entity.city.HotCity;
 
 import com.zt.rainbowweather.entity.weather.AirThDay;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
+import com.zt.rainbowweather.entity.weather.WeatherVideo;
 
 
 import okhttp3.RequestBody;
@@ -159,5 +161,15 @@ public interface AppService {
     @POST("app/put-log")
     Observable<String> LookAtRxJava(@Body RequestBody requestBody);
 
+    /**
+     * 获取最新天气视频
+     * */
+    @GET("app/releases/weather-video")
+    Observable<WeatherVideo> WeatherVideoRxJava();
+    /**
+     * 获取最新城市预警
+     * */
+    @GET("app-warning")
+    Observable<CityEarlyWarning> CityEarlyWarningRxJava(@Query("province") String province, @Query("city") String city, @Query("county") String county);
 
 }

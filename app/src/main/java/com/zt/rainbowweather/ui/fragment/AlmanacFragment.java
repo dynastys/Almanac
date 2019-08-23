@@ -24,10 +24,11 @@ import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.Interface.MyEdit;
 import com.xy.xylibrary.base.BaseFragment;
 import com.xy.xylibrary.utils.GlideUtil;
 import com.xy.xylibrary.utils.Utils;
-import com.zt.rainbowweather.api.MyEdit;
+import com.xy.xylibrary.view.MyEditText;
 import com.zt.rainbowweather.entity.background.IsUserLight;
 import com.zt.rainbowweather.entity.calendar.DanXiangLi;
 import com.zt.rainbowweather.entity.calendar.HuangLi;
@@ -41,7 +42,6 @@ import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.view.ChangeTextViewSpace;
 import com.zt.rainbowweather.view.FlowLayout;
 import com.zt.rainbowweather.view.InfiniteViewPager;
-import com.zt.rainbowweather.view.MyEditText;
 import com.zt.weather.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -215,6 +215,11 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
                 }
             });
             mMyPager.setOnCurrentPageChangeListener(onject -> {
+                new Thread(() -> {
+                    if(almanacLogic != null && !TextUtils.isEmpty(onject.toString())){
+                        almanacLogic.getDanXiangLiData(getActivity(), onject.toString());
+                    }
+                }).start();
                 if (!TextUtils.isEmpty(onject.toString())) {
                     calendarView1.scrollToCalendar(Integer.parseInt(onject.toString().split("-")[0]), Integer.parseInt(onject.toString().split("-")[1]), ((Integer.parseInt(onject.toString().split("-")[2])) <= 0 ? 30 : (Integer.parseInt(onject.toString().split("-")[2]))));
                     mCalendarView.scrollToCalendar(Integer.parseInt(onject.toString().split("-")[0]), Integer.parseInt(onject.toString().split("-")[1]), ((Integer.parseInt(onject.toString().split("-")[2])) <= 0 ? 30 : (Integer.parseInt(onject.toString().split("-")[2]))));
@@ -316,6 +321,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
     @Override
     public void onCalendarOutOfRange(Calendar calendar) {
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -544,7 +550,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
                 break;
             case R.id.even_more:
-                AdviseMoreDetailActivity.startActivity(getActivity(), "周公解梦", "http://api.xytq.qukanzixun.com/zgjm");
+                AdviseMoreDetailActivity.startActivity(getActivity(), "周公解梦", "http://api.xytq.qukanzixun.com/zgjm","0");
                 break;
         }
     }

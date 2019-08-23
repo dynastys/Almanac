@@ -116,7 +116,7 @@ public class ServerManager {
             baseAdapter2.setOnItemClickListener((adapter, view, position) -> {
                 switch (serviceList.getData().get(position).getClickAction()) {
                     case 1://跳转
-                        AdviseMoreDetailActivity.startActivity(context, serviceList.getData().get(position).getTitle(), serviceList.getData().get(position).getLink());
+                        AdviseMoreDetailActivity.startActivity(context, serviceList.getData().get(position).getTitle(), serviceList.getData().get(position).getLink(),"0");
                         break;
                     case 2://下载
                         utils.Download(context, serviceList.getData().get(position).getLink());

@@ -125,7 +125,7 @@ public class AdviseDetailActivity extends BaseActivity implements RequestSyntony
                     if(position == 1 && nativelogic != null){
                         nativelogic.OnClick(null);
                     }else{
-                        AdviseMoreDetailActivity.startActivity(AdviseDetailActivity.this, article.getData().get(position).getTitle(), article.getData().get(position).getHtml_url());
+                        AdviseMoreDetailActivity.startActivity(AdviseDetailActivity.this, article.getData().get(position).getTitle(), article.getData().get(position).getHtml_url(),"1");
                     }
                 });
             }

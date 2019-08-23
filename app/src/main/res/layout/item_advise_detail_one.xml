@@ -17,10 +17,13 @@
             android:id="@+id/iv_title"
             android:layout_width="110dp"
             android:layout_height="70dp"
-            android:layout_margin="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/dp_10"
             android:background="@drawable/shape_line_drawable"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/icon_1" />
+            android:visibility="gone"
+             />
 
         <TextView
             android:id="@+id/tv_title"
@@ -28,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/dp_10"
             android:layout_toRightOf="@+id/iv_title"
             android:ellipsize="end"
             android:maxLines="2"
@@ -41,6 +45,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/dp_10"
             android:layout_toRightOf="@+id/iv_title"
             android:orientation="horizontal">
 

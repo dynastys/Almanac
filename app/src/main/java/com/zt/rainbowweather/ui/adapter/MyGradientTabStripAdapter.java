@@ -6,8 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 
 import com.xy.xylibrary.ui.adapter.GradientTabStripAdapter;
+import com.xy.xylibrary.ui.fragment.task.TaskFragment;
+import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.Utils;
 import com.yilan.sdk.ui.littlevideo.LittleVideoFragment;
 import com.zt.rainbowweather.ui.fragment.AlmanacFragment;
 import com.zt.rainbowweather.ui.fragment.HomeFragment;
@@ -18,13 +22,35 @@ import com.zt.rainbowweather.utils.ConstUtils;
 
 public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
 
+    private Context context;
     public MyGradientTabStripAdapter(FragmentManager fm, ViewPager tabVp) {
         super(fm, tabVp);
     }
 
-
     @Override
     public boolean isTabTagEnable(int position) {
+       switch (position){
+           case 1:
+               return false;
+           case 2:
+               if(context != null){
+                   String JB = SaveShare.getValue(context,"JB");
+                   if(!TextUtils.isEmpty(JB) && JB.equals(Utils.getOldDate(0))){
+                       return false;
+                   }
+               }
+               return true;
+           case 3:
+               if(context != null){
+                   String vidoe = SaveShare.getValue(context,"video");
+                   if(!TextUtils.isEmpty(vidoe) && vidoe.equals(Utils.getOldDate(0))){
+                       return false;
+                   }
+               }
+               return true;
+           case 4:
+               return false;
+       }
         return false;
     }
 
@@ -37,7 +63,7 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
     @Override
     public int getCount() {
         if(ConstUtils.take_a_look){
-            return 4;
+            return 5;
         }
         return 3;
     }
@@ -52,8 +78,10 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                 case 1:
                     return "运势";
                 case 2:
-                    return "看一看";
+                    return "赚金币";
                 case 3:
+                    return "视频";
+                case 4:
                     return "服务";
             }
         }else{
@@ -73,6 +101,7 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
     @Override
     public Drawable getNormalDrawable(int position, Context context) {
         try {
+            this.context = context;
             if(ConstUtils.take_a_look){
                 switch (position) {
                     default:
@@ -81,8 +110,10 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                     case 1:
                         return ContextCompat.getDrawable(context, R.mipmap.ic_looks_black);
                     case 2:
-                        return ContextCompat.getDrawable(context, R.mipmap.ic_fiber_new_no);
+                        return ContextCompat.getDrawable(context, R.mipmap.task_no);
                     case 3:
+                        return ContextCompat.getDrawable(context, R.mipmap.ic_fiber_new_no);
+                    case 4:
                         return ContextCompat.getDrawable(context, R.mipmap.ic_apps_no);
                 }
             }else{
@@ -114,8 +145,10 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                     case 1:
                         return ContextCompat.getDrawable(context,  R.mipmap.ic_looks);
                     case 2:
-                        return ContextCompat.getDrawable(context,  R.mipmap.ic_fiber_new);
+                        return ContextCompat.getDrawable(context,  R.mipmap.task_se);
                     case 3:
+                        return ContextCompat.getDrawable(context,  R.mipmap.ic_fiber_new);
+                    case 4:
                         return ContextCompat.getDrawable(context,  R.mipmap.ic_apps);
                 }
             }else{
@@ -147,11 +180,13 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                 case 1:
                     return new AlmanacFragment();
                 case 2:
+                    return new TaskFragment();
+                case 3:
                     //        小视频
 //                    LittleVideoFragment littleVideoFragment = LittleVideoFragment.newInstance();
                     return  LittleVideoFragment.newInstance();
 //                    return new NewsFragment("http://ssp.xuanad.com/page/f1e294cc-8546-438b-b0af-801ca170b2d0");
-                case 3:
+                case 4:
                     return new ServeFragment();
             }
         }else{

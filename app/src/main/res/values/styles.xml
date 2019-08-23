@@ -13,6 +13,7 @@
         <item name="android:windowIsTranslucent">true</item>//保证背景透明
 -->
     </style>
+
     <!--Activity进场。出场动画-->
     <style name="AnimationActivity" parent="@android:style/Animation.Activity">
         <!--用于设置打开新的Activity并进入新的Activity展示的动画-->
@@ -76,4 +77,12 @@
         <attr name="mine_divider_visibility" format="boolean"/>
         <attr name="mine_arrow_visibility" format="boolean"/>
     </declare-styleable>
+
+
+    <style name="text_black">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black_dft</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

@@ -25,46 +25,65 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/service_bar"
                 />
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_avatar"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:src="@mipmap/defa_head" />
-
-                <LinearLayout
+                android:layout_height="130dp">
+                <TextView
+                    android:id="@+id/binding_weChat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_15"
-                    android:layout_toRightOf="@+id/img_avatar"
-                    android:orientation="vertical">
+                    android:layout_alignParentRight="true"
+                    android:text="绑定微信"
+                    android:textSize="13sp"
+                    android:textColor="#ffd1eaff"
+                    android:drawableRight="@drawable/skip_icon"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:layout_marginTop="25dp"
+                    android:visibility="gone"
+                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="130dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_avatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:src="@mipmap/defa_head" />
 
-                    <TextView
-                        android:id="@+id/tv_name"
-                        style="@style/text_white"
-                        android:text="用户ID:"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_toRightOf="@+id/img_avatar"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_fans"
-                        style="@style/text_white"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="4dp"
-                        android:text="ID:*********"
-                        android:textSize="13sp"
-                        />
+                        <TextView
+                            android:id="@+id/tv_name"
+                            style="@style/text_white"
+                            android:text="用户ID:"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tv_fans"
+                            style="@style/text_white"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="4dp"
+                            android:text="ID:*********"
+                            android:textSize="16sp"
+
+                            />
+                    </LinearLayout>
                 </LinearLayout>
-        </LinearLayout>
+
+            </RelativeLayout>
 
 
         </LinearLayout>
@@ -271,9 +290,18 @@
             android:layout_height="56dp"
             android:background="@drawable/ripple_bg4"
             android:clickable="true"
-            app:mine_divider_visibility="false"
             app:mine_icon="@drawable/about_us_icon"
-            android:layout_marginBottom="20dp"
             app:mine_title="@string/about_us" />
+
+        <com.zt.rainbowweather.view.MineRowView
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:background="@drawable/ripple_bg4"
+            android:clickable="true"
+            app:mine_divider_visibility="false"
+            app:mine_icon="@mipmap/ic_set_my"
+            android:layout_marginBottom="20dp"
+            app:mine_title="@string/setting" />
     </LinearLayout>
 </ScrollView>

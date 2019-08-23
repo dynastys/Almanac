@@ -20,7 +20,7 @@ public class ConventionWeather extends LitePalSupport {
         this.HeWeather6 = HeWeather6;
     }
 
-    public static class HeWeather6Bean {
+    public static class HeWeather6Bean extends LitePalSupport{
         /**
          * basic : {"cid":"CN101020100","location":"上海","parent_city":"上海","admin_area":"上海","cnty":"中国","lat":"31.23170662","lon":"121.47264099","tz":"+8.00"}
          * update : {"loc":"2019-05-22 16:54","utc":"2019-05-22 08:54"}
@@ -95,7 +95,7 @@ public class ConventionWeather extends LitePalSupport {
             this.lifestyle = lifestyle;
         }
 
-        public static class BasicBean {
+        public static class BasicBean extends LitePalSupport{
             /**
              * cid : CN101020100
              * location : 上海
@@ -181,7 +181,7 @@ public class ConventionWeather extends LitePalSupport {
             }
         }
 
-        public static class UpdateBean {
+        public static class UpdateBean extends LitePalSupport{
             /**
              * loc : 2019-05-22 16:54
              * utc : 2019-05-22 08:54
@@ -207,7 +207,7 @@ public class ConventionWeather extends LitePalSupport {
             }
         }
 
-        public static class NowBean {
+        public static class NowBean extends LitePalSupport{
             /**
              * cloud : 0
              * cond_code : 100
@@ -343,7 +343,7 @@ public class ConventionWeather extends LitePalSupport {
             }
         }
 
-        public static class DailyForecastBean implements Parcelable{
+        public static class DailyForecastBean extends LitePalSupport implements Serializable{
             /**
              * cond_code_d : 100
              * cond_code_n : 100
@@ -386,39 +386,6 @@ public class ConventionWeather extends LitePalSupport {
             private String wind_sc;
             private String wind_spd;
 
-            protected DailyForecastBean(Parcel in) {
-                cond_code_d = in.readString();
-                cond_code_n = in.readString();
-                cond_txt_d = in.readString();
-                cond_txt_n = in.readString();
-                date = in.readString();
-                hum = in.readString();
-                pcpn = in.readString();
-                pop = in.readString();
-                pres = in.readString();
-                sr = in.readString();
-                ss = in.readString();
-                tmp_max = in.readString();
-                tmp_min = in.readString();
-                uv_index = in.readString();
-                vis = in.readString();
-                wind_deg = in.readString();
-                wind_dir = in.readString();
-                wind_sc = in.readString();
-                wind_spd = in.readString();
-            }
-
-            public static final Creator<DailyForecastBean> CREATOR = new Creator<DailyForecastBean>() {
-                @Override
-                public DailyForecastBean createFromParcel(Parcel in) {
-                    return new DailyForecastBean(in);
-                }
-
-                @Override
-                public DailyForecastBean[] newArray(int size) {
-                    return new DailyForecastBean[size];
-                }
-            };
 
             public String getCond_code_d() {
                 return cond_code_d;
@@ -572,36 +539,10 @@ public class ConventionWeather extends LitePalSupport {
                 this.wind_spd = wind_spd;
             }
 
-            @Override
-            public int describeContents() {
-                return 0;
-            }
 
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(cond_code_d);
-                dest.writeString(cond_code_n);
-                dest.writeString(cond_txt_d);
-                dest.writeString(cond_txt_n);
-                dest.writeString(date);
-                dest.writeString(hum);
-                dest.writeString(pcpn);
-                dest.writeString(pop);
-                dest.writeString(pres);
-                dest.writeString(sr);
-                dest.writeString(ss);
-                dest.writeString(tmp_max);
-                dest.writeString(tmp_min);
-                dest.writeString(uv_index);
-                dest.writeString(vis);
-                dest.writeString(wind_deg);
-                dest.writeString(wind_dir);
-                dest.writeString(wind_sc);
-                dest.writeString(wind_spd);
-            }
         }
 
-        public static class HourlyBean {
+        public static class HourlyBean extends LitePalSupport{
             /**
              * cloud : 0
              * cond_code : 100
@@ -737,7 +678,7 @@ public class ConventionWeather extends LitePalSupport {
             }
         }
 
-        public static class LifestyleBean implements Serializable {
+        public static class LifestyleBean extends LitePalSupport implements Serializable {
             /**
              * type : comf
              * brf : 较不舒适

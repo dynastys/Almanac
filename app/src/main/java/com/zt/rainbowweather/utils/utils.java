@@ -229,7 +229,6 @@ public final class utils {
 
     public static void Download(final Context context, final String url){
         try {
-
             // 创建一个下载存储位置
             String downloadStringName = url.substring(url.lastIndexOf("/") + 1, url.length());
             String downloadPath = ConstUtils.PATH + "/" + downloadStringName+System.currentTimeMillis()+".apk";

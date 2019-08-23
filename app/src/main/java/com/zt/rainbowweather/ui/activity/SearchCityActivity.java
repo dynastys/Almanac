@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
+import com.zt.rainbowweather.presenter.map.MapLocation;
 import com.zt.weather.R;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.BaseActivity;
@@ -53,7 +54,7 @@ import butterknife.OnClick;
  * @time 2019-3-8
  * 城市搜索
  * */
-public class SearchCityActivity extends BaseActivity {
+public class SearchCityActivity extends BaseActivity implements MapLocation.LocationSucceed {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -256,31 +257,43 @@ public class SearchCityActivity extends BaseActivity {
     }
 
     private void showHotCityData(List<City> cities) {
-        if (cities != null && cities.size() > 0) {
-            rvHot.setLayoutManager(new StaggeredGridLayoutManager(cities.size() / 5 + 1,
-                    StaggeredGridLayoutManager.HORIZONTAL) {
-                @Override
-                public boolean canScrollHorizontally() {
-                    return false;
-                }
-            });
-        } else {
-            cities = new ArrayList<>();
-        }
-        if (locatedCity != null) {
-            cities.add(0, locatedCity);
-            locatedCity.isChecked = "0";
-        }
-        if(mAddresses != null){
-            for (City city : cities) {
-                for (AddressBean mAddress : mAddresses) {
-                    if (city.affiliation.equals(mAddress.city.affiliation)) {
-                        city.isChecked = "1";
+        try {
+            if (cities != null && cities.size() > 0) {
+                rvHot.setLayoutManager(new StaggeredGridLayoutManager(cities.size() / 5 + 1,
+                        StaggeredGridLayoutManager.HORIZONTAL) {
+                    @Override
+                    public boolean canScrollHorizontally() {
+                        return false;
+                    }
+                });
+            } else {
+                cities = new ArrayList<>();
+            }
+            if(BasicApplication.getLocatedCity() != null && !TextUtils.isEmpty(BasicApplication.getLocatedCity().name)){
+                locatedCity = BasicApplication.getLocatedCity();
+            }
+            if (locatedCity != null) {
+                cities.add(0, locatedCity);
+                locatedCity.isChecked = "0";
+            }else{
+                locatedCity = new City();
+                locatedCity.isLocate = "1";
+                locatedCity.isChecked = "1";
+                cities.add(0, locatedCity);
+            }
+            if(mAddresses != null){
+                for (City city : cities) {
+                    for (AddressBean mAddress : mAddresses) {
+                        if (city.affiliation.equals(mAddress.city.affiliation)) {
+                            city.isChecked = "1";
+                        }
                     }
                 }
             }
+            mHotCityAdapter.setNewData(cities);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mHotCityAdapter.setNewData(cities);
     }
     private List<City> cities = new ArrayList<>();
     @OnClick({R.id.iv_back, R.id.iv_clear})
@@ -320,64 +333,84 @@ public class SearchCityActivity extends BaseActivity {
 
     @Override
     protected void bindViews() {
-        rvHot.setLayoutManager(new StaggeredGridLayoutManager(5, StaggeredGridLayoutManager
-                .HORIZONTAL) {
-            @Override
-            public boolean canScrollHorizontally() {
-                return false;
-            }
-        });
-        rvHot.setAdapter(mHotCityAdapter = new HotCityAdapter(null));
-        rvSearch.setLayoutManager(new LinearLayoutManager(SearchCityActivity.this));
-        rvSearch.addItemDecoration(new DividerItemDecoration(SearchCityActivity.this, DividerItemDecoration
-                .VERTICAL));
-        mSearchCityAdapter = new SearchCityAdapter(null);
-        mSearchCityAdapter.bindToRecyclerView(rvSearch);
-        mHotCityAdapter.setOnItemClickListener((adapter, view, position) -> {
-            City city = (City) adapter.getData().get(position);
-            addCityWeather(city);
-        });
-        mSearchCityAdapter.setOnItemClickListener((adapter, view, position) -> {
-            City city = (City) adapter.getData().get(position);
-            addCityWeather(city);
-        });
-        getHotCityData();
+        try {
+            rvHot.setLayoutManager(new StaggeredGridLayoutManager(5, StaggeredGridLayoutManager
+                    .HORIZONTAL) {
+                @Override
+                public boolean canScrollHorizontally() {
+                    return false;
+                }
+            });
+            rvHot.setAdapter(mHotCityAdapter = new HotCityAdapter(null));
+            rvSearch.setLayoutManager(new LinearLayoutManager(SearchCityActivity.this));
+            rvSearch.addItemDecoration(new DividerItemDecoration(SearchCityActivity.this, DividerItemDecoration
+                    .VERTICAL));
+            mSearchCityAdapter = new SearchCityAdapter(null);
+            mSearchCityAdapter.bindToRecyclerView(rvSearch);
+            mHotCityAdapter.setOnItemClickListener((adapter, view, position) -> {
+                try {
+                    if(TextUtils.isEmpty(((City)adapter.getData().get(position)).name)){
+                        MapLocation  mapLocation = MapLocation.getMapLocation();
+                        mapLocation.setLocationSucceed(SearchCityActivity.this);
+                        mapLocation.locate(SearchCityActivity.this);
+                        getHotCityData();
+                    }else{
+                        City city = (City) adapter.getData().get(position);
+                        addCityWeather(city);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            });
+            mSearchCityAdapter.setOnItemClickListener((adapter, view, position) -> {
+                City city = (City) adapter.getData().get(position);
+                addCityWeather(city);
+            });
+            getHotCityData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        locatedCity = BasicApplication.getLocatedCity();
-        mAddresses = (List<AddressBean>) getIntent().getSerializableExtra
-                ("address");
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String key = s.toString();
-                if (!TextUtils.isEmpty(key)) {
-                    ivClear.setVisibility(View.VISIBLE);
-                    tvText.setVisibility(View.INVISIBLE);
-                    rvHot.setVisibility(View.INVISIBLE);
-                    rvSearch.setVisibility(View.VISIBLE);
-                    searchKey(key);
-                } else {
-                    ivClear.setVisibility(View.GONE);
-                    mSearchCityAdapter.getData().clear();
-                    mSearchCityAdapter.notifyDataSetChanged();
-                    tvText.setVisibility(View.VISIBLE);
-                    ivClear.setVisibility(View.GONE);
-                    rvHot.setVisibility(View.VISIBLE);
-                    rvSearch.setVisibility(View.GONE);
+        try {
+            locatedCity = BasicApplication.getLocatedCity();
+            mAddresses = (List<AddressBean>) getIntent().getSerializableExtra
+                    ("address");
+            etSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String key = s.toString();
+                    if (!TextUtils.isEmpty(key)) {
+                        ivClear.setVisibility(View.VISIBLE);
+                        tvText.setVisibility(View.INVISIBLE);
+                        rvHot.setVisibility(View.INVISIBLE);
+                        rvSearch.setVisibility(View.VISIBLE);
+                        searchKey(key);
+                    } else {
+                        ivClear.setVisibility(View.GONE);
+                        mSearchCityAdapter.getData().clear();
+                        mSearchCityAdapter.notifyDataSetChanged();
+                        tvText.setVisibility(View.VISIBLE);
+                        ivClear.setVisibility(View.GONE);
+                        rvHot.setVisibility(View.VISIBLE);
+                        rvSearch.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -397,5 +430,15 @@ public class SearchCityActivity extends BaseActivity {
 
     @Override
     public void denied(List<String> deniedList) {
+    }
+
+    @Override
+    public void LocationSucceed(City locatedCity) {
+        if(mHotCityAdapter != null && cities.size() > 0){
+            cities.set(0, locatedCity);
+            locatedCity.isChecked = "0";
+            mHotCityAdapter.setNewData(cities);
+        }
+
     }
 }

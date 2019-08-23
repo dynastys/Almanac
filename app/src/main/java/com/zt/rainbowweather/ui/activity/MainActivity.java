@@ -6,6 +6,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -17,11 +18,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
+import com.xy.xylibrary.utils.Utils;
+import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.api.RequestSyntony;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
 import com.zt.rainbowweather.ui.fragment.HomeFragment;
+import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.weather.R;
 import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
@@ -39,12 +46,13 @@ import com.zt.rainbowweather.entity.city.Event;
 import com.zt.rainbowweather.presenter.ExtraFunction;
 import com.zt.rainbowweather.presenter.UpdatePort;
 import com.zt.rainbowweather.ui.adapter.MyGradientTabStripAdapter;
- import com.zt.rainbowweather.ui.service.FloatingService;
+import com.zt.rainbowweather.ui.service.FloatingService;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
 import com.zt.xuanyin.controller.NativeAd;
 import com.zt.xuanyin.entity.model.Native;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -57,7 +65,7 @@ import java.util.List;
  * @author zw
  * @time 2019-3-8
  * 主页面
- * */
+ */
 public class MainActivity extends BaseChoiceActivity implements OnViewClickListener {
 
     private int position;
@@ -66,25 +74,44 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     private BindViewHolder MyviewHolder;
     private ExtraFunction extraFunction;
     private List<City> cities = new ArrayList<>();
+    private CountDownTimer timer;
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if(position == 2){
-            WeatherRequest.getWeatherRequest().getLookAtData(MainActivity.this, new RequestSyntony<String>() {
-                @Override
-                public void onCompleted() {
+        try {
+            setIsUserLightMode(false);
+            if (position == 3) {
+                SaveShare.saveValue(MainActivity.this,"video", Utils.getOldDate(0));
+                myGradientTabStripAdapter.isTagEnable(3);
+                String Sp = SaveShare.getValue(MainActivity.this, "SP");
+                if (!TextUtils.isEmpty(Sp) && Sp.equals("4")) {
+                    timer = new CountDownTimer(60 * 1000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                        }
 
+                        @Override
+                        public void onFinish() {
+                            TaskType taskType3 = LitePal.where("tasktype = ?", "4").findFirst(TaskType.class);
+                            taskType3.ISStartTask = true;
+                            taskType3.save();
+                        }
+                    };
+                    timer.start();
                 }
-
-                @Override
-                public void onError(Throwable e) {
-
+                WeatherRequest.getWeatherRequest().getLookAtData(MainActivity.this, "看一看", "进入视频");
+            } else {
+                if (timer != null) {
+                    timer.cancel();
                 }
-
-                @Override
-                public void onNext(String s) {
-
-                }
-            });
+            }
+            if (position == 2) {
+                SaveShare.saveValue(MainActivity.this,"JB", Utils.getOldDate(0));
+                myGradientTabStripAdapter.isTagEnable(2);
+                setIsUserLightMode(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -97,26 +124,30 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void loadViewLayout() {
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        String ISAD = SaveShare.getValue(this, "ISAD");
-        if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
-//            DialogShow();
-        }
-        cities = LitePal.findAll(City.class);
-        if(cities == null || cities.size() == 0){
-            SearchCityActivity.startActivity(MainActivity.this, null);
-            finish();
-        }
-        extraFunction = new ExtraFunction(MainActivity.this);
-        extraFunction.AppListData();
+        try {
+            getWindow().setFormat(PixelFormat.TRANSLUCENT);
+            String ISAD = SaveShare.getValue(this, "ISAD");
+            if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
+    //            DialogShow();
+            }
+            cities = LitePal.findAll(City.class);
+            if (cities == null || cities.size() == 0) {
+                SearchCityActivity.startActivity(MainActivity.this, null);
+                finish();
+            }
+            extraFunction = new ExtraFunction(MainActivity.this);
+            extraFunction.AppListData();
 //        extraFunction.KeepAlive();
-        extraFunction.NotificationBar();
-        extraFunction.setNoninductive();
-        UpdatePort.getUpdatePort().UpdateDialog(MainActivity.this);
+            extraFunction.NotificationBar();
+            extraFunction.setNoninductive();
+            UpdatePort.getUpdatePort().UpdateDialog(MainActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void setIsUserLight(IsUserLight isUserLight){
+    public void setIsUserLight(IsUserLight isUserLight) {
         setIsUserLightMode(isUserLight.getMessage());
     }
 
@@ -128,7 +159,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         try {
-            if(ConstUtils.take_a_look){
+            if (ConstUtils.take_a_look) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && position == 0) {
                     if (((HomeFragment) myGradientTabStripAdapter.getItem(position)).onKeyDown(keyCode, event)) {
                         return true;
@@ -151,14 +182,21 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
         EventBus.getDefault().post(new CityX(city));
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setTabStrip(String s) {
+        if(myGradientTabStripAdapter != null){
+            myGradientTabStripAdapter.isTagEnable(2);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         try {
-//           List<City> citys = LitePal.findAll(City.class);
-//            for (int i = 0; i < citys.size(); i++) {
-//                Log.e("citys", "onDestroy: "+citys.get(i).name);
-//            }
+            List<City> citys = LitePal.findAll(City.class);
+            for (int i = 0; i < citys.size(); i++) {
+                Log.e("citys", "onDestroy: " + citys.get(i).name);
+            }
             if (EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().unregister(this);
             }
@@ -174,6 +212,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
         try {
             EventBus.getDefault().register(this);
             PushAgent.getInstance(this).onAppStart();
+
 //          floatWindow();
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +244,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
             // 获得开屏广告对象
             nativelogic = new Ad().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "7c6680c9-e304-49a6-a692-7efb2dd38224", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
                 @Override
-                public void onADReady(final Native url,NativeAd nativelogic) {
+                public void onADReady(final Native url, NativeAd nativelogic) {
                     if (url.src != null) {
                         new TDialog.Builder(getSupportFragmentManager())
                                 .setLayoutRes(R.layout.dialog)    //设置弹窗展示的xml布局
@@ -274,9 +313,13 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     @Override
     public void onResume() {
         super.onResume();
+        if(myGradientTabStripAdapter != null){
+            myGradientTabStripAdapter.isTagEnable(2);
+        }
         MobclickAgent.onPageStart("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
         MobclickAgent.onResume(this); //统计时长
     }
+
     @Override
     public void onPause() {
         super.onPause();

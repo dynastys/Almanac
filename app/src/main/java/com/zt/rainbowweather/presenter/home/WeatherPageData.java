@@ -5,15 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.SyncStateContract;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,39 +24,39 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.qq.e.ads.banner.AbstractBannerADListener;
-import com.qq.e.ads.banner.BannerView;
 import com.qq.e.ads.banner2.UnifiedBannerADListener;
 import com.qq.e.ads.banner2.UnifiedBannerView;
-import com.qq.e.ads.cfg.VideoOption;
 import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.ads.nativ.NativeExpressMediaListener;
 import com.qq.e.comm.constants.AdPatternType;
 import com.qq.e.comm.util.AdError;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.zt.rainbowweather.BasicApplication;
+import com.zt.rainbowweather.entity.city.CityEarlyWarning;
+import com.zt.rainbowweather.entity.weather.WeatherVideo;
 import com.zt.rainbowweather.presenter.PangolinBannerAd;
 import com.zt.rainbowweather.ui.activity.IndexDetailsActivity;
-import com.zt.rainbowweather.ui.activity.StartActivity;
 import com.zt.rainbowweather.ui.adapter.MyPagerAdapter;
 import com.zt.rainbowweather.ui.fragment.ListFragment;
 import com.zt.rainbowweather.ui.fragment.TendencyFragment;
-import com.zt.rainbowweather.view.NoScrollViewPager;
+import com.zt.rainbowweather.view.MyVideoView;
+import com.zt.rainbowweather.view.X5WebView;
 import com.zt.rainbowweather.view.tab.OnTabSelectListener;
 import com.zt.rainbowweather.view.tab.SegmentTabLayout;
 import com.zt.weather.R;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xy.xylibrary.Interface.RlSimpleTarget;
-import com.xy.xylibrary.Interface.SwipeRefreshListener;
 import com.xy.xylibrary.base.BaseAdapter;
 import com.xy.xylibrary.base.BaseFragment;
 import com.xy.xylibrary.config.ColumnHorizontalPackage;
-import com.xy.xylibrary.config.SwipeRefreshOnRefresh;
-import com.xy.xylibrary.refresh.SuperEasyRefreshLayout;
 import com.xy.xylibrary.utils.GlideUtil;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
@@ -67,7 +67,6 @@ import com.zt.rainbowweather.entity.City;
 import com.zt.rainbowweather.entity.OutLookWeather;
 import com.zt.rainbowweather.entity.WeatherBean;
 import com.zt.rainbowweather.entity.WeatherUtilBean;
-import com.zt.rainbowweather.entity.advise.AdviseTitleBean;
 import com.zt.rainbowweather.entity.background.BackdropTheme;
 import com.zt.rainbowweather.entity.news.NewColumn;
 import com.zt.rainbowweather.entity.news.Nnotice;
@@ -75,13 +74,9 @@ import com.zt.rainbowweather.entity.weather.AirThDay;
 import com.zt.rainbowweather.entity.weather.ConventionWeather;
 import com.zt.rainbowweather.entity.weather.Notification;
 import com.zt.rainbowweather.presenter.GridItemDecoration;
-import com.zt.rainbowweather.presenter.atlas.RecommendLogic;
-import com.zt.rainbowweather.presenter.dynamic.BaseWeatherType;
-import com.zt.rainbowweather.presenter.dynamic.ShortWeatherInfo;
 import com.zt.rainbowweather.presenter.request.BackgroundRequest;
 import com.zt.rainbowweather.presenter.request.NewsRequest;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
-import com.zt.rainbowweather.ui.activity.AdviseDetailActivity;
 import com.zt.rainbowweather.ui.activity.AdviseMoreDetailActivity;
 import com.zt.rainbowweather.ui.activity.IndexOfLivingActivity;
 import com.zt.rainbowweather.ui.fragment.ColumnFragment;
@@ -90,11 +85,9 @@ import com.zt.rainbowweather.ui.service.CancelNoticeService;
 import com.zt.rainbowweather.utils.AutoVerticalScrollTextViewUtil;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.SizeUtils;
-import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.utils.WeatherUtils;
 import com.zt.rainbowweather.view.AutoVerticalScrollTextView;
 import com.zt.rainbowweather.view.MiuiWeatherView;
-import com.zt.rainbowweather.view.ScrollFutureDaysWeatherView;
 import com.zt.rainbowweather.view.TranslucentActionBar;
 import com.zt.rainbowweather.view.TranslucentScrollView;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
@@ -106,6 +99,7 @@ import org.litepal.LitePal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -140,6 +134,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     private ViewPager vp7;
     private WeatherFragment weatherFragment;
     private GridItemDecoration divider;
+    private MediaController mediaController;
 
     public WeatherPageData(AppCompatActivity activity) {
         this.context = activity;
@@ -155,6 +150,73 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
         this.weatherFragment = weatherFragment;
     }
 
+
+    /**
+     * 使用自定义webview播放视频
+     */
+    public void startPlay(MyVideoView videoView, String vedioUrl) {
+        videoView.setVideoPath(vedioUrl);
+        //创建MediaController对象
+        mediaController = new MediaController(context);
+        //VideoView与MediaController建立关联
+        videoView.setMediaController(mediaController);
+ //        //让VideoView获取焦点
+//        videoView.requestFocus();
+    }
+
+    public MediaController getMediaController() {
+        if(mediaController != null){
+            mediaController.hide();
+        }
+        return mediaController;
+    }
+
+    public Boolean checkIsVisible(View view) {
+        // 如果已经加载了，判断广告view是否显示出来，然后曝光
+        int screenWidth = Utils.getWindowsWidth(context);
+        int screenHeight =  Utils.getScreenHeight(context);
+        Rect rect = new Rect(0, 0, screenWidth, screenHeight);
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        if (view.getLocalVisibleRect(rect)) {
+            return true;
+        } else {
+            //view已不在屏幕可见区域;
+            return false;
+        }
+    }
+
+    /**
+     * 新闻视频和预警
+     * */
+    public void VideoWarning(ImageView imageView,TextView videoT,MyVideoView x5VideoWebview){
+        WeatherRequest.getWeatherRequest().getWeatherVideoData(context, new RequestSyntony<WeatherVideo>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(WeatherVideo weatherVideo) {
+                if(weatherVideo != null && weatherVideo.getData() != null){
+                    GlideUtil.getGlideUtil().setImages1(context,weatherVideo.getData().getCover(),imageView);
+                    videoT.setText(weatherVideo.getData().getTitle());
+                    Log.e("weatherVideo", "onNext: "+weatherVideo.getData().getVideourl() );
+                   startPlay(x5VideoWebview,weatherVideo.getData().getVideourl());
+                }
+            }
+        });
+
+
+    }
+    /**
+     * 轮播新闻
+     * */
     public void NnoticeData(AutoVerticalScrollTextView keyword) {
         NewsRequest.getNewsRequest().getNnoticeData(context, new RequestSyntony<Nnotice>() {
             @Override
@@ -172,13 +234,14 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 // 初始化AutoVerticalScrollTextView控制器
                 autoVerticalScrollTextViewUtil = new AutoVerticalScrollTextViewUtil(keyword, nnotice.getData());
                 // 设置滚动的时间间隔
-                autoVerticalScrollTextViewUtil.setDuration(3000);
+                autoVerticalScrollTextViewUtil.setDuration(5000);
                 // 开启滚动
                 autoVerticalScrollTextViewUtil.start();
+
                 // 点击事件监听
                 autoVerticalScrollTextViewUtil.setOnMyClickListener((position, dataBean) -> {
                     if (dataBean != null) {
-                        AdviseMoreDetailActivity.startActivity(context, dataBean.getTitle(), dataBean.getHtml_url());
+                        AdviseMoreDetailActivity.startActivity(context, dataBean.getTitle(), dataBean.getHtml_url(),"1");
                     }
                     if (autoVerticalScrollTextViewUtil.getIsRunning())
                         autoVerticalScrollTextViewUtil.stop(); // 停止滚动
@@ -226,7 +289,6 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
 
                 }
             });
-
             vp_3.setCurrentItem(TextUtils.isEmpty(SaveShare.getValue(context, "Vp")) ? 0 : Integer.parseInt(SaveShare.getValue(context, "Vp")));
         } catch (NumberFormatException e) {
             vp_3.setCurrentItem(0);
@@ -280,7 +342,6 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
         if (relatAd.getChildCount() > 0) {
             relatAd.removeAllViews();
         }
-
         // 需要保证 View 被绘制的时候是可见的，否则将无法产生曝光和收益。
         relatAd.addView(nativeExpressADView);
     }
@@ -288,13 +349,11 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
 
     @Override
     public void onRenderFail(NativeExpressADView nativeExpressADView) {
-        Log.i("TAG", "onRenderFail");
         relatAd.setVisibility(View.GONE);
     }
 
     @Override
     public void onRenderSuccess(NativeExpressADView nativeExpressADView) {
-        Log.i("TAG", "onRenderSuccess");
         if (nativelogic != null) {
             nativelogic.OnRequest("0", "msg");
         }
@@ -422,10 +481,129 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     }
 
     /**
+     * 获取天气缓存
+     * */
+    private void WeatherDataCacheGain(TextView rainAlarmPro,LinearLayout rainAlarmProLin, AirQualityListener airQualityListener,RequestSyntony<ConventionWeather> requestSyntony){
+        try {
+            ConventionWeather.HeWeather6Bean.BasicBean basicBean = LitePal.findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class);
+            if(basicBean != null){
+                ConventionWeather conventionWeather = new ConventionWeather();
+                List<ConventionWeather.HeWeather6Bean> heWeather6Beans = new ArrayList<>();
+                ConventionWeather.HeWeather6Bean heWeather6Bean = new ConventionWeather.HeWeather6Bean();
+                heWeather6Bean.setBasic(LitePal.findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class));
+                heWeather6Bean.setUpdate(LitePal.findFirst(ConventionWeather.HeWeather6Bean.UpdateBean.class));
+                heWeather6Bean.setNow(LitePal.findFirst(ConventionWeather.HeWeather6Bean.NowBean.class));
+                heWeather6Bean.setDaily_forecast(LitePal.findAll(ConventionWeather.HeWeather6Bean.DailyForecastBean.class));
+                heWeather6Bean.setHourly(LitePal.findAll(ConventionWeather.HeWeather6Bean.HourlyBean.class));
+                heWeather6Bean.setLifestyle(LitePal.findAll(ConventionWeather.HeWeather6Bean.LifestyleBean.class));
+                heWeather6Beans.add(heWeather6Bean);
+                conventionWeather.setHeWeather6(heWeather6Beans);
+                addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    /**
+     * 天气数据缓存
+     * */
+    private void WeatherDataCache(ConventionWeather conventionWeather){
+        try {
+            LitePal.deleteAll(ConventionWeather.HeWeather6Bean.BasicBean.class);
+            LitePal.deleteAll(ConventionWeather.HeWeather6Bean.UpdateBean.class);
+            LitePal.deleteAll(ConventionWeather.HeWeather6Bean.NowBean.class);
+            LitePal.deleteAll(ConventionWeather.HeWeather6Bean.DailyForecastBean.class);
+            LitePal.deleteAll(ConventionWeather.HeWeather6Bean.HourlyBean.class);
+            LitePal.deleteAll(ConventionWeather.HeWeather6Bean.LifestyleBean.class);
+            ConventionWeather.HeWeather6Bean.BasicBean basic = conventionWeather.getHeWeather6().get(0).getBasic();
+            ConventionWeather.HeWeather6Bean.UpdateBean update = conventionWeather.getHeWeather6().get(0).getUpdate();
+            String status = conventionWeather.getHeWeather6().get(0).getStatus();
+            ConventionWeather.HeWeather6Bean.NowBean now = conventionWeather.getHeWeather6().get(0).getNow();
+            List<ConventionWeather.HeWeather6Bean.DailyForecastBean> daily_forecast = conventionWeather.getHeWeather6().get(0).getDaily_forecast();
+            List<ConventionWeather.HeWeather6Bean.HourlyBean> hourly = conventionWeather.getHeWeather6().get(0).getHourly();
+            List<ConventionWeather.HeWeather6Bean.LifestyleBean> lifestyle = conventionWeather.getHeWeather6().get(0).getLifestyle();
+            basic.save();
+            update.save();
+            now.save();
+            LitePal.saveAll(daily_forecast);
+            LitePal.saveAll(hourly);
+            LitePal.saveAll(lifestyle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void addWeatherData(ConventionWeather conventionWeather,TextView rainAlarmPro, LinearLayout rainAlarmProLin,AirQualityListener airQualityListener,RequestSyntony<ConventionWeather> requestSyntony){
+        try {
+            conventionWeatherData = conventionWeather;
+            requestSyntony.onNext(conventionWeather);
+            SaveShare.saveValue(context, "sunrise", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSr());
+            SaveShare.saveValue(context, "sunset", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSs());
+            setExponent(conventionWeather.getHeWeather6().get(0).getLifestyle());
+            HourWeather(conventionWeather.getHeWeather6().get(0).getHourly());
+//                            SwitchDynamicWeather(conventionWeather.getHeWeather6().get(0).getNow().getCond_txt(), relWetherBg);
+            AlterNotification();
+            WeatherRequest.getWeatherRequest().getAirThDayData(context, city.name, new RequestSyntony<AirThDay>() {
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                }
+
+                @Override
+                public void onNext(AirThDay airThDay) {
+                    try {
+                        if (airThDay != null && airThDay.getHeWeather6() != null) {
+                            air_forecast = airThDay.getHeWeather6().get(0).getAir_forecast();
+                            airQualityListener.AirQuality(air_forecast);
+                            DayTendency(conventionWeather.getHeWeather6().get(0).getDaily_forecast());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            WeatherRequest.getWeatherRequest().getCityEarlyWarningData(context, conventionWeather.getHeWeather6().get(0).getBasic().getAdmin_area(),  conventionWeather.getHeWeather6().get(0).getBasic().getParent_city(),  conventionWeather.getHeWeather6().get(0).getBasic().getLocation(), new RequestSyntony<CityEarlyWarning>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(CityEarlyWarning cityEarlyWarning) {
+                    if(cityEarlyWarning != null && cityEarlyWarning.getData() != null && rainAlarmPro != null){
+                        rainAlarmPro.setVisibility(View.VISIBLE);
+                        rainAlarmProLin.setVisibility(View.VISIBLE);
+                        rainAlarmPro.setText(cityEarlyWarning.getData().getWarning_type());
+//                        GlideUtil.getGlideUtil().setImages(context, cityEarlyWarning.getData().getIcon(), rainAlarmPro,1);
+                        rainAlarmPro.setOnClickListener(v -> {
+                            AdviseMoreDetailActivity.startActivity(context, cityEarlyWarning.getData().getWarning_type(), cityEarlyWarning.getData().getWarning_url(),"0");
+                        });
+                    }
+                }
+            });
+            WeatherDataCache(conventionWeather);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
      * 天气数据请求
      */
-    public void RequestWeatherData(City city, RequestSyntony<ConventionWeather> requestSyntony, AirQualityListener airQualityListener) {
+    public void RequestWeatherData(City city,TextView rainAlarmPro,LinearLayout rainAlarmProLin, RequestSyntony<ConventionWeather> requestSyntony, AirQualityListener airQualityListener,int type) {
         this.city = city;
+        if(type == 0){
+            WeatherDataCacheGain(rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+        }
         WeatherRequest.getWeatherRequest().getConventionWeatherData(context, city.name, new RequestSyntony<ConventionWeather>() {
 
             @Override
@@ -441,36 +619,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             @Override
             public void onNext(ConventionWeather conventionWeather) {
                 if (conventionWeather != null && conventionWeather.getHeWeather6() != null && conventionWeather.getHeWeather6().size() > 0) {
-                    conventionWeatherData = conventionWeather;
-                    SaveShare.saveValue(context, "sunrise", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSr());
-                    SaveShare.saveValue(context, "sunset", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSs());
-                    WeatherRequest.getWeatherRequest().getAirThDayData(context, city.name, new RequestSyntony<AirThDay>() {
-                        @Override
-                        public void onCompleted() {
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-
-                        @Override
-                        public void onNext(AirThDay airThDay) {
-                            try {
-                                if (airThDay != null && airThDay.getHeWeather6() != null) {
-                                    air_forecast = airThDay.getHeWeather6().get(0).getAir_forecast();
-                                    airQualityListener.AirQuality(air_forecast);
-                                    setExponent(conventionWeather.getHeWeather6().get(0).getLifestyle());
-                                    HourWeather(conventionWeather.getHeWeather6().get(0).getHourly());
-                                    DayTendency(conventionWeather.getHeWeather6().get(0).getDaily_forecast());
-//                            SwitchDynamicWeather(conventionWeather.getHeWeather6().get(0).getNow().getCond_txt(), relWetherBg);
-                                    requestSyntony.onNext(conventionWeather);
-                                    AlterNotification();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
                 }
             }
         });

@@ -34,7 +34,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical" >
 
@@ -45,7 +45,29 @@
             android:background="@color/white"
             >
         </FrameLayout>
-
+        <com.xy.xylibrary.view.CirclePgBar
+            android:id="@+id/crclepgbar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="150dp"
+            android:layout_marginRight="@dimen/dp_5"
+            app:ringColor="@color/almanac_tv"
+            app:circleColor="@color/blue_light"
+            android:visibility="gone"
+            />
+        <ImageView
+            android:id="@+id/big_gold_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="150dp"
+            android:layout_marginRight="@dimen/dp_5"
+            android:src="@drawable/big_gold"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
 </LinearLayout>

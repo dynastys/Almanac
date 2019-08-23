@@ -1,5 +1,7 @@
 package com.zt.rainbowweather.ui.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,24 +18,37 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.umeng.analytics.MobclickAgent;
-import com.zt.rainbowweather.view.X5WebView;
-import com.zt.weather.R;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.BaseActivity;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
+import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.ToastUtils;
+import com.xy.xylibrary.view.CirclePgBar;
 import com.zt.rainbowweather.utils.DeeplinkUtils;
+import com.zt.rainbowweather.view.X5WebView;
+import com.zt.weather.R;
+
+import org.litepal.LitePal;
+
 import java.util.List;
+
 import butterknife.BindView;
+
 import static com.zt.xuanyin.view.AdLinkActivity.deviceCanHandleIntent;
 import static com.zt.xuanyin.view.AdLinkActivity.isDeepLink;
 
@@ -41,7 +56,7 @@ import static com.zt.xuanyin.view.AdLinkActivity.isDeepLink;
  * @author zw
  * @time 2019-3-8
  * 新闻资讯周公解梦落地页详情
- * */
+ */
 public class AdviseMoreDetailActivity extends BaseActivity {
 
     @BindView(R.id.detail_toolbar)
@@ -50,15 +65,23 @@ public class AdviseMoreDetailActivity extends BaseActivity {
     ProgressBar detail_progress;
     @BindView(R.id.webView_url)
     FrameLayout mViewParent;
+    @BindView(R.id.crclepgbar)
+    CirclePgBar crclepgbar;
 
     private static X5WebView mWebView;
+    @BindView(R.id.big_gold_image)
+    ImageView bigGoldImage;
     private String url;
     private String title;
+    private String type;
     public static final int MSG_OPEN_TEST_URL = 0;
     public static final int MSG_INIT_UI = 1;
     private final int mUrlStartNum = 0;
     private int mCurrentUrl = mUrlStartNum;
     private boolean mNeedTestPage = false;
+    private boolean ISToast = true;
+    private String ReadTask;
+    private TaskType taskType; //任务详情
 
     @Override
     public void onResume() {
@@ -66,6 +89,7 @@ public class AdviseMoreDetailActivity extends BaseActivity {
         MobclickAgent.onPageStart("AdviseMoreDetailActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
         MobclickAgent.onResume(this); //统计时长
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -101,7 +125,7 @@ public class AdviseMoreDetailActivity extends BaseActivity {
         }
     };
 
-        @Override
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mWebView != null && mWebView.canGoBack()) {
@@ -114,13 +138,15 @@ public class AdviseMoreDetailActivity extends BaseActivity {
         return true;
     }
 
-    public static void startActivity(Activity context, String title, String url) {
+    public static void startActivity(Activity context, String title, String url,String type) {
         Intent intent = new Intent(context, AdviseMoreDetailActivity.class);
         intent.putExtra("url", url);
         intent.putExtra("title", title);
+        intent.putExtra("type", type);
         context.overridePendingTransition(com.constellation.xylibrary.R.anim.in_from_right, com.constellation.xylibrary.R.anim.out_to_left);
         context.startActivity(intent);
     }
+
     @Override
     public void onDestroy() {
         if (mTestHandler != null)
@@ -145,6 +171,7 @@ public class AdviseMoreDetailActivity extends BaseActivity {
     protected Activity getContext() {
         url = getIntent().getStringExtra("url");
         title = getIntent().getStringExtra("title");
+        type = getIntent().getStringExtra("type");
         return AdviseMoreDetailActivity.this;
     }
 
@@ -155,25 +182,59 @@ public class AdviseMoreDetailActivity extends BaseActivity {
 
 
     protected void loadViewLayout(int v) {
-         detail_toolbar.setTitle(title);
+        detail_toolbar.setTitle(title);
         setSupportActionBar(detail_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mWebView = new X5WebView(this, null);
+        taskType = LitePal.where("tasktype = ?","1").findFirst(TaskType.class);
+        ReadTask = SaveShare.getValue(AdviseMoreDetailActivity.this,"TaskId");
+        if(type.equals("1") && !TextUtils.isEmpty(ReadTask) && taskType.taskfinishsize < taskType.tasksize){
+            crclepgbar.setVisibility(View.VISIBLE);
+            crclepgbar.setProgress(taskType.schedule);
+        }
+        mWebView.setOnScrollChangedCallback((dx, dy) -> {
+            if(type.equals("1") && !TextUtils.isEmpty(ReadTask)){
+                crclepgbar.setProgress(0);
+            }
+        });
+        crclepgbar.setCircleSyntony(() -> {
+            bigGoldImage.setVisibility(View.VISIBLE);
+            if(ISToast && type.equals("1") && !TextUtils.isEmpty(ReadTask)){
+//            ObjectAnimator animator = ObjectAnimator.ofFloat(bigGoldImage, "scaleY", 1f, 3f, 1f);
+//            animator.setDuration(1000);
+//            animator.start();
+            AnimatorSet animatorSetsuofang = new AnimatorSet();
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(bigGoldImage, "scaleX", 0f, 1f, 0f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(bigGoldImage, "scaleY", 0f, 1f, 0f);
+            animatorSetsuofang.setDuration(1000);
+            animatorSetsuofang.setInterpolator(new DecelerateInterpolator());
+            animatorSetsuofang.play(scaleX).with(scaleY);
+            animatorSetsuofang.start();
+//            ToastUtils.setView(com.constellation.xylibrary.R.layout.toast_show);
+//            View view = ToastUtils.getView();
+//            ToastUtils.showLong("");
+//            ToastUtils.setView(null);
+            }
+        });
         mViewParent.addView(mWebView, new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.FILL_PARENT,
                 FrameLayout.LayoutParams.FILL_PARENT));
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(com.tencent.smtt.sdk.WebView view, String url) {
-                Log.e("url111", "shouldOverrideUrlLoading: "+url );
-                if(!TextUtils.isEmpty(url)) {
-                    if(DeeplinkUtils.getDeeplinkUtils().CanOpenDeeplink(AdviseMoreDetailActivity.this, url)){
-                        if(url.startsWith("http://") || url.startsWith("https://")){
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                mWebView.oldtsize = -1;
+                ISToast = true;
+                if(type.equals("1") && !TextUtils.isEmpty(ReadTask)){
+                    crclepgbar.setRestore();
+                }
+                if (!TextUtils.isEmpty(url)) {
+                    if (DeeplinkUtils.getDeeplinkUtils().CanOpenDeeplink(AdviseMoreDetailActivity.this, url)) {
+                        if (url.startsWith("http://") || url.startsWith("https://")) {
                             view.loadUrl(url);
-                        }else{
+                        } else {
                             DeeplinkUtils.getDeeplinkUtils().OpenDeeplink(AdviseMoreDetailActivity.this, url);
                         }
-                    }else{
+                    } else {
                         //隐士意图
                         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri
                                 .parse(url));
@@ -187,13 +248,13 @@ public class AdviseMoreDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onReceivedSslError(com.tencent.smtt.sdk.WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
+            public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
                 sslErrorHandler.proceed();//接受信任所有网站的证书
             }
 
             @Override
-            public void onPageFinished(com.tencent.smtt.sdk.WebView view, String url) {
-                 super.onPageFinished(view, url);
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
                 mTestHandler.sendEmptyMessageDelayed(MSG_OPEN_TEST_URL, 5000);// 5s?
                 if (Integer.parseInt(Build.VERSION.SDK) >= 16)
                     if (detail_toolbar != null && !TextUtils.isEmpty(view.getTitle())) {
@@ -202,28 +263,30 @@ public class AdviseMoreDetailActivity extends BaseActivity {
             }
         });
 
-        mWebView.setWebChromeClient(new com.tencent.smtt.sdk.WebChromeClient() {
+        mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public void onProgressChanged(com.tencent.smtt.sdk.WebView webView, int i) {
+            public void onProgressChanged(WebView webView, int i) {
                 super.onProgressChanged(webView, i);
-                 if (detail_progress != null){
+                if (detail_progress != null) {
                     detail_progress.setProgress(i);
-                    if(i == 100){
+                    if (i == 100) {
                         detail_progress.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         detail_progress.setVisibility(View.VISIBLE);
                     }
                 }
             }
 
             @Override
-            public boolean onJsConfirm(com.tencent.smtt.sdk.WebView arg0, String arg1, String arg2,
+            public boolean onJsConfirm(WebView arg0, String arg1, String arg2,
                                        JsResult arg3) {
                 return super.onJsConfirm(arg0, arg1, arg2, arg3);
             }
+
             View myVideoView;
             View myNormalView;
             IX5WebChromeClient.CustomViewCallback callback;
+
             /**
              * 全屏播放配置
              */
@@ -286,7 +349,7 @@ public class AdviseMoreDetailActivity extends BaseActivity {
                 .getPath());
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        Log.e("url111", "shouldOverrideUrlLoading:111 "+ url);
+        Log.e("url111", "shouldOverrideUrlLoading:111 " + url);
         mWebView.loadUrl(url);
         CookieSyncManager.createInstance(AdviseMoreDetailActivity.this);
         CookieSyncManager.getInstance().sync();
