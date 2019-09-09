@@ -19,7 +19,6 @@ android {
         renderscriptSupportModeEnabled true
         ndk {
             abiFilters "x86", "armeabi", "arm64-v8a", 'armeabi-v7a', 'armeabi-v8a', "mips"
-
         }
     }
 
@@ -70,6 +69,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
+
+        debug {
+            // 是否进行混淆
+            minifyEnabled false
+            debuggable true
+            shrinkResources false    // 移除无用的resource文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
     }
 
     compileOptions {
@@ -106,12 +114,8 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-3'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation 'com.kyleduo.switchbutton:library:2.0.0'
-    //PushSDK必须依赖基础组件库，所以需要加入对应依赖
-    implementation 'com.umeng.umsdk:common:2.0.0'
-    //PushSDK必须依赖utdid库，所以需要加入对应依赖
-    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
-    //PushSDK
-    implementation 'com.umeng.umsdk:push:5.0.2'
+
+
     implementation files('libs/xuanyin.jar')
     //推啊广告 Android SDK
     implementation 'com.tuia:sdk:2.3.9-release'
@@ -139,6 +143,7 @@ dependencies {
 //    implementation files('libs/tnet4android-3.1.14.9.jar')
 //    implementation files('libs/umeng-push-6.0.1.jar')
     implementation(name: 'alicloud-android-hotfix-3.2.8', ext: 'aar')
+
     //小米Push通道
     implementation 'com.umeng.umsdk:xiaomi-push:3.6.17'
     implementation 'com.umeng.umsdk:xiaomi-umengaccs:1.1.0'
@@ -153,4 +158,9 @@ dependencies {
     //Oppo Push通道
     implementation 'com.umeng.umsdk:oppo-push:1.0.1'
     implementation 'com.umeng.umsdk:oppo-umengaccs:1.0.3'
+
+    //视频播放 required
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.7.0'
+    // Default control panel: optional
+    implementation 'org.salient.artvideoplayer:artplayer-ui:0.7.0'
 }

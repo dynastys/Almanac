@@ -23,7 +23,6 @@
         android:background="@drawable/sign_in_activate"
         >
         <TextView
-            android:id="@+id/grad_sign_in_gold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="300"

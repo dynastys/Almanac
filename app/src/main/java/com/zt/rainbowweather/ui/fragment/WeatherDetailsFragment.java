@@ -23,7 +23,10 @@ import com.qq.e.ads.banner2.UnifiedBannerADListener;
 import com.qq.e.ads.banner2.UnifiedBannerView;
 import com.qq.e.comm.util.AdError;
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.Interface.OnInitViewListener;
 import com.xy.xylibrary.base.BaseFragment;
+import com.xy.xylibrary.base.BasicDialog;
+import com.xy.xylibrary.config.DialogConfig;
 import com.xy.xylibrary.utils.GlideUtil;
 import com.xy.xylibrary.utils.SaveShare;
 import com.zt.rainbowweather.api.RequestSyntony;
@@ -37,6 +40,7 @@ import com.zt.rainbowweather.ui.activity.DXiangLiActivity;
 import com.zt.rainbowweather.ui.activity.YiJiActivity;
 import com.zt.rainbowweather.utils.PopupWindowUtil;
 import com.zt.rainbowweather.utils.Util;
+import com.zt.rainbowweather.utils.WeatherDetailsDialog;
 import com.zt.rainbowweather.utils.WeatherUtils;
 import com.zt.rainbowweather.view.ChangeTextViewSpace;
 import com.zt.rainbowweather.view.SunriseView;
@@ -142,6 +146,22 @@ public class WeatherDetailsFragment extends BaseFragment implements RequestSynto
         return R.layout.fragment_weather_details;
     }
 
+    private void DialogShow(String title, int notes,int image,int type){
+        WeatherDetailsDialog weatherDetailsDialog = new WeatherDetailsDialog(getActivity(),title, notes,image,type);
+        weatherDetailsDialog.setCanceledOnTouchOutside(false);
+        weatherDetailsDialog.show();
+        weatherDetailsDialog.setClicklistener(new WeatherDetailsDialog.ClickListenerInterface() {
+            @Override
+            public void doConfirm() {
+
+            }
+
+            @Override
+            public void doCancel() {
+                weatherDetailsDialog.dismiss();
+            }
+        });
+    }
     @Override
     protected void initData(View view) {
         try {
@@ -233,7 +253,7 @@ public class WeatherDetailsFragment extends BaseFragment implements RequestSynto
                 }
             }
         });
-        windPowerPopup.setOnClickListener(v -> menuWindow = PopupWindowUtil.getPopupWindowUtil().setPopupWindowUtil(getActivity(), R.layout.pop_menu,true, humidityPopup, WeatherDetailsFragment.this));
+//        windPowerPopup.setOnClickListener(v -> menuWindow = PopupWindowUtil.getPopupWindowUtil().setPopupWindowUtil(getActivity(), R.layout.pop_menu,true, humidityPopup, WeatherDetailsFragment.this));
         if (ISAD) {
             ISAD = false;
             String ISAD = SaveShare.getValue(getActivity(), "ISAD");
@@ -422,7 +442,7 @@ public class WeatherDetailsFragment extends BaseFragment implements RequestSynto
 
     }
 
-    @OnClick({R.id.ji_yi_lin, R.id.dynamic_state, R.id.ad_image_banner_clear, R.id.humidity_popup})
+    @OnClick({R.id.ji_yi_lin, R.id.dynamic_state, R.id.ad_image_banner_clear, R.id.humidity_popup,R.id.wind_power_popup,R.id.weather_details_today_excellent_bg_rel,R.id.sendible_temperature_rel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ji_yi_lin:
@@ -439,9 +459,18 @@ public class WeatherDetailsFragment extends BaseFragment implements RequestSynto
                 adLin.setVisibility(View.GONE);
                 break;
             case R.id.humidity_popup:
-                menuWindow = PopupWindowUtil.getPopupWindowUtil().setPopupWindowUtil(getActivity(), R.layout.pop_menu,false, humidityPopup, WeatherDetailsFragment.this);
+                DialogShow("室内空气质量标准：",R.string.popup_tv,R.mipmap.humidity,0);
+//                menuWindow = PopupWindowUtil.getPopupWindowUtil().setPopupWindowUtil(getActivity(), R.layout.pop_menu,false, humidityPopup, WeatherDetailsFragment.this);
                 break;
-
+            case R.id.wind_power_popup:
+                DialogShow("",R.string.wind_power_popup_tv,R.mipmap.wind_power,2);
+                 break;
+            case R.id.weather_details_today_excellent_bg_rel:
+                DialogShow("",R.string.air_quality_popup_tv,R.mipmap.air_quality,2);
+                 break;
+            case R.id.sendible_temperature_rel:
+                DialogShow("",R.string.ultraviolet_ray_popup_tv,R.mipmap.ultraviolet_ray_head,1);
+                break;
         }
     }
 

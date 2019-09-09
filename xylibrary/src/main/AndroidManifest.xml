@@ -8,7 +8,12 @@
         <activity
             android:name="com.xy.xylibrary.ui.activity.task.LookOverDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.xy.xylibrary.ui.fragment.task.WithdrawDepositActivity"></activity>
+        <activity android:name="com.xy.xylibrary.ui.fragment.task.WithdrawDepositActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name="com.xy.xylibrary.ui.fragment.task.WithdrawalRecordActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

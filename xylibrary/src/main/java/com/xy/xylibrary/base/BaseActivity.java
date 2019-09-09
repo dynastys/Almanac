@@ -262,6 +262,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
         // 接受软键盘输入的编辑文本或其它视图
         inputMethodManager.showSoftInput(submitBt, InputMethodManager.SHOW_FORCED);
     }
+    /**
+     * 隐藏键盘
+     */
+    protected void hideInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        View v = getWindow().peekDecorView();
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
 
     //关闭输入法
     protected void IMEClose(final EditText txtSearchKey) {

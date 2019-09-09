@@ -73,7 +73,9 @@ public class TaskLogic {
     private TTAdNative mTTAdNative;
     private String taskID;//翻倍任务id
     private RecyclerView listRecycler;
-
+    private TaskType taskTypeVideo;//激励视频
+    private boolean ISVideo = true;
+    private BaseAdapter baseAdapter;
     public static TaskLogic getTaskLogic() {
         if (taskLogic == null) {
             synchronized (TaskLogic.class) {
@@ -108,13 +110,13 @@ public class TaskLogic {
             public void onNext(AppTaskList appTaskList) {
                 try {
                     if (appTaskList != null && appTaskList.getData() != null && appTaskList.getData().size() > 0) {
-    //                     LitePal.deleteAll(TaskType.class);
+//                         LitePal.deleteAll(TaskType.class);
                         setTaskList(context, listRecycler, appTaskList.getData());
                        if(TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                            return;
                        }
                         dataBeans = LitePal.findAll(TaskType.class);
-                        if (dataBeans.size() > 0) {
+                        if (dataBeans.size() > 0 && dataBeans.size() == appTaskList.getData().size()) {
                             for (int i = 0; i < dataBeans.size(); i++) {
                                  dataBeans.get(i).taskId = appTaskList.getData().get(i).getId();
                                 dataBeans.get(i).tasksize = appTaskList.getData().get(i).getCompleteNumber();
@@ -124,16 +126,19 @@ public class TaskLogic {
                                 dataBeans.get(i).tasktype = appTaskList.getData().get(i).getMultitaskingType();
                                 dataBeans.get(i).IsDouble = appTaskList.getData().get(i).isIsDelete();
                                 dataBeans.get(i).gold = appTaskList.getData().get(i).getShowMinGold();
+                                dataBeans.get(i).CompleteMinTime = appTaskList.getData().get(i).getCompleteMinTime();
                                 if(!TextUtils.isEmpty(dataBeans.get(i).time) && dataBeans.get(i).time.equals(Utils.getOldDate(0))){
                                 }else{
                                     dataBeans.get(i).ISStartTask = false;
                                     dataBeans.get(i).time = Utils.getOldDate(0);
                                 }
-                                dataBeans.add(dataBeans.get(i));
+//                                dataBeans.add(dataBeans.get(i));
     //                            SaveShare.saveValue(context,"TaskId",dataBeans.get(i).taskId);
                             }
     //
                         }else{
+                            LitePal.deleteAll(TaskType.class);
+                            dataBeans.clear();
                             for (int i = 0; i < appTaskList.getData().size(); i++) {
                                 TaskType taskType = new TaskType();
                                 taskType.taskId = appTaskList.getData().get(i).getId();
@@ -152,110 +157,131 @@ public class TaskLogic {
                                 dataBeans.add(taskType);
                                 SaveShare.saveValue(context,"TaskId",taskType.taskId);
                             }
-                            LitePal.saveAll(dataBeans);
                         }
-
+                        LitePal.saveAll(dataBeans);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }
 
     public void setTaskList(final Activity context, RecyclerView listRecycler, final List<AppTaskList.DataBean> beans) {
         try {
+
 //        getAppTaskList(context,listRecycler);
-            ScrollLinearLayoutManager setScrollEnable = new ScrollLinearLayoutManager(context);
-            setScrollEnable.setScrollEnable(false);
-            listRecycler.setLayoutManager(setScrollEnable);
-            BaseAdapter baseAdapter = new BaseAdapter<>(R.layout.recycler_item_task, beans, new BaseAdapterListener<AppTaskList.DataBean>() {
-                @Override
-                public void convertView(final BaseViewHolder viewHolder, AppTaskList.DataBean item) {
-                    try {
-                        if (item.getCompleteNumber() > 1 && item.getU_CompleteNumber() != item.getCompleteNumber()) {
-                            CustomHorizontalProgresNoNum horizontalProgress1 = viewHolder.getView(R.id.horizontalProgress1);
-                            horizontalProgress1.setVisibility(View.VISIBLE);
-                            viewHolder.getView(R.id.receive_btn).setVisibility(View.GONE);
-                            horizontalProgress1.setProgress(0);
-                            horizontalProgress1.setSchedule(item.getU_CompleteNumber() + "/" + item.getCompleteNumber());
-                            horizontalProgress1.setMax(100);
-                            horizontalProgress1.setProgress((int) (((double) item.getU_CompleteNumber() / item.getCompleteNumber()) * 100));
-                        } else {
-                            final TextView receive_btn = viewHolder.getView(R.id.receive_btn);
-                            viewHolder.getView(R.id.receive_btn).setVisibility(View.VISIBLE);
-                            viewHolder.getView(R.id.horizontalProgress1).setVisibility(View.GONE);
-                            if (item.isU_IsComplete()) {
-                                receive_btn.setText("领取完成");
-                                receive_btn.setBackground(context.getResources().getDrawable(R.drawable.finish_search_5));
+            if(baseAdapter == null){
+                ScrollLinearLayoutManager setScrollEnable = new ScrollLinearLayoutManager(context);
+                setScrollEnable.setScrollEnable(false);
+                listRecycler.setLayoutManager(setScrollEnable);
+                listRecycler.addItemDecoration(new DividerItemDecoration(context, 1));
+            }
+              baseAdapter = new BaseAdapter<>(R.layout.recycler_item_task, beans, new BaseAdapterListener<AppTaskList.DataBean>() {
+                    @Override
+                    public void convertView(final BaseViewHolder viewHolder, AppTaskList.DataBean item) {
+                        try {
+                            if (item.getCompleteNumber() > 1 && item.getU_CompleteNumber() != item.getCompleteNumber()) {
+                                CustomHorizontalProgresNoNum horizontalProgress1 = viewHolder.getView(R.id.horizontalProgress1);
+                                horizontalProgress1.setVisibility(View.VISIBLE);
+                                viewHolder.getView(R.id.receive_btn).setVisibility(View.GONE);
+                                horizontalProgress1.setProgress(0);
+                                horizontalProgress1.setSchedule(item.getU_CompleteNumber() + "/" + item.getCompleteNumber());
+                                horizontalProgress1.setMax(100);
+                                horizontalProgress1.setProgress((int) (((double) item.getU_CompleteNumber() / item.getCompleteNumber()) * 100));
                             } else {
-                                TaskType taskType = LitePal.where("tasktype = ?",item.getMultitaskingType()+"").findFirst(TaskType.class);
-                                if (taskType != null && taskType.ISStartTask) {
-                                    receive_btn.setText("立即领取");
-                                    receive_btn.setBackground(context.getResources().getDrawable(R.drawable.withdraw_search_5));
+                                final TextView receive_btn = viewHolder.getView(R.id.receive_btn);
+                                viewHolder.getView(R.id.receive_btn).setVisibility(View.VISIBLE);
+                                viewHolder.getView(R.id.horizontalProgress1).setVisibility(View.GONE);
+                                if (item.isU_IsComplete()) {
+                                    receive_btn.setText("领取完成");
+                                    receive_btn.setBackground(context.getResources().getDrawable(R.drawable.finish_search_5));
                                 } else {
-                                    receive_btn.setText("立即完成");
-                                    receive_btn.setBackground(context.getResources().getDrawable(R.drawable.search_5));
+                                    TaskType taskType = LitePal.where("tasktype = ?",item.getMultitaskingType()+"").findFirst(TaskType.class);
+                                    if (taskType != null && taskType.ISStartTask) {
+                                        receive_btn.setText("立即领取");
+                                        receive_btn.setBackground(context.getResources().getDrawable(R.drawable.withdraw_search_5));
+                                    } else {
+                                        receive_btn.setText("立即完成");
+                                        receive_btn.setBackground(context.getResources().getDrawable(R.drawable.search_5));
+                                    }
                                 }
                             }
+                            viewHolder.setText(R.id.task_title_tv, item.getName());
+                            viewHolder.setText(R.id.task_money, "最高+" + item.getShowMaxGold());
+                            viewHolder.setText(R.id.task_details, item.getDesc());
+                            final TextView receive_btn = viewHolder.getView(R.id.receive_btn);
+                        } catch (Resources.NotFoundException e) {
+                            e.printStackTrace();
                         }
-                        viewHolder.setText(R.id.task_title_tv, item.getName());
-                        viewHolder.setText(R.id.task_money, "最高可领取+" + item.getMaxGold());
-                        viewHolder.setText(R.id.task_details, item.getDesc());
-                        final TextView receive_btn = viewHolder.getView(R.id.receive_btn);
-                    } catch (Resources.NotFoundException e) {
-                        e.printStackTrace();
                     }
-                }
-            });
-            baseAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    try {
-                        final TextView receive_btn = view.findViewById(R.id.receive_btn);
-                        AcodeEmojiView acodeEmojiView = view.findViewById(R.id.view_point);
-                        final TextView btn3 = view.findViewById(R.id.btn3);
-                        acodeEmojiView.addEmoji(btn3);
-                        if(TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
-                            Intent intent1 = new Intent(context, LoginTypeActivity.class);
-                            context.startActivity(intent1);
-                            return;
-                        }
-                        if(beans.get(position).isU_IsComplete()){
-                            return;
-                        }
-                        if (receive_btn.getText().equals("立即领取")) {
-                            QuitDialog(context, "", beans.get(position).getId(),receive_btn);
-                        } else {
-                            TaskType taskType = dataBeans.get(position);
-                            taskType.taskId = beans.get(position).getId();
-                            switch (beans.get(position).getMultitaskingType()){
-                                case 1:
-                                    taskType.tasktype = 1;
-                                    break;
-                                case 2:
-        //                            taskType.tasktype = 2;
-                                    break;
-                                case 3:
-                                    taskType.tasktype = 3;
-                                    break;
-                                case 4:
-                                    taskType.tasktype = 4;
-                                    break;
+                });
+                baseAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        try {
+                            final TextView receive_btn = view.findViewById(R.id.receive_btn);
+                            AcodeEmojiView acodeEmojiView = view.findViewById(R.id.view_point);
+                            final TextView btn3 = view.findViewById(R.id.btn3);
+                            acodeEmojiView.addEmoji(btn3);
+                            if(TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                                Intent intent1 = new Intent(context, LoginTypeActivity.class);
+                                context.startActivity(intent1);
+                                return;
                             }
-                            EventBus.getDefault().post(taskType);
+                            if(beans.get(position).isU_IsComplete()){
+                                return;
+                            }
+                            if (receive_btn.getText().equals("立即领取")) {
+                                QuitDialog(context, "", beans.get(position).getId(),receive_btn);
+                            } else {
+                                TaskType taskType = dataBeans.get(position);
+                                taskType.taskId = beans.get(position).getId();
+                                switch (beans.get(position).getMultitaskingType()){
+                                    case 1://阅读
+                                        taskType.tasktype = 1;
+                                        break;
+//                                case 2:
+//        //                            taskType.tasktype = 2;
+//                                    break;
+                                    case 3://看天气
+                                        taskType.tasktype = 3;
+                                        break;
+                                    case 4://看小视频
+                                        taskType.tasktype = 4;
+                                        break;
+                                    case 5://查看7天预报
+                                        taskType.tasktype = 5;
+                                        break;
+                                    case 6://看运势
+                                        taskType.tasktype = 6;
+                                        break;
+                                    case 7://看奖励视频
+//                                    taskType.tasktype = 7;
+                                        taskTypeVideo = taskType;
+                                        ISVideo = false;
+                                        taskID = taskTypeVideo.taskId;
+                                        if (mttRewardVideoAd != null) {
+                                            //step6:在获取到广告后展示
+                                            mttRewardVideoAd.showRewardVideoAd(context);
+                                            mttRewardVideoAd = null;
+                                        } else {
+                                            ToastUtils.showLong("暂时不能加倍哦");
+                                        }
+                                        break;
+                                }
+                                EventBus.getDefault().post(taskType);
 //                            receive_btn.setText("立即领取");
 //                            receive_btn.setBackground(context.getResources().getDrawable(R.drawable.withdraw_search_5));
+                            }
+                        } catch (Resources.NotFoundException e) {
+                            e.printStackTrace();
                         }
-                    } catch (Resources.NotFoundException e) {
-                        e.printStackTrace();
-                    }
 
-                }
-            });
-            listRecycler.addItemDecoration(new DividerItemDecoration(context, 1));
-            listRecycler.setAdapter(baseAdapter);
+                    }
+                });
+
+                listRecycler.setAdapter(baseAdapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -283,6 +309,7 @@ public class TaskLogic {
                         receive_btn.setBackground(context.getResources().getDrawable(R.drawable.finish_search_5));
                         confirmDialog.dismiss();
                         if (mttRewardVideoAd != null) {
+                            ISVideo = true;
                             taskID = id;
                             //step6:在获取到广告后展示
                             mttRewardVideoAd.showRewardVideoAd(context);
@@ -365,11 +392,12 @@ public class TaskLogic {
 
                 @Override
                 public void onNext(AppSignInList appSignInList) {
+                    if (null != signInRort) {
+                        signInRort.SignIn(appSignInList);
+                    }
                     if (appSignInList != null && appSignInList.getData() != null) {
                         if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
-                            if (null != signInRort) {
-                                signInRort.SignIn(appSignInList);
-                            }
+
                             appSignInListData = appSignInList;
                             setSignData(appSignInList.getData().getSignAtureVms(), mStepView);
                             SaveShare.saveValue(context,"SignInId",appSignInList.getData().getSignAtureID());
@@ -419,13 +447,17 @@ public class TaskLogic {
 
                @Override
                public void onNext(SignIn signIn) {
-                   userGold.gold(null);
-                   AppSignInData(context, mStepView, signInRort);
-                   ToastUtils.setView(R.layout.toast_show);
-                   View view = ToastUtils.getView();
-                   ((TextView) view.findViewById(R.id.add_money)).setText(signIn.getData());
-                   ToastUtils.showLong("");
-                   ToastUtils.setView(null);
+                   try {
+                       userGold.gold(null);
+                       AppSignInData(context, mStepView, signInRort);
+                       ToastUtils.setView(R.layout.toast_show);
+                       View view = ToastUtils.getView();
+                       ((TextView) view.findViewById(R.id.add_money)).setText(signIn.getData());
+                       ToastUtils.showLong("");
+                       ToastUtils.setView(null);
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
                }
            });
         } catch (Exception e) {
@@ -553,10 +585,13 @@ public class TaskLogic {
                             Log.e("VideoAd", "onAdVideoBarClick: ");
                         }
 
+                        public void onSkippedVideo() {
+                        }
+
                         @Override
                         public void onAdClose() {
                             Log.e("VideoAd", "onAdClose: ");
-                            FinishTask(context, "", taskID, true);
+                            FinishTask(context, "", taskID, ISVideo);
                             loadVideoAd("923044756", TTAdConstant.VERTICAL);
                         }
 

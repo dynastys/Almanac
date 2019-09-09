@@ -49,7 +49,7 @@ public class SPUtils {
     }
 
     private SPUtils(String spName) {
-        if(!TextUtils.isEmpty(spName)){
+        if(utils.getApp() != null && !TextUtils.isEmpty(spName)){
             sp = utils.getApp().getSharedPreferences(spName, Context.MODE_PRIVATE);
         }
 

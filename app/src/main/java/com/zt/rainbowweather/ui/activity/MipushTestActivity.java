@@ -22,12 +22,14 @@ public class MipushTestActivity extends UmengNotifyClickActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_mipush_test);
+        Log.e("message", "onMessage: ");
 
     }
     @Override
     public void onMessage(Intent intent) {
         super.onMessage(intent);  //此方法必须调用，否则无法统计打开数
         String message = intent.getStringExtra(AgooConstants.MESSAGE_BODY);
+        Log.e("message", "onMessage: "+message);
         try {
             UMessage msg = new UMessage(new JSONObject(message));
             Map<String, String> extra = msg.extra;

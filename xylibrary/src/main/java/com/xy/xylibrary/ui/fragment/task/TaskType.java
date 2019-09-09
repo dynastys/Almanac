@@ -27,4 +27,5 @@ public class TaskType extends LitePalSupport {
 
     public String time;
 
+    public long CompleteMinTime;
 }

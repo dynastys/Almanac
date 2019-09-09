@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,18 +49,19 @@ public class BasicDialog extends DialogFragment {
     private DialogInterface.OnCancelListener mOnCancelListener;
 
     private Activity mActivity;
-
     @SuppressLint("ValidFragment")
     private BasicDialog() {
 
     }
+    @SuppressLint("ValidFragment")
+    private BasicDialog(FragmentActivity mActivity) {
+        this.mActivity = mActivity;
+    }
 
-    public static BasicDialog newInstance(DialogConfig configuration) {
-
+    public static BasicDialog newInstance(FragmentActivity mActivity, DialogConfig configuration) {
         Bundle args = new Bundle();
         args.putParcelable(KEY, configuration);
-
-        BasicDialog fragment = new BasicDialog();
+        BasicDialog fragment = new BasicDialog(mActivity);
         fragment.setArguments(args);
         return fragment;
     }
@@ -151,7 +153,7 @@ public class BasicDialog extends DialogFragment {
     }
 
     public void show() {
-        show(mActivity.getFragmentManager(), mConfig.tag);
+        show();
     }
 
     @Override

@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.zt.rainbowweather.view.tab.SlidingTabLayout;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseAdapter;
 import com.xy.xylibrary.base.BaseFragment;
@@ -46,7 +48,7 @@ public class ServerManager {
         return serverManager;
     }
 
-    public void FragmentsData(AppCompatActivity context, TabLayout tablayoutServiceVp, CustomScrollViewPager viewpagerService){
+    public void FragmentsData(AppCompatActivity context, SlidingTabLayout tablayoutServiceVp, CustomScrollViewPager viewpagerService){
         try {
             BackgroundRequest.getBackgroundRequest().getPersonalCenterIconData(context, "huawei", new RequestSyntony<PersonalCenterIcon>() {
                 @Override
@@ -61,35 +63,41 @@ public class ServerManager {
 
                 @Override
                 public void onNext(PersonalCenterIcon personalCenterIcon) {
-                    mFragment = new ArrayList<>();
-                    for (int i = 0; i < personalCenterIcon.getData().size(); i++) {
-                        tablayoutServiceVp.addTab(tablayoutServiceVp.newTab().setText(personalCenterIcon.getData().get(i).getName()));
-                        TabServiceFragment tabServiceFragment = new TabServiceFragment();
-                        //传递数据到fragment
-                        Bundle data = new Bundle();
-                        data.putSerializable("Icon", (Serializable) personalCenterIcon.getData().get(i).getIcons());
-                        tabServiceFragment.setArguments(data);
-                        tabServiceFragment.setviewPager(viewpagerService);
-                        mFragment.add(tabServiceFragment);
+                    try {
+                        mFragment = new ArrayList<>();
+                        String[] mTitles = new String[personalCenterIcon.getData().size()];
+                        for (int i = 0; i < personalCenterIcon.getData().size(); i++) {
+                            mTitles[i] = personalCenterIcon.getData().get(i).getName();
+    //                        tablayoutServiceVp.addTab(tablayoutServiceVp.newTab().setText(personalCenterIcon.getData().get(i).getName()));
+                            TabServiceFragment tabServiceFragment = new TabServiceFragment();
+                            //传递数据到fragment
+                            Bundle data = new Bundle();
+                            data.putSerializable("Icon", (Serializable) personalCenterIcon.getData().get(i).getIcons());
+                            tabServiceFragment.setArguments(data);
+                            tabServiceFragment.setviewPager(viewpagerService);
+                            mFragment.add(tabServiceFragment);
+                        }
+
+                        viewpagerService.setAdapter(new FragmentPagerAdapter(context.getSupportFragmentManager()) {
+                            @Override
+                            public BaseFragment getItem(int position) {
+                                return mFragment.get(position);
+                            }
+
+                            @Override
+                            public int getCount() {
+                                return mFragment.size();
+                            }
+                            @Override
+                            public CharSequence getPageTitle(int position) {
+                                return  personalCenterIcon.getData().get(position).getName();
+                            }
+                        });
+                        viewpagerService.setOffscreenPageLimit(4);
+                        tablayoutServiceVp.setViewPager(viewpagerService, mTitles);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                    viewpagerService.setAdapter(new FragmentPagerAdapter(context.getSupportFragmentManager()) {
-                        @Override
-                        public BaseFragment getItem(int position) {
-                            return mFragment.get(position);
-                        }
-
-                        @Override
-                        public int getCount() {
-                            return mFragment.size();
-                        }
-                        @Override
-                        public CharSequence getPageTitle(int position) {
-                            return  personalCenterIcon.getData().get(position).getName();
-                        }
-                    });
-                    viewpagerService.setOffscreenPageLimit(4);
-                    tablayoutServiceVp.setupWithViewPager(viewpagerService);
                 }
             });
         } catch (Exception e) {
@@ -108,7 +116,7 @@ public class ServerManager {
             baseAdapter2 = new BaseAdapter<>(R.layout.popup_recycler_item, serviceList.getData(), (viewHolder, item) -> {
                 try {
                     viewHolder.setText(R.id.popup_recycler_tv, item.getTitle());
-                    GlideUtil.getGlideUtil().setImages(context, item.getCover(), viewHolder.getView(R.id.popup_recycler_image));
+                    GlideUtil.getGlideUtil().setImages(context, item.getCover(), viewHolder.getView(R.id.popup_recycler_image),20);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

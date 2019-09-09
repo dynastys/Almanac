@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <solid android:color="@color/nb_divider_narrow"/>
+    <solid android:color="#3f1b1b1b"/>
 
     <corners
         android:bottomLeftRadius="20dp"

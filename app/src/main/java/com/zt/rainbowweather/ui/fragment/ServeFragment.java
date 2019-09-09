@@ -56,6 +56,7 @@ import com.zt.rainbowweather.ui.service.CancelNoticeService;
 import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.rainbowweather.view.MineRowView;
+import com.zt.rainbowweather.view.tab.SlidingTabLayout;
 import com.zt.weather.R;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
@@ -106,7 +107,7 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     @BindView(R.id.tv_fans)
     TextView tvFans;
     @BindView(R.id.tablayout_service_vp)
-    TabLayout tablayoutServiceVp;
+    SlidingTabLayout tablayoutServiceVp;
     @BindView(R.id.viewpager_service)
     CustomScrollViewPager viewpagerService;
     @BindView(R.id.sw_night_mode)
@@ -195,7 +196,7 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         try {
-            IsWeChat();
+
             if (isVisibleToUser) {
                 MobclickAgent.onEvent(getActivity(), "my");
             }
@@ -208,6 +209,7 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
         }
 
         if (isVisibleToUser && recyclerService != null) {
+            IsWeChat();
             EventBus.getDefault().post(new IsUserLight(false));
             if (serverManager == null) {
                 serverManager = ServerManager.getServerManager();
@@ -220,8 +222,8 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
                             .setColorResource(R.color.nb_divider_narrow)
                             .setShowLastLine(true)
                             .build();
-                    ListRecycler.addItemDecoration(divider);
-                    recyclerService.addItemDecoration(divider);
+//                    ListRecycler.addItemDecoration(divider);
+//                    recyclerService.addItemDecoration(divider);
                     AlmanacRequest.getAlmanacRequest().getGainIconData(getActivity(), 3, "", ServeFragment.this);
                 }
                 swNightMode.setChecked(true);
@@ -261,7 +263,11 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
                 bindingWeChat.setVisibility(View.GONE);
                 tvName.setText("已登录");
                 tvFans.setVisibility(View.VISIBLE);
-                tvFans.setText(phoneDta.nickname);
+                if(TextUtils.isEmpty(phoneDta.nickname)){
+                    tvFans.setText(phoneDta.name);
+                }else{
+                    tvFans.setText(phoneDta.nickname);
+                }
                 if (!TextUtils.isEmpty(phoneDta.headimgurl)) {
                     GlideUtil.getGlideUtil().setImages(getActivity(),phoneDta.headimgurl, imgAvatar);
                 }

@@ -107,7 +107,6 @@
 
                  </LinearLayout>
                  <RelativeLayout
-                     android:id="@+id/sign_in_lin"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:layout_below="@+id/lin_money"
@@ -151,14 +150,15 @@
                          android:id="@+id/broken_line_s"
                          android:visibility="gone"
                          />
-                     <com.xy.xylibrary.signin.StepsView
-                         android:id="@+id/step_view"
-                         android:layout_below="@+id/broken_line_s"
-                         android:layout_width="wrap_content"
-                         android:layout_centerHorizontal="true"
-                         android:layout_marginRight="@dimen/dp_10"
-                         android:layout_marginLeft="@dimen/dp_5"
-                         android:layout_height="77dp" />
+
+                         <com.xy.xylibrary.signin.StepsView
+                             android:id="@+id/step_view"
+                             android:layout_below="@+id/broken_line_s"
+                             android:layout_width="wrap_content"
+                             android:layout_centerHorizontal="true"
+                             android:layout_height="77dp" />
+
+
 
                      <TextView
                          android:id="@+id/sign_in_15"
@@ -231,7 +231,6 @@
                  android:background="@color/white"
                  >
                  <TextView
-                     android:id="@+id/daily_task"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:text="@string/task_list"

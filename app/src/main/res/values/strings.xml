@@ -20,21 +20,18 @@
     <string name="day">日</string>
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
-    <string name="load_more">加载更多</string>
     <string name="share_the_weather">分享天气</string>
     <string name="serve_txt">服务</string>
     <string name="instrument">本地服务</string>
     <string name="version_updating">1.添加反馈以后联系方式的填写\n2.添加初步的登录注册功能\n3.优化用户体验</string>
     <string name="index_of_living">生活指数</string>
     <string name="forecast_7">7天预报</string>
-    <string name="wallpaper_cut">壁纸切换</string>
     <string name="sunrise_and_sunset">日出日落</string>
     <string name="open_notification_bar">开启天气通知栏</string>
     <string name="skin_is_set">皮肤设置</string>
     <string name="clear_cache">清理缓存</string>
     <string name="message_feedback">留言反馈</string>
     <string name="about_us">关于我们</string>
-    <string name="temperature">温度</string>
     <string name="wind_power">风力</string>
     <string name="air_quality">空气质量</string>
     <string name="almanac">黄历</string>
@@ -44,16 +41,11 @@
     <string name="even_more">更多>></string>
     <string name="widget">桌面小部件设置</string>
     <string name="share">分享</string>
-    <string name="drawer_open">open</string>
-    <string name="close">close</string>
     <string name="add_city">添加城市</string>
-    <string name="wind_power_popup_tv">零级无风炊烟上；一级软风烟稍斜；\n二级轻风树叶响；三级微风树枝晃；\n
-                 四级和风灰尘起；五级清风水起波；\n
-                 六级强风大树摇；七级疾风步难行；\n
-                 八级大风树枝折；九级烈风烟囱毁；\n
-                 十级狂风树根拔；十一级暴风陆罕见；\n
-                 十二级飓风浪滔天。</string>
-    <string name="popup_tv">室内空气质量标准（GB/T18883）:\n 夏季制冷时，相对湿度以40%—80%为宜。\n 冬季采暖时，应控制在30%—60%。\n 老人和小孩适合的室内湿度为45%—50%。\n 哮喘等呼吸道系统疾病的患者适宜的室内湿度在40%—50%之间。</string>
+    <string name="air_quality_popup_tv">一级： 空气污染指数 ≤50优级\n二级： 空气污染指数 ≤100良好\n三级： 空气污染指数 ≤150轻度污染\n四级： 空气污染指数 ≤200中度污染\n五级： 空气污染指数 ≤300重度污染\n六级：空气污染指数>300严重污染</string>
+    <string name="wind_power_popup_tv">零级无风炊烟上；一级软风烟稍斜；\n二级轻风树叶响；三级微风树枝晃；\n四级和风灰尘起；五级清风水起波；\n六级强风大树摇；七级疾风步难行；\n八级大风树枝折；九级烈风烟囱毁；\n十级狂风树根拔；十一级暴风陆罕见；\n十二级飓风浪滔天。</string>
+    <string name="popup_tv">夏季制冷时，相对湿度以40%—80%为宜。\n 冬季采暖时，应控制在30%—60%。\n 老人和小孩适合的室内湿度为45%—50%。\n 哮喘等呼吸道系统疾病的患者适宜的室内湿度在40%—50%之间。</string>
+    <string name="ultraviolet_ray_popup_tv">指数值3到4，一般为多云天气，此时紫外线强度较弱，预报等级为二级；5到6，一般为少云天气，此时紫外线强度较强，预报等级为三级；7到9，一般为晴天无云，此时紫外线强度很强，预报等级为四级；达到或超过10，多为夏季晴日，紫外线强度特别强，预报等级为五级。</string>
     <string name="chanxiangli">单向历</string>
     <string name="distance">在一定的距离之外，每个人都可能是我们要找的那一个。</string>
     <string name="poet">诗人 余秀华</string>
@@ -69,5 +61,6 @@
     <string name="rain_alarm_pro">天气预警</string>
     <string name="setting">设置</string>
     <string name="next_two_hours">未来两小时无雨</string>
+    <string name="read_next_chapter">阅读下一篇赚金币哦！</string>
 
 </resources>

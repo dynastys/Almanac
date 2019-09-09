@@ -6,6 +6,8 @@ import com.xy.xylibrary.signin.AppTaskList;
 import com.xy.xylibrary.signin.FinishTask;
 import com.xy.xylibrary.signin.InvitedUsers;
 import com.xy.xylibrary.signin.SignIn;
+import com.xy.xylibrary.ui.activity.task.WithdrawDeposit;
+import com.xy.xylibrary.ui.activity.task.WithdrawalRecord;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -37,8 +39,8 @@ public interface LoginApi {
     /**
      * 绑定手机号
      */
-    @POST("v1/users/bind-Phone")
-    Observable<WeChat> BindingPhone(@Body RequestBody body);
+    @POST("api/v1/BindMobile")
+    Observable<Phone> BindingPhone(@Body RequestBody body);
 
     /**
      * 微信登录
@@ -107,4 +109,22 @@ public interface LoginApi {
      */
     @POST("api/v1/GetUserActiveInfo")
     Observable<UserActiveInfo> UserActiveInfo(@Body RequestBody body);
+
+    /**
+     * 提现
+     */
+    @POST("api/v1/Withdrawals")
+    Observable<WithdrawDeposit> WithdrawDeposit(@Body RequestBody body);
+
+    /**
+     * 获取用户提现记录
+     */
+    @POST("api/v1/GetWithdrawalsByUserID")
+    Observable<WithdrawalRecord> WithdrawalRecord(@Body RequestBody body);
+
+    /**
+     * 获取50条提现记录，用作轮播
+     */
+    @POST("api/v1/GetAllWithdrawals")
+    Observable<WithdrawalRecord> WithdrawalRecordCarousel(@Body RequestBody body);
 }

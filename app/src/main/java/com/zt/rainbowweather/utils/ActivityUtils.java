@@ -714,15 +714,19 @@ public final class ActivityUtils {
      * @return the name of launcher activity
      */
     public static String getLauncherActivity(@NonNull final String pkg) {
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PackageManager pm = utils.getApp().getPackageManager();
-        List<ResolveInfo> info = pm.queryIntentActivities(intent, 0);
-        for (ResolveInfo aInfo : info) {
-            if (aInfo.activityInfo.packageName.equals(pkg)) {
-                return aInfo.activityInfo.name;
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN, null);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PackageManager pm = utils.getApp().getPackageManager();
+            List<ResolveInfo> info = pm.queryIntentActivities(intent, 0);
+            for (ResolveInfo aInfo : info) {
+                if (aInfo.activityInfo.packageName.equals(pkg)) {
+                    return aInfo.activityInfo.name;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return "no " + pkg;
     }

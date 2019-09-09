@@ -2,6 +2,7 @@ package com.zt.rainbowweather.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.xy.xylibrary.ui.activity.login.LoginTypeActivity;
 import com.xy.xylibrary.ui.activity.login.RequestSyntony;
 import com.xy.xylibrary.ui.activity.login.UserMessage;
 import com.xy.xylibrary.ui.activity.login.WeChat;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.GlideUtil;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.ToastUtils;
@@ -128,7 +130,9 @@ public class IntegralWithdrawActivity extends BaseActivity implements RequestSyn
     @Override
     public void onResume() {
         super.onResume();
-        wxLogin();
+        if(versionsTv != null){
+            wxLogin();
+        }
     }
     //弹出框
     public void Cancellation(){
@@ -137,12 +141,19 @@ public class IntegralWithdrawActivity extends BaseActivity implements RequestSyn
         confirmDialog.setClicklistener(new UpdateDialog.ClickListenerInterface() {
             @Override
             public void doConfirm() {
-                confirmDialog.dismiss();
+                try {
+                    confirmDialog.dismiss();
                     SaveShare.saveValue(IntegralWithdrawActivity.this, "userId", "");
                     SaveShare.saveValue(IntegralWithdrawActivity.this, "Phone", "");
                     LitePal.deleteAll(UserMessage.class);
+                    LitePal.deleteAll(TaskType.class);
+
                     onResume();
+                    ToastUtils.setView(null);
                     ToastUtils.showLong("退出成功");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 //                RequestConnextor.getConnextor().Cancel(IntegralWithdrawActivity.this);
             }
 
@@ -153,21 +164,33 @@ public class IntegralWithdrawActivity extends BaseActivity implements RequestSyn
         });
     }
     public void wxLogin() {
-        phoneDta = LitePal.findLast(UserMessage.class);
-        phone = SaveShare.getValue(IntegralWithdrawActivity.this, "Phone");
-        if (phoneDta != null && !TextUtils.isEmpty(phoneDta.headimgurl)) {
-            GlideUtil.getGlideUtil().setImages(IntegralWithdrawActivity.this, phoneDta.headimgurl, integralWithdrawImage,1);
-        }
-        if (!TextUtils.isEmpty(phone) && phone != null) {
-            quitLogin.setText(getResources().getString(R.string.quit_login));
-            nickname.setText(phoneDta.nickname);
-        } else if (!TextUtils.isEmpty(phone)) {
-            nickname.setText("登录名：" + phoneDta.nickname);
-            quitLogin.setText(getResources().getString(R.string.quit_login));
-        } else {
-            nickname.setText("未登录");
-            integralWithdrawImage.setImageResource(R.mipmap.defa_head);
-            quitLogin.setText("登录");
+        try {
+            phoneDta = LitePal.findLast(UserMessage.class);
+            phone = SaveShare.getValue(IntegralWithdrawActivity.this, "Phone");
+            if (phoneDta != null && !TextUtils.isEmpty(phoneDta.headimgurl)) {
+                GlideUtil.getGlideUtil().setImages(IntegralWithdrawActivity.this, phoneDta.headimgurl, integralWithdrawImage,1);
+            }
+            if (!TextUtils.isEmpty(phone)) {
+                quitLogin.setText(getResources().getString(R.string.quit_login));
+                if(TextUtils.isEmpty(phoneDta.nickname)){
+                    nickname.setText(phoneDta.name);
+                }else{
+                    nickname.setText(phoneDta.nickname);
+                }
+            } else if (!TextUtils.isEmpty(phone)) {
+                if(TextUtils.isEmpty(phoneDta.nickname)){
+                    nickname.setText(phoneDta.name);
+                }else{
+                    nickname.setText(phoneDta.nickname);
+                }
+                quitLogin.setText(getResources().getString(R.string.quit_login));
+            } else {
+                nickname.setText("未登录");
+                integralWithdrawImage.setImageResource(R.mipmap.defa_head);
+                quitLogin.setText("登录");
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 

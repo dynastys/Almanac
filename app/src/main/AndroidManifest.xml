@@ -268,7 +268,7 @@
             android:screenOrientation="portrait" />
         <!-- 即时通讯模块、推送（均需要加入以下声明） START -->
         <!-- 即时通讯模块、推送都要使用 PushService -->
-        <service android:name="com.avos.avoscloud.PushService" />
+        <!--<service android:name="com.avos.avoscloud.PushService" />-->
 
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
@@ -332,7 +332,9 @@
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name="com.zt.rainbowweather.ui.activity.IntegralWithdrawActivity"></activity>
+        <activity android:name="com.zt.rainbowweather.ui.activity.IntegralWithdrawActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

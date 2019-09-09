@@ -2,6 +2,7 @@ package com.xy.xylibrary.ui.activity.login;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.xy.xylibrary.signin.AppInviteList;
 import com.xy.xylibrary.signin.AppSignInList;
@@ -9,6 +10,10 @@ import com.xy.xylibrary.signin.AppTaskList;
 import com.xy.xylibrary.signin.FinishTask;
 import com.xy.xylibrary.signin.InvitedUsers;
 import com.xy.xylibrary.signin.SignIn;
+import com.xy.xylibrary.ui.activity.task.WithdrawDeposit;
+import com.xy.xylibrary.ui.activity.task.WithdrawalRecord;
+import com.xy.xylibrary.utils.AESUtils;
+import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
 
 import org.json.JSONException;
@@ -25,7 +30,7 @@ public class LoginRequest {
 
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
     private static LoginRequest loginRequest;
-    private String Url = "http://47.99.132.67:8011/";
+    private String Url = "http://api.integrals.xingyuntianqi.com/";
     private String SignID = "A5AE4ED9-214C-4082-902A-3A8E31996417";//签到ID
 //    private String userID = "e7a3695d-c7e7-4821-8ac3-e8a05eb9c698";//    用户ID
     private String TaskID = "28CC8264-B564-4986-8F77-D08645B73533";//任务ID
@@ -52,11 +57,12 @@ public class LoginRequest {
             requestData.put("vCode", vCode);//"123"
             requestData.put("wxID",wxID);
             requestData.put("appId",AppID);//"62B0E5C9-F486-48B3-8B57-11F00B676F3E"
+            requestData.put("channel_code", RomUtils.app_youm_code);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).QueryEntryList(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).QueryEntryList(JSONObjectData(context,requestData.toString()))
                  .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<Phone>() {
@@ -89,8 +95,9 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).QueryRegisteList(requestBody)
+
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).QueryRegisteList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<RegisteJson>() {
@@ -115,20 +122,21 @@ public class LoginRequest {
     /**
      * 绑定手机号
      * */
-    public void getBindingPhoneData(Context context,String page,final RequestSyntony<WeChat> requestSyntony){
-//        JSONObject requestData = new JSONObject();
-//        try {
-//            requestData.put("app", "星云天气");
-//            requestData.put("page", page);
-//            requestData.put("content",content);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),page);
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,"http://api.xytq.qukanzixun.com/").BindingPhone(requestBody)
+    public void getBindingPhoneData(Context context,String mobile,String vCode,String userId,final RequestSyntony<Phone> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("mobile", mobile);//"1333333333"
+            requestData.put("vCode", vCode);//"123"
+            requestData.put("userId", userId);
+            requestData.put("appId",AppID);//"62B0E5C9-F486-48B3-8B57-11F00B676F3E"
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).BindingPhone(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
-                .subscribe(new Observer<WeChat>() {
+                .subscribe(new Observer<Phone>() {
                     @Override
                     public void onCompleted() {
                         requestSyntony.onCompleted();
@@ -140,8 +148,8 @@ public class LoginRequest {
                     }
 
                     @Override
-                    public void onNext(WeChat weChat) {
-                        requestSyntony.onNext(weChat);
+                    public void onNext(Phone phone) {
+                        requestSyntony.onNext(phone);
                     }
                 })
         );
@@ -155,11 +163,12 @@ public class LoginRequest {
         try {
             requestData.put("code", code);
             requestData.put("appId",AppID);//"62B0E5C9-F486-48B3-8B57-11F00B676F3E"
+            requestData.put("channel_code", RomUtils.app_youm_code);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).WeChatLogin(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).WeChatLogin(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<WeChatLogin>() {
@@ -209,7 +218,7 @@ public class LoginRequest {
     /**
      * *注册用户绑定微信号
      * */
-    public void getBindWechatData(Context context,String code,String userId,final RequestSyntony<BindWechat> requestSyntony){
+    public void getBindWechatData(Context context, String verifyCode, String code, final RequestSyntony<BindWechat> requestSyntony){
         JSONObject requestData = new JSONObject();
         try {
             requestData.put("code", code);//"021NN4NV0bJPP22xBpPV0V2kNV0NN4Nm"
@@ -220,8 +229,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).BindWechat(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).BindWechat(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<BindWechat>() {
@@ -257,8 +266,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppTaskList(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppTaskList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<AppTaskList>() {
@@ -295,8 +304,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).FinishTask(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).FinishTask(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<FinishTask>() {
@@ -328,8 +337,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppInviteList(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppInviteList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<AppInviteList>() {
@@ -365,8 +374,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppSignInList(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppSignInList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<AppSignInList>() {
@@ -402,8 +411,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).SignIn(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).SignIn(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<SignIn>() {
@@ -440,8 +449,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).InvitedUsers(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).InvitedUsers(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<InvitedUsers>() {
@@ -463,32 +472,51 @@ public class LoginRequest {
         );
     }
 
+//    /**
+//     * *用户退出注销 更改用户token 和最后一次登录时间
+//     * */
+//    public void getBindWechatData(Context context,final RequestSyntony<Exit> requestSyntony){
+//        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,"http://api.xytq.qukanzixun.com/").Cancel()
+//                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+//                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+//                .subscribe(new Observer<Exit>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        requestSyntony.onCompleted();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        requestSyntony.onError(e);
+//                    }
+//
+//                    @Override
+//                    public void onNext(Exit exit) {
+//                        requestSyntony.onNext(exit);
+//                    }
+//                })
+//        );
+//    }
     /**
-     * *用户退出注销 更改用户token 和最后一次登录时间
+     * 封装的请求加密数据
      * */
-    public void getBindWechatData(Context context,final RequestSyntony<Exit> requestSyntony){
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,"http://api.xytq.qukanzixun.com/").Cancel()
-                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
-                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
-                .subscribe(new Observer<Exit>() {
-                    @Override
-                    public void onCompleted() {
-                        requestSyntony.onCompleted();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        requestSyntony.onError(e);
-                    }
-
-                    @Override
-                    public void onNext(Exit exit) {
-                        requestSyntony.onNext(exit);
-                    }
-                })
-        );
-    }
-
+     private RequestBody JSONObjectData(Context context,String requestData){
+         RequestBody requestBody = null;
+         try {
+              SaveShare.saveValue(context, "utoken",AESUtils.getInstance().encrypt2(System.currentTimeMillis()+""));
+             JSONObject request = new JSONObject();
+             try {
+                 request.put("requestModel",  AESUtils.getInstance().encrypt2(requestData.toString()));
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+              requestBody = RequestBody.create(MediaType.parse("application/json"),request.toString());
+             return requestBody;
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         return requestBody;
+     }
     /**
      * 获取用户信息
      *
@@ -500,12 +528,10 @@ public class LoginRequest {
             if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                 requestData.put("userId", SaveShare.getValue(context, "userId"));
             }
-//            requestData.put("multitaskingID", multitaskingID);
-        } catch (JSONException e) {
+         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).UserInfo(requestBody)
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).UserInfo(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<UserInfo>() {
@@ -528,7 +554,7 @@ public class LoginRequest {
     }
 
     /**
-     * 获取用户信息
+     * 获取用户活跃记录
      *
      */
     public void getUserActiveInfoData(Context context,String appid,String uesrid,final RequestSyntony<UserActiveInfo> requestSyntony){
@@ -542,8 +568,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).UserActiveInfo(requestBody)
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).UserActiveInfo(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<UserActiveInfo>() {
@@ -560,6 +586,120 @@ public class LoginRequest {
                     @Override
                     public void onNext(UserActiveInfo userInfo) {
                         requestSyntony.onNext(userInfo);
+                    }
+                })
+        );
+    }
+
+    /**
+     * 提现
+     *
+     */
+    public void getWithdrawDepositData(Context context,String desc,int gold,final RequestSyntony<WithdrawDeposit> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("appId", AppID);
+            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                requestData.put("userId", SaveShare.getValue(context, "userId"));
+            }
+            requestData.put("gold", gold);
+            requestData.put("WxNumber", desc);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).WithdrawDeposit(JSONObjectData(context,requestData.toString()))
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<WithdrawDeposit>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(WithdrawDeposit withdrawDeposit) {
+                        requestSyntony.onNext(withdrawDeposit);
+                    }
+                })
+        );
+    }
+
+    /**
+     * 获取用户提现记录
+     *
+     */
+    public void getWithdrawalRecordData(Context context,final RequestSyntony<WithdrawalRecord> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("appId", AppID);
+            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                requestData.put("userId", SaveShare.getValue(context, "userId"));
+            }
+//            requestData.put("multitaskingID", multitaskingID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).WithdrawalRecord(JSONObjectData(context,requestData.toString()))
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<WithdrawalRecord>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(WithdrawalRecord withdrawalRecord) {
+                        requestSyntony.onNext(withdrawalRecord);
+                    }
+                })
+        );
+    }
+
+    /**
+     * 获取50条提现记录，用作轮播
+     *
+     */
+    public void getWithdrawalRecordCarouselData(Context context,final RequestSyntony<WithdrawalRecord> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("appId", AppID);
+            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                requestData.put("userId", SaveShare.getValue(context, "userId"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).WithdrawalRecordCarousel(JSONObjectData(context,requestData.toString()))
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<WithdrawalRecord>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(WithdrawalRecord withdrawalRecord) {
+                        requestSyntony.onNext(withdrawalRecord);
                     }
                 })
         );

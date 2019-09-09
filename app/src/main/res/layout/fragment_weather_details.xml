@@ -136,7 +136,6 @@
                     android:padding="@dimen/dp_10"
                     android:layout_weight="1"
                     android:id="@+id/wind_power_popup"
-
                     >
                     <TextView
                         android:layout_width="wrap_content"
@@ -176,6 +175,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dp_10"
                     android:layout_weight="1"
+                    android:id="@+id/weather_details_today_excellent_bg_rel"
                      >
                     <TextView
                         android:layout_width="wrap_content"
@@ -230,6 +230,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dp_10"
                     android:layout_weight="1"
+                    android:id="@+id/sendible_temperature_rel"
                      >
                     <TextView
                         android:layout_width="wrap_content"
@@ -267,12 +268,14 @@
             <RelativeLayout
                 android:id="@+id/WD_GDT_ad"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
                 >
 
             </RelativeLayout>
+
             <include layout="@layout/ad_item"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,7 +287,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="#2fffffff"
-
                     android:id="@+id/dynamic_state_lin"
                     >
                     <TextView

@@ -15,7 +15,6 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ad_bg"
             android:id="@+id/ad_image_banner"
             />
 

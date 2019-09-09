@@ -8,13 +8,17 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.constellation.xylibrary.R;
 import com.xy.xylibrary.utils.SizeUtils;
+import com.xy.xylibrary.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.xy.xylibrary.utils.DensityUtil.getScreenWidth;
 
 /**
  * description: 自定义签到View.
@@ -152,6 +156,7 @@ public class StepsView extends View {
      */
     private int mPosition;
     private int[] mMax;
+    private int widthMeasureSpec;
 
     public StepsView(Context context) {
         this(context, null);
@@ -208,11 +213,14 @@ public class StepsView extends View {
         mDefaultIcon = ContextCompat.getDrawable(getContext(), R.drawable.sign_in_default);
         //UP的icon
         mUpIcon = ContextCompat.getDrawable(getContext(), R.drawable.jifendikuai);
+
     }
 
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        this.widthMeasureSpec = 11 * getScreenWidth() / 12;
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
+
     }
 
     @Override
@@ -262,6 +270,7 @@ public class StepsView extends View {
     @SuppressLint("DrawAllocation")
     private void drawSign(Canvas canvas) {
         for (int i = 0; i < mCircleCenterPointPositionList.size(); i++) {
+
             //绘制线段
             float preComplectedXPosition = mCircleCenterPointPositionList.get(i);
             if (i != mCircleCenterPointPositionList.size() - 1) {
@@ -346,13 +355,13 @@ public class StepsView extends View {
             //0表示不需要显示积分，非0表示需要消失积分
             if (stepsBean.getNumber() != 0) {
                 canvas.drawText("+" + stepsBean.getNumber(),
-                        currentComplectedXPosition - SizeUtils.dip2px(getContext(), 8f),
+                        currentComplectedXPosition - mIconWidth / 2,
                         mCenterY / 2 - SizeUtils.dip2px(getContext(), 0.5f),
                         mTextNumberPaint);
             }
             //天数文字
             canvas.drawText(stepsBean.getDay(),
-                    currentComplectedXPosition - SizeUtils.dip2px(getContext(), 14f),
+                    currentComplectedXPosition - mIconWidth / 2 + SizeUtils.dip2px(getContext(), 5f),
                     mCenterY + SizeUtils.dip2px(getContext(), 30f),
                     mTextDayPaint);
         }
@@ -374,7 +383,10 @@ public class StepsView extends View {
      */
     @SuppressLint("DrawAllocation")
     private void drawUnSign(Canvas canvas) {
-
+        Log.e("drawSign", "drawSign: "+widthMeasureSpec );
+        if(widthMeasureSpec > 0){
+            mLineWidth = (widthMeasureSpec - (7*mIconWidth))/7;
+        }
         for (int i = 0; i < mCircleCenterPointPositionList.size(); i++) {
             //绘制线段
             float preComplectedXPosition = mCircleCenterPointPositionList.get(i) + mIconWidth / 2;
@@ -443,7 +455,7 @@ public class StepsView extends View {
             if (stepsBean.getNumber() != 0) {
                 //积分文字
                 canvas.drawText("+" + stepsBean.getNumber(),
-                        currentComplectedXPosition - SizeUtils.dip2px(getContext(), 8f),
+                        currentComplectedXPosition - mIconWidth / 2,
                         mCenterY / 2 - SizeUtils.dip2px(getContext(), 0.5f),
                         mTextNumberPaint);
             }
@@ -451,7 +463,7 @@ public class StepsView extends View {
 
             //天数文字
             canvas.drawText(stepsBean.getDay(),
-                    currentComplectedXPosition - SizeUtils.dip2px(getContext(), 12f),
+                    currentComplectedXPosition - mIconWidth / 2 + SizeUtils.dip2px(getContext(), 5f),
                     mCenterY + SizeUtils.dip2px(getContext(), 30f),
                     mTextDayPaint);
         }

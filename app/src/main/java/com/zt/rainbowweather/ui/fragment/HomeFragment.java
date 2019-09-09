@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -126,19 +127,23 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
     private ItemTouchHelper itemTouchHelper;
     private CityWeatherQuantity cityWeatherQuantity;
     private List<City> cities = new ArrayList<>();
-    private static boolean ISOPEN = false;
+    private boolean ISOPEN = true;
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Uri bitmap = Shares.localshare(getActivity(), "aaa", null, true);
-            if (bitmap != null) {
-                ShareActivity.startActivity(getActivity(), bitmap);
+            try {
+                Uri bitmap = Shares.localshare(getActivity(), "aaa", null, true);
+                if (bitmap != null) {
+                    ShareActivity.startActivity(getActivity(), bitmap);
 
-            }else{
-                dismissLoadingDialog();
-                ToastUtils.showLong("分享失败");
+                }else{
+                    dismissLoadingDialog();
+                    ToastUtils.showLong("分享失败");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     };
@@ -166,10 +171,6 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
             if (cities == null) {
                 cities = LitePal.findAll(City.class);
             }
-//            if(Utils.getWindowsWidth(getActivity()) != 0){
-//                DrawerLayout.LayoutParams layoutParamsF = new DrawerLayout.LayoutParams(Utils.getWindowsWidth(getActivity())/5*4, ViewGroup.LayoutParams.MATCH_PARENT);
-//                cityAddressF.setLayoutParams(layoutParamsF);
-//            }
             drawerlayout = view.findViewById(R.id.drawerlayout);
             ivBack.setVisibility(View.GONE);
             ViewGroup.LayoutParams layoutParams = actionBarSize.getLayoutParams();
@@ -199,7 +200,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
 
     protected void bindViews() {
         try {
-            Drawable resource = SaveShare.getDrawable(getActivity(), "icon");
+             Drawable resource = SaveShare.getDrawable(getActivity(), "icon");
             if (resource != null) {
                 addressWetherBgRel.setBackground(new BitmapDrawable(Util.rsBlur(getActivity(), Util.drawable2Bitmap(resource), 20)));
             } else {
@@ -348,9 +349,11 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (isVisibleToUser && ISOPEN) {
+            ISOPEN = false;
             MobclickAgent.onEvent(getActivity(), "home");
             EventBus.getDefault().post(new IsUserLight(false));
+
         }
     }
 

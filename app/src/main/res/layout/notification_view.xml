@@ -57,7 +57,6 @@
             android:id="@+id/notification_wether_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@mipmap/a100"
             />
     </LinearLayout>
 
@@ -78,7 +77,7 @@
             android:maxLines="2"
             android:text="今日温度30℃,天气炎热，建议着短衫、短裙、短裤、薄型T恤衫等清凉夏季服装。"
             android:textColor="@color/tab_color"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:paddingRight="@dimen/dp_10"
             />
     </LinearLayout>

@@ -54,12 +54,12 @@ public class TabServiceFragment extends BaseFragment {
                 .setColorResource(R.color.nb_divider_narrow)
                 .setShowLastLine(true)
                 .build();
-        recyclerService.addItemDecoration(divider);
+//        recyclerService.addItemDecoration(divider);
         if (iconsBeanList != null && iconsBeanList.size() > 0) {
             baseAdapter = new BaseAdapter<>(R.layout.popup_recycler_item, iconsBeanList, (viewHolder, item) -> {
                 try {
                     viewHolder.setText(R.id.popup_recycler_tv, item.getTitle());
-                    GlideUtil.getGlideUtil().setImages(getActivity(), item.getCover(), viewHolder.getView(R.id.popup_recycler_image));
+                    GlideUtil.getGlideUtil().setImages(getActivity(), item.getCover(), viewHolder.getView(R.id.popup_recycler_image),1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

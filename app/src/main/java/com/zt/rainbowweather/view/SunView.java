@@ -69,6 +69,8 @@ public class SunView extends View {
     private float svPadding;
     private float svTrackWidth;
     private Bitmap mSunIcon; //太阳图片
+    private Bitmap mSunupIcon;
+    private Bitmap mSunsetIcon;
 
     private float mAngle;
     public SunView(Context context) {
@@ -107,7 +109,8 @@ public class SunView extends View {
         svPadding = array.getDimension(R.styleable.SunView_svPadding, 10);
         svTrackWidth = array.getDimension(R.styleable.SunView_svTrackWidth, 3);
         mSunIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_sun);
-
+        mSunupIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.sunrise_icon);
+        mSunsetIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.sunset_icon);
         array.recycle();
 
         // 渐变路径的画笔
@@ -130,7 +133,7 @@ public class SunView extends View {
         motionPaint.setStyle(Paint.Style.STROKE);
         mMotionPaint = motionPaint;
         TrackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        TrackPaint.setColor(R.color.lucency2);
+        TrackPaint.setColor(Color.parseColor("#9f000000"));
         TrackPaint.setStrokeCap(Paint.Cap.ROUND);
         TrackPaint.setStrokeWidth(3);
         TrackPaint.setStyle(Paint.Style.FILL);
@@ -207,14 +210,17 @@ public class SunView extends View {
         // 画一条虚线表示未运动到的轨迹
 //        mMotionPaint.setPathEffect(mDashPathEffect);
 //        canvas.drawPath(mMotionPath, mMotionPaint);
+
         // 画日出日落文字
         if (mSunrise.length != 0||mSunset.length != 0){
             mTextPaint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText("日出 "+(mSunrise[0]<10? "0"+mSunrise[0]: mSunrise[0])
-                    +":"+(mSunrise[1]<10? "0"+mSunrise[1]: mSunrise[1]), startX+textOffset, startY, mTextPaint);
+            canvas.drawText(" "+(mSunrise[0]<10? "0"+mSunrise[0]: mSunrise[0])
+                    +":"+(mSunrise[1]<10? "0"+mSunrise[1]: mSunrise[1]), startX+textOffset+mSunupIcon.getWidth(), startY + mSunupIcon.getWidth()/3, mTextPaint);
             mTextPaint.setTextAlign(Paint.Align.RIGHT);
-            canvas.drawText("日落 "+(mSunset[0]<10? "0"+mSunset[0]: mSunset[0])
-                    +":"+(mSunset[1]<10? "0"+mSunset[1]: mSunset[1]), endX-textOffset, endY, mTextPaint);
+            canvas.drawText(" "+(mSunset[0]<10? "0"+mSunset[0]: mSunset[0])
+                    +":"+(mSunset[1]<10? "0"+mSunset[1]: mSunset[1]), endX-textOffset, endY+ mSunsetIcon.getHeight()/2, mTextPaint);
+            canvas.drawBitmap(mSunupIcon, (float) startX + mSunsetIcon.getWidth(), (float)startY-mSunupIcon.getHeight()/2, mSunPaint);
+            canvas.drawBitmap(mSunsetIcon, (float) endX - mSunsetIcon.getWidth()*3/2- textOffset*2, (float)endY-mSunsetIcon.getHeight()/2, mSunPaint);
         }
 
         // 画端点

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,11 @@ public final class ToastUtils {
      * @param view 视图
      */
     public static void setView(View view) {
-        ToastUtils.customView = view;
+        try {
+            ToastUtils.customView = view;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -210,6 +215,9 @@ public final class ToastUtils {
      */
     public static void showLong(CharSequence text) {
         try {
+            if(!TextUtils.isEmpty(text)){
+                customView = null;
+            }
             show(text, Toast.LENGTH_LONG);
         } catch (Exception e) {
             e.printStackTrace();
