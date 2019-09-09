@@ -2,6 +2,7 @@ package com.zt.rainbowweather.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -80,6 +81,9 @@ import com.zt.weather.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
+import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.VideoView;
+import org.salient.artplayer.ui.ControlPanel;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -240,9 +244,9 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
     @BindView(R.id.wether_even_more)
     TextView wetherEvenMore;
     @BindView(R.id.x5_video_webview)
-    MyVideoView x5VideoWebview;
-    @BindView(R.id.iv_first_frame)
-    ImageView ivFirstFrame;
+    VideoView x5VideoWebview;
+//    @BindView(R.id.iv_first_frame)
+//    ImageView ivFirstFrame;
     @BindView(R.id.rain_alarm_pro)
     TextView rainAlarmPro;
     @BindView(R.id.weather_forecast)
@@ -266,7 +270,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
     @SuppressLint("StaticFieldLeak")
     private static HomeFragment homeFragments;
     private WeatherLogic weatherLogic;
-    //    private static Drawable[] drawable = {null};
+    private boolean LookVideo = false;
     private int hour;
     private int minute;
     private String INUSE = "";
@@ -343,6 +347,13 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
     protected void initData(View view) {
         try {
             x5VideoWebview.setFocusable(false);
+//            x5VideoWebview.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
+//            final ControlPanel controlPanel = new ControlPanel(getActivity());
+//            x5VideoWebview.setControlPanel(controlPanel);
+//            TextView tvTitle = controlPanel.findViewById(R.id.tvTitle);
+//            tvTitle.setText("天气预报");
+//            GlideUtil.getGlideUtil().setImages(getActivity(),"http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg",(ImageView) controlPanel.findViewById(R.id.video_cover));
+
             if (null != scrollView) {
                 scrollView.smoothScrollTo(0, 0);
             }
@@ -354,14 +365,6 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                     todayRel.setBackgroundResource(R.drawable.ripple_bg);
                     tomorrowRel.setBackgroundResource(R.drawable.ripple_bg2);
                 }
-//                 if(INUSE != null){
-//                    GlideUtil.getGlideUtil().setImages(getActivity(),INUSE,tvWetherBg);
-//                }
-//                if (SaveShare.getDrawable(Objects.requireNonNull(getActivity()), "icon") != null) {
-//                    tvWetherBg.setImageDrawable(SaveShare.getDrawable(Objects.requireNonNull(getActivity()), "icon"));
-//                } else {
-//                    GlideUtil.getGlideUtil().getDrawableImages(getActivity(), INUSE, WeatherFragment.this);
-//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -378,10 +381,15 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
 //            weatherPageData.VideoWarning(ivFirstFrame, weatherForecast, x5VideoWebview);
             if (ISNEWS) {
                 ISNEWS = false;
+                if (SaveShare.getDrawable(Objects.requireNonNull(getActivity()),  currCity.name) != null) {
+                    tvWetherBg.setImageDrawable(SaveShare.getDrawable(Objects.requireNonNull(getActivity()),  currCity.name));
+                } else {
+                    GlideUtil.getGlideUtil().getDrawableImages(getActivity(), INUSE, WeatherFragment.this);
+                }
                  if (weatherPageData.WeatherDataCacheGain(currCity, WeatherFragment.this)) {
                     weatherPageData.RequestWeatherData(currCity, rainAlarmPro, rainAlarmProLin, WeatherFragment.this, WeatherFragment.this, 0);
                     weatherPageData.BannerAd(getActivity(), banner, relatAd, adLin, bannerContainer, GDTAd, GDTAd1, adImageBanner, adIcon, adIconImage);
-                    weatherPageData.VideoWarning(ivFirstFrame, weatherForecast, x5VideoWebview);
+                    weatherPageData.VideoWarning(weatherForecast, x5VideoWebview);
                     weatherPageData.RequestNewsData(WeatherFragment.this, mRadioGroupContent, column, viewpagerColumn);
                     weatherPageData.NnoticeData(keyword);
                 }
@@ -422,6 +430,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+
     }
 
     private boolean ISBG = true;
@@ -531,7 +540,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                     ISNews = false;
                     weatherPageData.RequestWeatherData(currCity, rainAlarmPro, rainAlarmProLin, WeatherFragment.this, WeatherFragment.this, 0);
                     weatherPageData.RequestNewsData(WeatherFragment.this, mRadioGroupContent, column, viewpagerColumn);
-                    weatherPageData.VideoWarning(ivFirstFrame, weatherForecast, x5VideoWebview);
+                    weatherPageData.VideoWarning(weatherForecast, x5VideoWebview);
                     //                    weatherLogic.setAd(TMAw1, WeatherFragment.this);
                     weatherPageData.NnoticeData(keyword);
                     weatherLogic.initData(getActivity(), rlHeader, relWetherBg, shopListBar, listBar, weather, homeFragments, refreshLayout, WeatherFragment.this, WeatherFragment.this);
@@ -555,7 +564,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
             ISNEWSONR = false;
             weatherPageData.RequestWeatherData(currCity, rainAlarmPro, rainAlarmProLin, WeatherFragment.this, WeatherFragment.this, 1);
             weatherPageData.BannerAd(getActivity(), banner, relatAd, adLin, bannerContainer, GDTAd, GDTAd1, adImageBanner, adIcon, adIconImage);
-            weatherPageData.VideoWarning(ivFirstFrame, weatherForecast, x5VideoWebview);
+            weatherPageData.VideoWarning(weatherForecast, x5VideoWebview);
             weatherPageData.RequestNewsData(WeatherFragment.this, mRadioGroupContent, column, viewpagerColumn);
             weatherPageData.NnoticeData(keyword);
         }
@@ -579,6 +588,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
         super.onPause();
         if (x5VideoWebview != null) {
             x5VideoWebview.pause();
+            MediaPlayerManager.instance().pause();
         }
         resource = null;
         MobclickAgent.onPageEnd("WeatherFragment");
@@ -592,6 +602,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                 TMAw1.destroy();
             }
             EventBus.getDefault().unregister(this);
+            MediaPlayerManager.instance().releasePlayerAndView(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -715,17 +726,6 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                 EventBus.getDefault().post(new MessageEvent(currCity.name, currCity.name));
             }
 
-            if (ivFirstFrame != null && weatherPageData.checkIsVisible(ivFirstFrame)) {
-                if (taskType != null && !taskType.ISStartTask) {
-                    TaskType taskType3 = LitePal.where("tasktype = ?", "3").findFirst(TaskType.class);
-                    SaveShare.saveValue(getActivity(), "JB", "");
-                    taskType3.ISStartTask = true;
-                    taskType3.save();
-                    EventBus.getDefault().post("");
-//                    TaskLogic.getTaskLogic().FinishTask(getActivity(),"",taskType.taskId,taskType.IsDouble);
-                    taskType = null;
-                }
-            }
             if (null != x5VideoWebview) {
                 weatherPageData.getMediaController();
                 if (weatherPageData.checkIsVisible(x5VideoWebview)) {
@@ -739,6 +739,13 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                         taskType = null;
                     }
                     x5VideoWebview.start();
+                    if(!LookVideo){
+                        LookVideo = true;
+//                        ((ImageView) x5VideoWebview.getControlPanel().findViewById(R.id.video_cover)).setImageResource(0);
+//                        x5VideoWebview.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                        MediaPlayerManager.instance().setMute(true);
+                        WeatherRequest.getWeatherRequest().getLookAtData(getActivity(), "天气预报", "播放视频");
+                    }
                 } else {
                     x5VideoWebview.pause();
                 }
@@ -900,7 +907,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
     }
 
 
-    @OnClick({R.id.today_rel, R.id.tomorrow_rel, R.id.ad_image_banner_clear, R.id.tv_h_curr_temp, R.id.forecast_date, R.id.sunrise_and_sunset_lin, R.id.wether_even_more, R.id.iv_first_frame})
+    @OnClick({R.id.today_rel, R.id.tomorrow_rel, R.id.ad_image_banner_clear, R.id.tv_h_curr_temp, R.id.forecast_date, R.id.sunrise_and_sunset_lin, R.id.wether_even_more })
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sunrise_and_sunset_lin:
@@ -934,16 +941,16 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                 IndexIntent.putExtra("City", currCity.name);
                 getActivity().startActivity(IndexIntent);
                 break;
-            case R.id.iv_first_frame:
-                try {
-                    ivFirstFrame.setVisibility(View.GONE);
-                    x5VideoWebview.setVisibility(View.VISIBLE);
-                    x5VideoWebview.start();
-                    WeatherRequest.getWeatherRequest().getLookAtData(getActivity(), "天气预报", "播放视频");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
+//            case R.id.iv_first_frame:
+//                try {
+//                    ivFirstFrame.setVisibility(View.GONE);
+//                    x5VideoWebview.setVisibility(View.VISIBLE);
+//                    x5VideoWebview.start();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                break;
         }
     }
 

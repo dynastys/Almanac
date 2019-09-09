@@ -143,6 +143,7 @@ dependencies {
 //    implementation files('libs/tnet4android-3.1.14.9.jar')
 //    implementation files('libs/umeng-push-6.0.1.jar')
     implementation(name: 'alicloud-android-hotfix-3.2.8', ext: 'aar')
+
     //小米Push通道
     implementation 'com.umeng.umsdk:xiaomi-push:3.6.17'
     implementation 'com.umeng.umsdk:xiaomi-umengaccs:1.1.0'
@@ -158,4 +159,8 @@ dependencies {
     implementation 'com.umeng.umsdk:oppo-push:1.0.1'
     implementation 'com.umeng.umsdk:oppo-umengaccs:1.0.3'
 
+    //视频播放 required
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.7.0'
+    // Default control panel: optional
+    implementation 'org.salient.artvideoplayer:artplayer-ui:0.7.0'
 }

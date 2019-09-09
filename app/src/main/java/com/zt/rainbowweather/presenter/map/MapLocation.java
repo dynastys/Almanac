@@ -115,6 +115,7 @@ public class MapLocation implements AMapLocationListener {
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         try {
+            Log.e("latitude", "onLocationChanged: "+aMapLocation.getCity());
             if (locatedCity == null && !TextUtils.isEmpty(aMapLocation.getCity())) {
                 locatedCity = new City();
 //                aMapLocation.setCity("深圳");
@@ -197,7 +198,6 @@ public class MapLocation implements AMapLocationListener {
                     }
 ////                    LitePal.saveAll(cityList);
 //                }
-                Log.e("latitude", "onLocationChanged: ");
                 if(locationSucceed != null){
                     locationSucceed.LocationSucceed(locatedCity);
                 }

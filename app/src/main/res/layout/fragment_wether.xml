@@ -853,17 +853,17 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
+                            android:layout_height="210dp"
                             android:layout_below="@+id/x5_video_division">
 
-                            <com.zt.rainbowweather.view.MyVideoView
+                            <org.salient.artplayer.VideoView
                                 android:id="@+id/x5_video_webview"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp"
                                 android:focusable="false"
-                                android:padding="@dimen/dp_10"
+                                android:layout_marginBottom="2dp"
                                 android:scrollbars="none"
-                                android:visibility="gone" />
+                              />
                         </RelativeLayout>
 
                         <ImageView
@@ -874,6 +874,7 @@
                             android:clickable="false"
                             android:focusable="false"
                             android:scaleType="fitXY"
+
                             />
 
                     </RelativeLayout>

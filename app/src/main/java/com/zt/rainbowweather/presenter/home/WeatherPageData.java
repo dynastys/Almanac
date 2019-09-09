@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,6 +98,8 @@ import com.zt.xuanyin.controller.NativeAd;
 import com.zt.xuanyin.entity.model.Native;
 
 import org.litepal.LitePal;
+import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.ui.ControlPanel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -154,13 +158,24 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     /**
      * 使用自定义webview播放视频
      */
-    public void startPlay(MyVideoView videoView, String vedioUrl) {
-        videoView.setVideoPath(vedioUrl);
-        //创建MediaController对象
-        mediaController = new MediaController(context);
-        //VideoView与MediaController建立关联
-        videoView.setMediaController(mediaController);
- //        //让VideoView获取焦点
+    public void startPlay(org.salient.artplayer.VideoView x5VideoWebview, String vedioUrl,String ImagrBg) {
+        x5VideoWebview.setUp(vedioUrl);
+        final ControlPanel controlPanel = new ControlPanel(context);
+        x5VideoWebview.setControlPanel(controlPanel);
+        ((ImageView) controlPanel.findViewById(R.id.video_cover)).setImageResource(0);
+        TextView tvTitle = controlPanel.findViewById(R.id.tvTitle);
+        tvTitle.setText("天气预报");
+        MediaPlayerManager.instance().setMute(true);
+        ((CheckBox)controlPanel.findViewById(R.id.ivVolume)).setChecked(false);
+        GlideUtil.getGlideUtil().setImages(context,ImagrBg,(ImageView) controlPanel.findViewById(R.id.video_cover));
+//        x5VideoWebview.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+//        WeatherRequest.getWeatherRequest().getLookAtData(getActivity(), "天气预报", "播放视频");
+//        videoView.setVideoPath(vedioUrl);
+//        //创建MediaController对象
+//        mediaController = new MediaController(context);
+//        //VideoView与MediaController建立关联
+//        videoView.setMediaController(mediaController);
+//        //让VideoView获取焦点
 //        videoView.requestFocus();
     }
 
@@ -189,7 +204,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     /**
      * 新闻视频和预警
      * */
-    public void VideoWarning(ImageView imageView,TextView videoT,MyVideoView x5VideoWebview){
+    public void VideoWarning(TextView videoT, org.salient.artplayer.VideoView x5VideoWebview){
         WeatherRequest.getWeatherRequest().getWeatherVideoData(context, new RequestSyntony<WeatherVideo>() {
             @Override
             public void onCompleted() {
@@ -204,10 +219,9 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             @Override
             public void onNext(WeatherVideo weatherVideo) {
                 if(weatherVideo != null && weatherVideo.getData() != null){
-                    GlideUtil.getGlideUtil().setImages1(context,weatherVideo.getData().getCover(),imageView);
+//                    GlideUtil.getGlideUtil().setImages1(context,weatherVideo.getData().getCover(),imageView);
                     videoT.setText(weatherVideo.getData().getTitle());
-                    Log.e("weatherVideo", "onNext: "+weatherVideo.getData().getVideourl() );
-                   startPlay(x5VideoWebview,weatherVideo.getData().getVideourl());
+                    startPlay(x5VideoWebview,weatherVideo.getData().getVideourl(),weatherVideo.getData().getCover());
                 }
             }
         });
@@ -553,7 +567,6 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             setExponent(conventionWeather.getHeWeather6().get(0).getLifestyle());
             HourWeather(conventionWeather.getHeWeather6().get(0).getHourly());
 //                            SwitchDynamicWeather(conventionWeather.getHeWeather6().get(0).getNow().getCond_txt(), relWetherBg);
-            AlterNotification();
             WeatherRequest.getWeatherRequest().getAirThDayData(context, city.name, new RequestSyntony<AirThDay>() {
                 @Override
                 public void onCompleted() {
@@ -570,6 +583,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                             air_forecast = airThDay.getHeWeather6().get(0).getAir_forecast();
                             airQualityListener.AirQuality(air_forecast);
                             DayTendency(conventionWeather.getHeWeather6().get(0).getDaily_forecast());
+                            AlterNotification();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -637,7 +651,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             public void onNext(ConventionWeather conventionWeather) {
                 if (conventionWeather != null && conventionWeather.getHeWeather6() != null && conventionWeather.getHeWeather6().size() > 0) {
                     addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
-                    AlterNotification();
+
                 }
             }
         });
@@ -726,7 +740,9 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 }
                 data.putString("text", "" + dateBeanList.get(i).getChannelid());
                 data.putString("ColumnName", "" + dateBeanList.get(i).getChannel_name());
-                data.putString("city", notification.city);
+                if(notification != null){
+                    data.putString("city", notification.city);
+                }
                 ColumnFragment newfragment = new ColumnFragment();
                 newfragment.setviewPager(viewpagerColumn);
                 newfragment.setArguments(data);

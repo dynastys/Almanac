@@ -224,11 +224,12 @@ public class ScrollFutureDaysWeatherView extends ViewGroup {
                         Intent intent = new Intent(context, WeatherDetailsActivity.class);
                         intent.putExtra("datas", (Serializable) datas);
                         intent.putExtra("Size",finalI+"");
-                        intent.putExtra("City",city.name);
+                        if(city != null){
+                            intent.putExtra("City",city.name);
+                        }
                         context.startActivity(intent);
                         MobclickAgent.onEvent(context, "home_Weather_Details", "home_Weather_Details");
                     });
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
