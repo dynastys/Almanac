@@ -66,54 +66,74 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:background="@color/white"
                 >
-                <TextView
-                    android:id="@+id/withdraw_deposit_my_gold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_15"
-                    android:layout_marginTop="25dp"
-                    android:drawableLeft="@drawable/head_image_gold"
-                    android:drawablePadding="@dimen/dp_10"
-                    android:text="@string/my_gold"
-                    android:textColor="@color/service_tv"
-                    android:textSize="15sp" />
-
                 <LinearLayout
-                    android:id="@+id/withdraw_deposit_my_lin_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/my_gold"
-                    android:layout_marginLeft="@dimen/dp_15"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
+                    android:orientation="vertical"
+                    >
                     <TextView
-                        android:id="@+id/withdraw_deposit_look_over_gold"
+                        android:id="@+id/withdraw_deposit_my_gold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/_22563"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="25dp"
+                        android:drawableLeft="@drawable/head_image_gold"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:text="@string/my_gold"
                         android:textColor="@color/service_tv"
-                        android:textSize="29sp"
-                        android:textStyle="bold" />
+                        android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/withdraw_deposit_look_over_RMB"
+                    <LinearLayout
+                        android:id="@+id/withdraw_deposit_my_lin_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:background="@drawable/sum_bg"
-                        android:gravity="center"
-                        android:text="@string/_22_57"
-                        android:textColor="#ffffffff"
-                        android:textSize="11sp" />
+                        android:layout_below="@+id/my_gold"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/withdraw_deposit_look_over_gold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_22563"
+                            android:textColor="@color/service_tv"
+                            android:textSize="29sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/withdraw_deposit_look_over_RMB"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:background="@drawable/sum_bg"
+                            android:gravity="center"
+                            android:text="@string/_22_57"
+                            android:textColor="#ffffffff"
+                            android:textSize="11sp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/withdraw_deposit_gold_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/check_the_details"
+                    android:textSize="13sp"
+                    android:textColor="@color/tab_tv"
+                    android:drawableRight="@drawable/skip_icon"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_15"
+                    android:layout_marginTop="25dp"
+                    />
+            </RelativeLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -185,7 +205,6 @@
                             />
                     </LinearLayout>
                 </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -219,6 +238,33 @@
                         android:singleLine="true"
                         android:textSize="14sp" />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_margin="@dimen/dp_10"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/search_10"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/iv_search_flag"
+                        android:layout_width="20.0dp"
+                        android:layout_height="20.0dp"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        app:srcCompat="@drawable/seek" />
+                    <com.xy.xylibrary.view.AutoVerticalScrollTextView
+                        android:id="@+id/withdrawal_keyword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingRight="10dp"
+                        android:text="今日提现"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+                </LinearLayout>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,7 +273,7 @@
                     android:textSize="18sp"
                     android:id="@+id/withdrawal_linxiasamo"
                     android:background="@drawable/withdraw_search_5"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
                     android:stateListAnimator="@null"
@@ -252,7 +298,6 @@
                 />
             <TextView
                 android:background="@color/white"
-                android:id="@+id/withdrawal_instructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/withdrawal_instructions"

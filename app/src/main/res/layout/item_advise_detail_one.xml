@@ -84,7 +84,7 @@
             android:background="@drawable/shape_line_drawable"
             android:layout_alignParentRight="true"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/icon_1" />
+              />
 
         <TextView
             android:id="@+id/tv_title_r"
@@ -120,7 +120,6 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/tv_time_r"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"
@@ -164,7 +163,7 @@
                 android:layout_alignParentRight="true"
                 android:scaleType="fitXY"
                 android:layout_weight="1"
-                app:srcCompat="@mipmap/icon_1" />
+              />
             <ImageView
                 android:id="@+id/iv_image_x2"
                 android:layout_width="100dp"
@@ -174,7 +173,7 @@
                 android:layout_alignParentRight="true"
                 android:scaleType="fitXY"
                 android:layout_weight="1"
-                app:srcCompat="@mipmap/icon_1" />
+                />
             <ImageView
                 android:id="@+id/iv_image_x3"
                 android:layout_width="100dp"
@@ -184,10 +183,9 @@
                 android:layout_alignParentRight="true"
                 android:scaleType="fitXY"
                 android:layout_weight="1"
-                app:srcCompat="@mipmap/icon_1" />
+              />
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/tv_from_x_lin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -207,7 +205,6 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/tv_time_x"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"
@@ -252,7 +249,7 @@
             android:background="@drawable/shape_line_drawable"
             android:scaleType="fitXY"
             android:layout_weight="1"
-            app:srcCompat="@mipmap/icon_1" />
+             />
         <LinearLayout
             android:id="@+id/tv_from_d_lin"
             android:layout_width="match_parent"
@@ -272,7 +269,6 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/tv_time_d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"

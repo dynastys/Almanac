@@ -153,8 +153,8 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                                 @Override
                                 public void onSplashAdLoad() {
                                     ad_relative.setVisibility(View.GONE);
-                                    tvSkip.setTextColor(R.color.white);
-                                    splash_skip_tv.setVisibility(View.VISIBLE);
+//                                    tvSkip.setTextColor(R.color.white);
+//                                    splash_skip_tv.setVisibility(View.VISIBLE);
                                     Log.e("Application", "initSophix:222 " + System.currentTimeMillis());
                                 }
                             });
@@ -211,13 +211,23 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                     .subscribe(new Subscriber<Integer>() {
                         @Override
                         public void onCompleted() {
-                            if(BasicApplication.getLocatedCity() != null && !TextUtils.isEmpty(BasicApplication.getLocatedCity().name)){
-                                intentActivity(MainActivity.class);
-                                 finish();
-                            }
-                             if (ISGDTSKIP) {
-                                 skip();
-                            }
+//                            if(!TextUtils.isEmpty(BasicApplication.url)){
+//                                AdviseMoreDetailActivity.startActivity(StartActivity.this, "资讯", BasicApplication.url,"0");
+//                                Log.e("getNotification", "getNotification: ");
+//                                BasicApplication.url = "";
+//                                SaveShare.saveValue(StartActivity.this, "skip", "skip");
+//                                SaveShare.saveValue(StartActivity.this, "finish", "finish");
+//                                SaveShare.saveValue(StartActivity.this, "location", "location");
+//                                ISGDTSKIP = false;
+//                            }else{
+                                if(BasicApplication.getLocatedCity() != null && !TextUtils.isEmpty(BasicApplication.getLocatedCity().name)){
+                                    intentActivity(MainActivity.class);
+                                    finish();
+                                }
+                                if (ISGDTSKIP) {
+                                    skip();
+                                }
+//                            }
                         }
 
                         @Override
@@ -243,7 +253,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                     //启动定位
                     mapLocation.startLocation();
                  intentActivity(MainActivity.class);
-//                mapLocation.setData();
+ //                mapLocation.setData();
                 this.finish();
             }
 
@@ -288,11 +298,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
             mapLocation.locate(StartActivity.this);
             startCountDown();
             StartAd.getStartAd().Application(StartActivity.this);
-            if(!TextUtils.isEmpty(BasicApplication.url)){
-                AdviseMoreDetailActivity.startActivity(this, "资讯", BasicApplication.url,"1");
-                Log.e("getNotification", "getNotification: ");
-                BasicApplication.url = "";
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -511,8 +517,8 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
         if (nativelogicDd != null) {
             nativelogicDd.OnRequest("0", "msg");
         }
-        tvSkip.setTextColor(R.color.white);
-        splash_skip_tv.setVisibility(View.VISIBLE);
+//        tvSkip.setTextColor(R.color.white);
+//        splash_skip_tv.setVisibility(View.VISIBLE);
     }
 
     @Override

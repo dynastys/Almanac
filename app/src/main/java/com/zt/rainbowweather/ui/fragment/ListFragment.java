@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,51 +63,54 @@ public class ListFragment extends BaseFragment {
 
     @Override
     protected void initData(View view) {
-        ScrollLinearLayoutManager setScrollEnable = new ScrollLinearLayoutManager(getActivity());
-        setScrollEnable.setScrollEnable(false);
-        listRecycler.setLayoutManager(setScrollEnable);
-        baseAdapter = new BaseAdapter<>(R.layout.list_item_future_days_weather, lookWeathers, (viewHolder, item) -> {
-            viewHolder.setText(R.id.list_tv_week,item.getWeek())
-                    .setText(R.id.list_tv_weather_day,item.weatherDay.weather.equals(item.weatherNight.weather)?item.weatherNight.weather : item.weatherDay.weather+"转"+item.weatherNight.weather)
-                    .setText(R.id.list_tv_wind,item.highTemperature+"～"+item.lowTemperature+"°");
-            TextView tvAirQuality = viewHolder.getView(R.id.list_tv_air_quality);
+        try {
+            ScrollLinearLayoutManager setScrollEnable = new ScrollLinearLayoutManager(getActivity());
+            setScrollEnable.setScrollEnable(false);
+            listRecycler.setLayoutManager(setScrollEnable);
+            baseAdapter = new BaseAdapter<>(R.layout.list_item_future_days_weather, lookWeathers, (viewHolder, item) -> {
+                viewHolder.setText(R.id.list_tv_week,item.getWeek())
+                        .setText(R.id.list_tv_weather_day,item.weatherDay.weather.equals(item.weatherNight.weather)?item.weatherNight.weather : item.weatherDay.weather+"转"+item.weatherNight.weather)
+                        .setText(R.id.list_tv_wind,item.highTemperature+"～"+item.lowTemperature+"°");
+                TextView tvAirQuality = viewHolder.getView(R.id.list_tv_air_quality);
 
-            tvAirQuality.setText(item.airQuality);
-            if (item.getAirQuality().equals("优")) {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_1));
-            } else if (item.getAirQuality().equals("良")) {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_2));
-            } else if (item.getAirQuality().equals("轻度污染")) {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_3));
-            } else if (item.getAirQuality().equals("中度污染")) {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_4));
-            } else if (item.getAirQuality().equals("重度污染")) {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_5));
-            } else if (item.getAirQuality().equals("严重污染")) {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_6));
-            } else {
-                tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30));
-            }
+                tvAirQuality.setText(item.airQuality);
+                if(!TextUtils.isEmpty(item.getAirQuality())){
+                    if (item.getAirQuality().equals("优")) {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_1));
+                    } else if (item.getAirQuality().equals("良")) {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_2));
+                    } else if (item.getAirQuality().equals("轻度污染")) {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_3));
+                    } else if (item.getAirQuality().equals("中度污染")) {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_4));
+                    } else if (item.getAirQuality().equals("重度污染")) {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_5));
+                    } else if (item.getAirQuality().equals("严重污染")) {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30_6));
+                    } else {
+                        tvAirQuality.setBackground(getResources().getDrawable(R.drawable.search30));
+                    }
+                }
 
-
-            ImageView imageView = viewHolder.getView(R.id.list_iv_weather_img_day);
-            //加载图片
-            imageView.setImageResource(WeatherUtils.getWeatherStatus(item.weatherDay.iconRes).iconRes);
-        });
-        baseAdapter.setOnItemClickListener((adapter, view1, position) -> {
-            Intent intent = new Intent(getActivity(), WeatherDetailsActivity.class);
-            intent.putExtra("datas", (Serializable) lookWeathers);
-            intent.putExtra("Size",position+"");
-            intent.putExtra("City",city.name);
-            getActivity().startActivity(intent);
-            MobclickAgent.onEvent(getActivity(), "home_Weather_Details", "home_Weather_Details");
-        });
-
-
+                ImageView imageView = viewHolder.getView(R.id.list_iv_weather_img_day);
+                //加载图片
+                imageView.setImageResource(WeatherUtils.getWeatherStatus(item.weatherDay.iconRes).iconRes);
+            });
+            baseAdapter.setOnItemClickListener((adapter, view1, position) -> {
+                Intent intent = new Intent(getActivity(), WeatherDetailsActivity.class);
+                intent.putExtra("datas", (Serializable) lookWeathers);
+                intent.putExtra("Size",position+"");
+                intent.putExtra("City",city.name);
+                getActivity().startActivity(intent);
+                MobclickAgent.onEvent(getActivity(), "home_Weather_Details", "home_Weather_Details");
+            });
 //        listRecycler.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getActivity()), 1));
-        listRecycler.setAdapter(baseAdapter);
-        listRecycler.setHasFixedSize(true);
-        listRecycler.setNestedScrollingEnabled(false);
+            listRecycler.setAdapter(baseAdapter);
+            listRecycler.setHasFixedSize(true);
+            listRecycler.setNestedScrollingEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -318,6 +318,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     public void onNext(BackdropTheme backdropTheme) {
         SaveShare.saveValue(context, "INUSE", backdropTheme.getData().getImg_src());
         GlideUtil.getGlideUtil().getDrawableImages(context, backdropTheme.getData().getImg_src(), WeatherPageData.this);
+
     }
 
     @Override
@@ -483,9 +484,10 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     /**
      * 获取天气缓存
      * */
-    private void WeatherDataCacheGain(TextView rainAlarmPro,LinearLayout rainAlarmProLin, AirQualityListener airQualityListener,RequestSyntony<ConventionWeather> requestSyntony){
+    public boolean WeatherDataCacheGain(City city,RequestSyntony<ConventionWeather> requestSyntony){
         try {
-            ConventionWeather.HeWeather6Bean.BasicBean basicBean = LitePal.findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class);
+            ConventionWeather.HeWeather6Bean.BasicBean basicBean =  LitePal.findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class);
+//                    LitePal.where("location = ?",city.name).findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class);
             if(basicBean != null){
                 ConventionWeather conventionWeather = new ConventionWeather();
                 List<ConventionWeather.HeWeather6Bean> heWeather6Beans = new ArrayList<>();
@@ -498,12 +500,19 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 heWeather6Bean.setLifestyle(LitePal.findAll(ConventionWeather.HeWeather6Bean.LifestyleBean.class));
                 heWeather6Beans.add(heWeather6Bean);
                 conventionWeather.setHeWeather6(heWeather6Beans);
-                addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+                requestSyntony.onNext(conventionWeather);
+                SaveShare.saveValue(context, "sunrise", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSr());
+                SaveShare.saveValue(context, "sunset", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSs());
+                setExponent(conventionWeather.getHeWeather6().get(0).getLifestyle());
+                HourWeather(conventionWeather.getHeWeather6().get(0).getHourly());
+                DayTendency(conventionWeather.getHeWeather6().get(0).getDaily_forecast());
+//                addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return true;
     }
     /**
      * 天气数据缓存
@@ -570,12 +579,10 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             WeatherRequest.getWeatherRequest().getCityEarlyWarningData(context, conventionWeather.getHeWeather6().get(0).getBasic().getAdmin_area(),  conventionWeather.getHeWeather6().get(0).getBasic().getParent_city(),  conventionWeather.getHeWeather6().get(0).getBasic().getLocation(), new RequestSyntony<CityEarlyWarning>() {
                 @Override
                 public void onCompleted() {
-
                 }
 
                 @Override
                 public void onError(Throwable e) {
-
                 }
 
                 @Override
@@ -588,6 +595,8 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                         rainAlarmPro.setOnClickListener(v -> {
                             AdviseMoreDetailActivity.startActivity(context, cityEarlyWarning.getData().getWarning_type(), cityEarlyWarning.getData().getWarning_url(),"0");
                         });
+                    }else{
+                        rainAlarmProLin.setVisibility(View.GONE);
                     }
                 }
             });
@@ -602,8 +611,16 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     public void RequestWeatherData(City city,TextView rainAlarmPro,LinearLayout rainAlarmProLin, RequestSyntony<ConventionWeather> requestSyntony, AirQualityListener airQualityListener,int type) {
         this.city = city;
         if(type == 0){
-            WeatherDataCacheGain(rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+            if(WeatherDataCacheGain(city,requestSyntony)){
+                ConventionWeatherData(city,rainAlarmPro,rainAlarmProLin,requestSyntony,airQualityListener);
+            }
+        }else{
+            ConventionWeatherData(city,rainAlarmPro,rainAlarmProLin,requestSyntony,airQualityListener);
         }
+
+    }
+
+    private void ConventionWeatherData(City city,TextView rainAlarmPro,LinearLayout rainAlarmProLin,RequestSyntony<ConventionWeather> requestSyntony, AirQualityListener airQualityListener){
         WeatherRequest.getWeatherRequest().getConventionWeatherData(context, city.name, new RequestSyntony<ConventionWeather>() {
 
             @Override
@@ -620,22 +637,27 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             public void onNext(ConventionWeather conventionWeather) {
                 if (conventionWeather != null && conventionWeather.getHeWeather6() != null && conventionWeather.getHeWeather6().size() > 0) {
                     addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+                    AlterNotification();
                 }
             }
         });
     }
-
     public void AlterNotification() {
         try {
             if (city != null) {
                 notification = new Notification();
                 notification.city = city.name;
-                notification.cond_txt = conventionWeatherData.getHeWeather6().get(0).getNow().getCond_txt() == null ? "" : conventionWeatherData.getHeWeather6().get(0).getNow().getCond_txt();
-                notification.qlty = air_forecast.get(0).getQlty() + " " + air_forecast.get(0).getAqi();
-                notification.time = System.currentTimeMillis();
-                notification.tmp = conventionWeatherData.getHeWeather6().get(0).getNow().getTmp();
-                notification.tmp_max_min = conventionWeatherData.getHeWeather6().get(0).getDaily_forecast().get(0).getTmp_max() + "°/" + conventionWeatherData.getHeWeather6().get(0).getDaily_forecast().get(0).getTmp_min() + "°";
-                notification.cond_code = conventionWeatherData.getHeWeather6().get(0).getNow().getCond_code() == null ? "100" : conventionWeatherData.getHeWeather6().get(0).getNow().getCond_code();
+                ColumnFragment.cityName = city.name;
+                 if(conventionWeatherData.getHeWeather6() != null && conventionWeatherData.getHeWeather6().size() > 0){
+                    notification.cond_txt = conventionWeatherData.getHeWeather6().get(0).getNow().getCond_txt() == null ? "" : conventionWeatherData.getHeWeather6().get(0).getNow().getCond_txt();
+                    if(air_forecast.size() > 0){
+                        notification.qlty = air_forecast.get(0).getQlty() + " " + air_forecast.get(0).getAqi();
+                    }
+                    notification.time = System.currentTimeMillis();
+                    notification.tmp = conventionWeatherData.getHeWeather6().get(0).getNow().getTmp();
+                    notification.tmp_max_min = conventionWeatherData.getHeWeather6().get(0).getDaily_forecast().get(0).getTmp_max() + "°/" + conventionWeatherData.getHeWeather6().get(0).getDaily_forecast().get(0).getTmp_min() + "°";
+                    notification.cond_code = conventionWeatherData.getHeWeather6().get(0).getNow().getCond_code() == null ? "100" : conventionWeatherData.getHeWeather6().get(0).getNow().getCond_code();
+                }
             }
             String notifications = SaveShare.getValue(context, "Notifications");
             if (TextUtils.isEmpty(notifications)) {
@@ -692,6 +714,9 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
 
     private void Column(List<NewColumn.DataBean> dateBeanList) {
         try {
+//            fragments.clear();
+//            userColumnList.clear();
+//            columnHorizontalPackage = null;
             for (int i = 0; i < dateBeanList.size(); i++) {
                 //传递数据到fragment
                 Bundle data = new Bundle();
@@ -701,6 +726,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 }
                 data.putString("text", "" + dateBeanList.get(i).getChannelid());
                 data.putString("ColumnName", "" + dateBeanList.get(i).getChannel_name());
+                data.putString("city", notification.city);
                 ColumnFragment newfragment = new ColumnFragment();
                 newfragment.setviewPager(viewpagerColumn);
                 newfragment.setArguments(data);
@@ -936,7 +962,9 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 if (!TextUtils.isEmpty(DailyForecast.get(i).getDate()) && DailyForecast.get(i).getDate().length() >= 4) {
                     outLookWeather.date = DailyForecast.get(i).getDate().substring(DailyForecast.get(i).getDate().length() - 5, DailyForecast.get(i).getDate().length());
                 }
-                outLookWeather.airQuality = air_forecast.get(i).getQlty();
+                if(air_forecast != null &&  air_forecast.size() > 0){
+                    outLookWeather.airQuality = air_forecast.get(i).getQlty();
+                }
                 WeatherUtilBean weatherDayD = new WeatherUtilBean();
                 weatherDayD.iconRes = Integer.parseInt(DailyForecast.get(i).getCond_code_d());
                 weatherDayD.weather = DailyForecast.get(i).getCond_txt_d();

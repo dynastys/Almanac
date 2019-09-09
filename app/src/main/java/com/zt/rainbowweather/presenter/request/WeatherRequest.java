@@ -2,6 +2,7 @@ package com.zt.rainbowweather.presenter.request;
 
 import android.content.Context;
 
+import com.xy.xylibrary.utils.RomUtils;
 import com.zt.rainbowweather.api.AppService;
 import com.zt.rainbowweather.api.RequestSyntony;
 import com.zt.rainbowweather.entity.Icons;
@@ -164,6 +165,7 @@ public class WeatherRequest {
             requestData.put("imei", Util.getIMEI(context));
             requestData.put("brand",Util.getDeviceBrand());
             requestData.put("model",Util.getDeviceModel());
+            requestData.put("channel_code", RomUtils.app_youm_code);
         } catch (JSONException e) {
             e.printStackTrace();
         }

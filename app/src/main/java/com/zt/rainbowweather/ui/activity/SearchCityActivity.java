@@ -97,8 +97,16 @@ public class SearchCityActivity extends BaseActivity implements MapLocation.Loca
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("SearchCityActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
-        MobclickAgent.onPause(this);
+        try {
+            MobclickAgent.onPageEnd("SearchCityActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
+            MobclickAgent.onPause(this);
+            if(etSearch != null){
+                IMEClose(etSearch);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -386,21 +394,25 @@ public class SearchCityActivity extends BaseActivity implements MapLocation.Loca
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    String key = s.toString();
-                    if (!TextUtils.isEmpty(key)) {
-                        ivClear.setVisibility(View.VISIBLE);
-                        tvText.setVisibility(View.INVISIBLE);
-                        rvHot.setVisibility(View.INVISIBLE);
-                        rvSearch.setVisibility(View.VISIBLE);
-                        searchKey(key);
-                    } else {
-                        ivClear.setVisibility(View.GONE);
-                        mSearchCityAdapter.getData().clear();
-                        mSearchCityAdapter.notifyDataSetChanged();
-                        tvText.setVisibility(View.VISIBLE);
-                        ivClear.setVisibility(View.GONE);
-                        rvHot.setVisibility(View.VISIBLE);
-                        rvSearch.setVisibility(View.GONE);
+                    try {
+                        String key = s.toString();
+                        if (!TextUtils.isEmpty(key)) {
+                            ivClear.setVisibility(View.VISIBLE);
+                            tvText.setVisibility(View.INVISIBLE);
+                            rvHot.setVisibility(View.INVISIBLE);
+                            rvSearch.setVisibility(View.VISIBLE);
+                            searchKey(key);
+                        } else {
+                            ivClear.setVisibility(View.GONE);
+                            mSearchCityAdapter.getData().clear();
+                            mSearchCityAdapter.notifyDataSetChanged();
+                            tvText.setVisibility(View.VISIBLE);
+                            ivClear.setVisibility(View.GONE);
+                            rvHot.setVisibility(View.VISIBLE);
+                            rvSearch.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

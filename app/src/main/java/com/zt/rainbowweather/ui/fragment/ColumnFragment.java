@@ -84,7 +84,8 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
     private int pageindex = 1;
     private TTAdNative mTTAdNative;
     private NativeExpressAD nativeExpressAD;
-
+    private MessageEvent messageEvent;
+    public static String cityName = "";
     public ColumnFragment() {
     }
 
@@ -108,6 +109,17 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
             listRecycler.setLayoutManager(setScrollEnable);
             baseAdapter = new BaseAdapter<>(R.layout.item_advise_detail_one, beans, (viewHolder, item) -> {
                 try {
+                    try {
+                        viewHolder.getView(R.id.iv_title_rel).setVisibility(View.GONE);
+                        viewHolder.getView(R.id.iv_title_r_rel).setVisibility(View.GONE);
+                        viewHolder.getView(R.id.tv_title_x_lin).setVisibility(View.GONE);
+                        viewHolder.getView(R.id.tv_title_d_lin).setVisibility(View.GONE);
+                        if ((beans.size() -2) == viewHolder.getAdapterPosition()) {
+                            textView = viewHolder.getView(R.id.tv_title);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     TTFeedAd ttFeedAd;
                     switch (item.getList_show_type()) {
                         case 0:
@@ -144,6 +156,9 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                         case 4:
                             viewHolder.getView(R.id.tv_title_x_lin).setVisibility(View.VISIBLE);
                             if(item.ttFeedAd != null){
+                                viewHolder.getView(R.id.iv_image_x1).setVisibility(View.VISIBLE);
+                                viewHolder.getView(R.id.iv_image_x2).setVisibility(View.VISIBLE);
+                                viewHolder.getView(R.id.iv_image_x3).setVisibility(View.VISIBLE);
                                 ttFeedAd = item.ttFeedAd;
                                 bindData(viewHolder, item.ttFeedAd,item.nativelogic);
                                 if (ttFeedAd.getImageList() != null && ttFeedAd.getImageList().size() >= 3) {
@@ -165,6 +180,10 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                                     GlideUtil.getGlideUtil().setImages(getActivity(),item.getArticle_imgs().get(0), viewHolder.getView(R.id.iv_image_x1), 0);
                                     GlideUtil.getGlideUtil().setImages(getActivity(), item.getArticle_imgs().get(1), viewHolder.getView(R.id.iv_image_x2), 0);
                                     GlideUtil.getGlideUtil().setImages(getActivity(), item.getArticle_imgs().get(2), viewHolder.getView(R.id.iv_image_x3), 0);
+                                }else{
+                                    viewHolder.getView(R.id.iv_image_x1).setVisibility(View.GONE);
+                                    viewHolder.getView(R.id.iv_image_x2).setVisibility(View.GONE);
+                                    viewHolder.getView(R.id.iv_image_x3).setVisibility(View.GONE);
                                 }
                             }
                             viewHolder.setText(R.id.tv_title_x, item.getTitle())
@@ -225,8 +244,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                Log.e("toutiao", "initData: "+item.getFrom_name() );
-                            }else{
+                             }else{
                                 try {
                                     if(item.nativeExpressADView != null){
                                         frameLayout.setVisibility(View.VISIBLE);
@@ -257,8 +275,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                                         }
                                         viewHolder.setText(R.id.tv_title_d, item.getTitle())
                                                 .setText(R.id.tv_from_d, item.getFrom_name());
-                                        Log.e("toutiao", "initData: "+item.getFrom_name() );
-                                    }
+                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -274,9 +291,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                         item.nativelogic.AdShow(null);
                         textViewList.put(viewHolder.getAdapterPosition(),viewHolder.getView(R.id.tv_title));
                     }
-                    if (beans.size() == viewHolder.getAdapterPosition() + 1) {
-                        textView = viewHolder.getView(R.id.tv_title);
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -302,6 +317,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
             listRecycler.setAdapter(baseAdapter);
             listRecycler.setHasFixedSize(true);
             listRecycler.setNestedScrollingEnabled(false);
+
             if (SaveShare.getValue(getActivity(), "Channelid").equals(text)) {
                 SaveShare.saveValue(getActivity(), "Channelid","");
                 beans.clear();
@@ -337,7 +353,9 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                 pageindex = 1;
                 textViewList.clear();
                 beans.clear();
+//                baseAdapter = null;
                 adMap.clear();
+                textView = null;
                 RequestData();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -377,9 +395,11 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Message(MessageEvent messageEvent) {
         try {
-            EventBus.getDefault().post(new ViewPageEvent(0));
+            this.messageEvent = messageEvent;
+            if(textView != null && cityName.equals(messageEvent.getCityName())){
+            EventBus.getDefault().post(new ViewPageEvent(0,messageEvent.getMessage()));
             String name = SaveShare.getValue(getActivity(),"ColumnName");
-            if(textView != null && isVisible(textView) && ColumnName.equals(name)){
+            if(ColumnName.equals(name)){
                 textView = null;
                 if(adMap.size() == 1){
                     if(adMap.get(4).nativelogic != null){
@@ -387,6 +407,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                     }
                 }
                 RequestData();
+            }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -426,12 +447,13 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
             if (viewPager != null) {
                 viewPager.setObjectForPosition(rootView, 0);
             }
-            EventBus.getDefault().post(new ViewPageEvent(0));
             String ISAD = SaveShare.getValue(getActivity(), "ISAD");
             if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
                 //            // 获得信息流广告对象
                 Ad.getAd().NativeAD(getActivity(), "98f8e423-02e0-49f5-989f-af46f5c59203", "80b46cdb-e90f-47fd-aeca-b0b7c00272ff", "67C53558D3E3485EA681EA21735A5003", this);
             }
+            EventBus.getDefault().post(new ViewPageEvent(0,messageEvent.getMessage()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -465,7 +487,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                 if (viewPager != null) {
                     viewPager.setObjectForPosition(rootView, 0);
                 }
-                EventBus.getDefault().post(new ViewPageEvent(0));
+                EventBus.getDefault().post(new ViewPageEvent(0,messageEvent.getMessage()));
             }
 
         } catch (Exception e) {
@@ -530,7 +552,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                         dateBean.ttFeedAd = ad;
                         dateBean.nativelogic = nativelogic;
                         dateBean.setFrom_name(TextUtils.isEmpty(ad.getSource()) ? "广告" : ad.getSource());
-                        Log.e("toutiao", "onFeedAdLoad: " + dateBean.getFrom_name());
+
                        switch (ad.getImageMode()){
                            case 3://大图
                                dateBean.setList_show_type(3);
@@ -558,7 +580,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                         if (viewPager != null) {
                             viewPager.setObjectForPosition(rootView, 0);
                         }
-                        EventBus.getDefault().post(new ViewPageEvent(0));
+                        EventBus.getDefault().post(new ViewPageEvent(0,messageEvent.getMessage()));
                     }
 
                 }
@@ -770,7 +792,7 @@ public class ColumnFragment extends BaseFragment implements RequestSyntony<Artic
                 if (viewPager != null) {
                     viewPager.setObjectForPosition(rootView, 0);
                 }
-                EventBus.getDefault().post(new ViewPageEvent(0));
+                EventBus.getDefault().post(new ViewPageEvent(0,messageEvent.getMessage()));
             }
         } catch (Exception e) {
             e.printStackTrace();

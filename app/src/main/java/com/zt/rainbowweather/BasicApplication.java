@@ -1,5 +1,6 @@
 package com.zt.rainbowweather;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,12 +9,14 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -29,8 +32,10 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
 import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import com.yilan.sdk.ui.YLUIInit;
@@ -38,6 +43,8 @@ import com.zt.rainbowweather.entity.City;
 import com.zt.rainbowweather.entity.WeatherUtilBean;
 import com.zt.rainbowweather.feedback.CustomUserProvider;
 import com.zt.rainbowweather.ui.activity.AdviseMoreDetailActivity;
+import com.zt.rainbowweather.ui.activity.MainActivity;
+import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.WeatherUtils;
 import com.zt.rainbowweather.utils.utils;
 import com.zt.weather.R;
@@ -74,23 +81,30 @@ public class BasicApplication extends LitePalApplication {
     public static BasicApplication getBasicApplication() {
         return basicApplication;
     }
-
+    public static int appCount = 0;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        basicApplication = this;
-        mContext = this;
-        utils.init(this);
-        Utils.init(this);
-        AppContext.registToWX(this);
-        // 初始化LitePal数据库
-        LitePal.initialize(BasicApplication.this);
+        try {
+            basicApplication = this;
+            mContext = this;
+            utils.init(this);
+            Utils.init(this);
+            AppContext.registToWX(this);
+            // 初始化LitePal数据库
+            LitePal.initialize(BasicApplication.this);
 //        LitePalApplication.initialize(this);
+            LCChatKit.getInstance().setProfileProvider((LCChatProfileProvider) CustomUserProvider.getInstance());
+            LCChatKit.getInstance().init(BasicApplication.getBasicApplication(), "vnB7DYkxpxsC1Gz6nMpBcdYO-gzGzoHsz", "Nmpeus4pLkxx19cXD0jyyUtq");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             // 初始化SDK
-            UMConfigure.init(this, "5d07585d3fc195c9ba001330", "tg_1", UMConfigure.DEVICE_TYPE_PHONE, null);
-            UMConfigure.init(this, "5d07585d3fc195c9ba001330", "tg_1", UMConfigure.DEVICE_TYPE_PHONE, "e583e679267b3542c272b1b36337687b");
+            UMConfigure.init(this, "5d07585d3fc195c9ba001330", RomUtils.app_youm_code, UMConfigure.DEVICE_TYPE_PHONE, null);
+            UMConfigure.init(this, "5d07585d3fc195c9ba001330", RomUtils.app_youm_code, UMConfigure.DEVICE_TYPE_PHONE, "e583e679267b3542c272b1b36337687b");
             //获取消息推送代理示例
             PushAgent mPushAgent = PushAgent.getInstance(this);
             UmengMessageHandler messageHandler = new UmengMessageHandler() {
@@ -98,7 +112,6 @@ public class BasicApplication extends LitePalApplication {
                 @Override
                 public Notification getNotification(Context context, UMessage msg) {
                     try {
-                        Log.e("getNotification", "getNotification: ");
                         switch (msg.builder_id) {
                             case 1:
                                 String Time = "";
@@ -127,11 +140,18 @@ public class BasicApplication extends LitePalApplication {
                                     mNM.createNotificationChannel(mChannel);
                                 }
                                 String[] str = msg.title.split("/-");
+
                                 RemoteViews myNotificationView = new RemoteViews(context.getPackageName(),
                                         R.layout.notification_view);
-                                WeatherUtilBean weatherUtilBean = WeatherUtils.getWeatherStatus(Integer.parseInt(str[1]));
-                                myNotificationView.setImageViewResource(R.id.notification_wether_icon,
-                                        weatherUtilBean.iconRes);
+                                WeatherUtilBean weatherUtilBean;
+                                if(str.length > 1){
+                                    weatherUtilBean = WeatherUtils.getWeatherStatus(Integer.parseInt(str[1]));
+                                    myNotificationView.setImageViewResource(R.id.notification_wether_icon,
+                                            weatherUtilBean.iconRes);
+                                }else{
+                                    weatherUtilBean = new WeatherUtilBean();
+                                    weatherUtilBean.iconRes = R.mipmap.icon;
+                                }
                                 myNotificationView.setTextViewText(R.id.notification_wether_title, str[0]);
                                 myNotificationView.setTextViewText(R.id.notification_wether_dec, msg.text);
                                 myNotificationView.setTextViewText(R.id.notification_time, Time);
@@ -149,27 +169,20 @@ public class BasicApplication extends LitePalApplication {
                                     .setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary))
                                     .setCategory(Notification.CATEGORY_REMINDER)
                                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                    .setAutoCancel(true)
                                     .build();
                                 // 标志位的设置：应设置为可以自动取消，这样用户就可以取消他，如果设置为Intent.FLAG_ACTIVITY_CLEAR_TOP | Notification.FLAG_ONGOING_EVENT;则会一直显示通知<br>//        Notification.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP | Notification.FLAG_ONGOING_EVENT;
-                                mNotification.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+//                                mNotification.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
                                 //由于Android v4包的bug，在2.3及以下系统，Builder创建出来的Notification，并没有设置RemoteView，故需要添加此代码
                                 mNotification.bigContentView = myNotificationView;
     //                            mNM.notify(0, mNotification);
-                                try {
-                                    if(msg.extra != null){
-                                        url = msg.extra.get("url");
-                                    }
-                                } catch (Exception e) {
-                                     e.printStackTrace();
+                                if(msg.extra != null){
+                                    url = msg.extra.get("url");
                                 }
                                 return mNotification;
                             default:
-                                try {
-                                    if(msg.extra != null){
-                                        url = msg.extra.get("url");
-                                    }
-                                } catch (Exception e) {
-                                     e.printStackTrace();
+                                if(msg.extra != null){
+                                    url = msg.extra.get("url");
                                 }
                                 return super.getNotification(context, msg);
                         }
@@ -198,59 +211,7 @@ public class BasicApplication extends LitePalApplication {
 //            // 选用AUTO页面采集模式
             MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
             handleSSLHandshake();
-//        OxSDK.init(this);
-//            LionSDK.init(this);
-//            try {
-//                QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
-//
-//                    @Override
-//                    public void onViewInitFinished(boolean arg0) {
-//                        //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-//                        Log.d("app", " onViewInitFinished is " + arg0);
-//                    }
-//
-//                    @Override
-//                    public void onCoreInitFinished() {
-//                        // TODO Auto-generated method stub
-//                    }
-//                };
-//                //x5内核初始化接口
-//                QbSdk.initX5Environment(getApplicationContext(), cb);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-            // 关于 CustomUserProvider 可以参看后面的文档
-//        // 初始化参数依次为 this, AppId, AppKey
-//        AVOSCloud.initialize(this,"vnB7DYkxpxsC1Gz6nMpBcdYO-gzGzoHsz","Nmpeus4pLkxx19cXD0jyyUtq");
-//        // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
-//        AVOSCloud.setDebugLogEnabled(true);
-//            LCChatKit.getInstance().setProfileProvider((LCChatProfileProvider) CustomUserProvider.getInstance());
-//            LCChatKit.getInstance().init(getApplicationContext(), "vnB7DYkxpxsC1Gz6nMpBcdYO-gzGzoHsz", "Nmpeus4pLkxx19cXD0jyyUtq");
-//
-//            //穿山甲广告强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
-//            TTAdSdk.init(getApplicationContext(),
-//                    new TTAdConfig.Builder()
-//                            .appId("5023044")
-//                            .useTextureView(true) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
-//                            .appName("星云天气")
-//                            .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
-//                            .allowShowNotify(true) //是否允许sdk展示通知栏提示
-//                            .allowShowPageWhenScreenLock(true) //是否在锁屏场景支持展示广告落地页
-////                            .debug(true) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
-//                            .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI, TTAdConstant.NETWORK_STATE_3G) //允许直接下载的网络状态集合
-//                            .supportMultiProcess(false) //是否支持多进程，true支持
-//                            .build());
-//
-//            //如果明确某个进程不会使用到广告SDK，可以只针对特定进程初始化广告SDK的content
-//            //if (PROCESS_NAME_XXXX.equals(processName)) {
-//            //   TTAdSdk.init(context, config);
-//            //}
-//            //一览广告初始化
-//            YLUIInit.getInstance()
-//                    .setApplication(this)
-//                    .setAccessKey("ylj9beit69ar")
-//                    .setAccessToken("6x1k831m4yasqb458v5ilocvo1cmd9u8")
-//                    .build();
+
             //小米推送
             MiPushRegistar.register(this, "2882303761518029190", "5201802946190"); // 小米开放平台申请到的 APPID 和 APPKEY
             //魅族
@@ -259,6 +220,42 @@ public class BasicApplication extends LitePalApplication {
             HuaWeiRegister.register(this);
             //OPPO通道，参数1为app key，参数2为app secret
             OppoRegister.register(this, "266ee86d3d314ef6bc1fea232346c81f", "9ce20d95d5e142b18896f13344cacd67");
+            registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+                @Override
+                public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+                }
+
+                @Override
+                public void onActivityStarted(Activity activity) {
+                    appCount++;
+                }
+
+                @Override
+                public void onActivityResumed(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivityPaused(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivityStopped(Activity activity) {
+                    appCount--;
+                }
+
+                @Override
+                public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                }
+
+                @Override
+                public void onActivityDestroyed(Activity activity) {
+
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

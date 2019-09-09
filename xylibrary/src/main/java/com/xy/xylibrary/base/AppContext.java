@@ -1,6 +1,8 @@
 package com.xy.xylibrary.base;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.xy.xylibrary.ui.activity.login.UserInfo;
 import com.xy.xylibrary.ui.activity.login.UserMessage;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.ToastUtils;
+import com.yilan.sdk.user.YLUser;
 
 import org.litepal.LitePal;
 
@@ -28,11 +31,10 @@ import java.util.List;
  * Created by zw on 2019/8/8 0008.
  */
 public class AppContext{
-    public static volatile Context applicationContext = null;
+
     private static AppContext sContext = null;
     private static String WEIXIN_APP_ID = "wxe9fd87db95f74d66";
-    private String AppSecret = "734df0e30fa5137d44254b4dd231f9b1";
-    public static IWXAPI mWxApi;
+     public static IWXAPI mWxApi;
     public static boolean ISLOGIN;
     public static UserMessage userMessageData;
     /**
@@ -45,7 +47,6 @@ public class AppContext{
         mWxApi.registerApp(WEIXIN_APP_ID);
 
     }
-
 
     public static void wxLogin() {
         if (!AppContext.mWxApi.isWXAppInstalled()) {
@@ -95,17 +96,27 @@ public class AppContext{
                    userMessageData.createTime = userInfo.getData().getCreateTime();
                    userMessageData.updateTime = userInfo.getData().getUpdateTime();
                    userMessageData.isDelete = userInfo.getData().isIsDelete();
+                   userMessageData.openid = userInfo.getData().getWxid();
+                   if(!TextUtils.isEmpty(userInfo.getData().getWxid()) && !TextUtils.isEmpty(SaveShare.getValue(context,"nickname"))){
+                       userMessageData.nickname = SaveShare.getValue(context,"nickname");
+                       userMessageData.headimgurl = SaveShare.getValue(context,"headimgurl");
+                   }
                    list.add(userMessageData);
                    LitePal.saveAll(list);
                    SaveShare.saveValue(context, "userId", userInfo.getData().getId());
                    SaveShare.saveValue(context, "Phone", userInfo.getData().getMobile() + "");
+                   YLUser.getInstance().login(userMessageData.name, userMessageData.headimgurl, userMessageData.mobile+"", userMessageData.uesrid);
                }else{
+                   YLUser.getInstance().logout();
+                   if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                       ToastUtils.showLong("登录失效，请重新登录");
+                   }
                    LitePal.deleteAll(UserMessage.class);
                    userMessageData = new UserMessage();
                    SaveShare.saveValue(context, "userId", "");
                    SaveShare.saveValue(context, "Phone",  "");
                }
-               if(userGold != null){
+               if(userGold != null && !TextUtils.isEmpty(userMessageData.uesrid)){
                    userGold.gold(userMessageData);
                }
            }
@@ -133,12 +144,18 @@ public class AppContext{
 
             @Override
             public void onNext(FinishTask finishTask) {
-                ToastUtils.setView(R.layout.toast_show);
-                View view = ToastUtils.getView();
-                ((TextView) view.findViewById(R.id.add_money)).setText("+" + finishTask.getData());
-                ToastUtils.showLong("");
-                ToastUtils.setView(null);
-
+                try {
+                    if(finishTask.getData() > 0){
+                        ToastUtils.setView(R.layout.toast_show);
+                        View view = ToastUtils.getView();
+                        ((TextView) view.findViewById(R.id.add_money)).setText("+" + finishTask.getData());
+                        ToastUtils.showLong("");
+                        ToastUtils.setView(null);
+                        Log.e("FinishTask", "onNext: " + finishTask.getData());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

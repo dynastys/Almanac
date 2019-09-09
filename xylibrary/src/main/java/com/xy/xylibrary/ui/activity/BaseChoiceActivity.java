@@ -1,10 +1,13 @@
 package com.xy.xylibrary.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -50,22 +53,50 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setCityEvent(TaskType taskType) {
-        this.taskType = taskType;
-        if (taskType.tasktype == 1 || taskType.tasktype == 3 || taskType.tasktype == 2) {
-            if (tabVp != null) {
-                tabVp.setCurrentItem(0);
+        try {
+            this.taskType = taskType;
+            if (taskType.tasktype == 5 || taskType.tasktype == 3|| taskType.tasktype == 1) {
+                if (tabVp != null) {
+                    tabVp.setCurrentItem(0);
+                }
+            } else if (taskType.tasktype == 4) {
+                if (tabVp != null) {
+                    tabVp.setCurrentItem(3);
+                    SaveShare.saveValue(BaseChoiceActivity.this,"SP","4");
+                 }
+            }else if (taskType.tasktype == 6) {
+                if (tabVp != null) {
+                    tabVp.setCurrentItem(1);
+                    SaveShare.saveValue(BaseChoiceActivity.this,"HL","5");
+                }
             }
-        } else if (taskType.tasktype == 4) {
-            if (tabVp != null) {
-                tabVp.setCurrentItem(3);
-                SaveShare.saveValue(BaseChoiceActivity.this,"SP","4");
-             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
 //        EventBus.getDefault().post(new Event(cityEvent.city, cityEvent.isDelete));
     }
 
+    @SuppressLint("WrongConstant")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setTabStrip(String s) {
+        if(adapter != null){
+            adapter.isTagEnable(2);
+            if(!TextUtils.isEmpty(s) && s.equals("1")){
+                adapter.getSelectedDrawable(1,BaseChoiceActivity.this);
+                adapter.getPageTitle(1);
+//                tabVp.setCurrentItem(0);
+            }else{
+                adapter.getSelectedDrawable(0,BaseChoiceActivity.this);
+                adapter.getPageTitle(0);
+//                tabVp.setCurrentItem(0);
+            }
+//            adapter.notifyDataSetChanged();
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                gtsGtsTabs.setFocusable(0);
+//            }
+
+        }
+    }
     /**
      * find控件
      */

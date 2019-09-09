@@ -260,18 +260,22 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
         @Override
         public void update(InfiniteViewPager.ViewHolder<View, String> holder, String s1) {
-            String finalS = s1;
-            almanacLogic.getHuangLiData(getActivity(), s1, huangLi -> {
-                Log.e("setViewpagerData", "s: " + s1);
-                almanacLogic.setSuitable(getActivity(), "宜", huangLi, suitableContent);
-                almanacLogic.setSuitable(getActivity(), "忌", huangLi, avoidContent);
-                suiId.setText(huangLi.getData().getSui_ci().get(1) + " 【" + huangLi.getData().getShengXiao() + "】 " + huangLi.getData().getSui_ci().get(2) + " " + huangLi.getData().getSui_ci().get(0));
-                NongLiMonthDay.setText(huangLi.getData().getNongLiMonth() + Util.LunarCalendarSize(huangLi.getData().getNongLiMonth()) + huangLi.getData().getNongLiDay());
-                shengxiao.setText(huangLi.getData().getStar());
-                bean.sui_ci_shengxiao = huangLi.getData().getSui_ci().get(1) + " 【" + huangLi.getData().getShengXiao() + "】 " + huangLi.getData().getSui_ci().get(2) + " " + huangLi.getData().getSui_ci().get(0);
-                bean.week = "周" + huangLi.getData().getWeek();
-                ISClick = false;
-            });
+            try {
+                String finalS = s1;
+                almanacLogic.getHuangLiData(getActivity(), s1, huangLi -> {
+                    Log.e("setViewpagerData", "s: " + s1);
+                    almanacLogic.setSuitable(getActivity(), "宜", huangLi, suitableContent);
+                    almanacLogic.setSuitable(getActivity(), "忌", huangLi, avoidContent);
+                    suiId.setText(huangLi.getData().getSui_ci().get(1) + " 【" + huangLi.getData().getShengXiao() + "】 " + huangLi.getData().getSui_ci().get(2) + " " + huangLi.getData().getSui_ci().get(0));
+                    NongLiMonthDay.setText(huangLi.getData().getNongLiMonth() + Util.LunarCalendarSize(huangLi.getData().getNongLiMonth()) + huangLi.getData().getNongLiDay());
+                    shengxiao.setText(huangLi.getData().getStar());
+                    bean.sui_ci_shengxiao = huangLi.getData().getSui_ci().get(1) + " 【" + huangLi.getData().getShengXiao() + "】 " + huangLi.getData().getSui_ci().get(2) + " " + huangLi.getData().getSui_ci().get(0);
+                    bean.week = "周" + huangLi.getData().getWeek();
+                    ISClick = false;
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
     }

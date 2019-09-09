@@ -42,9 +42,8 @@ public class ConstUtils {
     public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     /*公共的市场*/
-    public static String app_market_code = "360";
-
-    /*模块控制*/
+    public static String app_market_code = "tg_1";
+     /*模块控制*/
     public static boolean home_news = true; //首页底部资讯
     public static boolean almanac_icon = true; //黄历icon
     public static boolean almanac_news = true; //黄历资讯

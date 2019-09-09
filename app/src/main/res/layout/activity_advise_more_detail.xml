@@ -45,6 +45,22 @@
             android:background="@color/white"
             >
         </FrameLayout>
+        <TextView
+            android:id="@+id/read_next_chapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/read_next_search"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="170dp"
+            android:layout_marginRight="60dp"
+            android:text="@string/read_next_chapter"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_5"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            />
         <com.xy.xylibrary.view.CirclePgBar
             android:id="@+id/crclepgbar"
             android:layout_width="60dp"
@@ -68,6 +84,7 @@
             android:src="@drawable/big_gold"
             android:visibility="gone"
             />
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -112,15 +112,15 @@ public class RecommendLogic implements RequestSyntony<SkinTheme>,SwipeRefreshLis
                             break;
                     }
                 });
-                if(!TextUtils.isEmpty(SaveShare.getValue(context,item.getCover()))){
-                    viewHolder.setText(R.id.likenum_int,"14");
-                }else{
-                    viewHolder.setText(R.id.likenum_int,"13");
-
-                }
+//                if(!TextUtils.isEmpty(SaveShare.getValue(context,item.getCover()))){
+//                    viewHolder.setText(R.id.likenum_int,"14");
+//                }else{
+//                    viewHolder.setText(R.id.likenum_int,"13");
+//
+//                }
                 viewHolder.getView(R.id.give_a_like).setOnClickListener(v -> {
                     if(TextUtils.isEmpty(SaveShare.getValue(context,item.getCover()))){
-                        viewHolder.setText(R.id.likenum_int,"14");
+//                        viewHolder.setText(R.id.likenum_int,"14");
                         SaveShare.saveValue(context,item.getCover(),item.getCover());
 
                     }else{

@@ -5,10 +5,15 @@
     android:id="@+id/rel_wether_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/weather_bg"
     android:focusable="true"
     android:focusableInTouchMode="true">
-
+    <ImageView
+        android:id="@+id/tv_wether_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@mipmap/weather_bg"
+        />
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,11 +89,6 @@
                                 android:scaleType="fitXY"
                                 android:src="@mipmap/shade_2" />
 
-                            <com.zt.rainbowweather.presenter.dynamic.DynamicWeatherView
-                                android:id="@+id/dynamicWeather"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:id="@+id/tv_lin"
@@ -281,7 +281,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:src="@mipmap/caih"
                                 android:visibility="gone" />
 
                             <com.check.ox.sdk.LionWallView
@@ -853,7 +852,6 @@
                             android:background="@color/halving_line" />
 
                         <RelativeLayout
-                            android:id="@+id/x5_video_division_rel"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:layout_below="@+id/x5_video_division">
@@ -876,7 +874,7 @@
                             android:clickable="false"
                             android:focusable="false"
                             android:scaleType="fitXY"
-                            android:src="@mipmap/weather_forecast" />
+                            />
 
                     </RelativeLayout>
 
@@ -975,7 +973,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
-                            android:src="@mipmap/ad_bg" />
+                            />
 
                         <TextView
                             android:id="@+id/tv_ad_flag"

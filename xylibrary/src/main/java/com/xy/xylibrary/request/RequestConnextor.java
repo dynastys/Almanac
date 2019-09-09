@@ -2,9 +2,13 @@ package com.xy.xylibrary.request;
 
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.tencent.smtt.sdk.WebSettings;
+import com.xy.xylibrary.utils.AESUtils;
+import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +47,6 @@ public class RequestConnextor<T> {
     private static Context context;
     private static String url = "https://api.heweather.net/";
     public static RequestConnextor getConnextor(Context contexts) {
-
         if (connextor == null) {
             synchronized (RequestConnextor.class){
                 if (connextor == null) {
@@ -99,6 +102,21 @@ public class RequestConnextor<T> {
         }
     };
 
+    private static class TokenHeaderInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            String utoken = SaveShare.getValue(context, "utoken");
+            Log.e("requestData", utoken);
+            Request originalRequest = chain.request();
+            if(TextUtils.isEmpty(utoken)){
+                return chain.proceed(originalRequest);
+            }else{
+                Request updateRequest = originalRequest.newBuilder() .header("utoken", utoken.trim()).build();
+                return chain.proceed(updateRequest);
+            }
+        }
+    }
 
     //正常缓存，减少服务器请求
     static Interceptor REWRITE_CACHE_CONTROL_INTERCEPTOR = new Interceptor() {
@@ -119,7 +137,8 @@ public class RequestConnextor<T> {
                 return response.newBuilder()
                         .removeHeader("Pragma")//清除头信息，因为服务器如果不支持，会返回一些干扰信息，不清除下面无法生效
                         .header("Cache-Control", cacheControl)
-                         .build();
+//
+                        .build();//
             } else {
                 Request request = chain.request();
                 Response response = chain.proceed(request);
@@ -128,7 +147,8 @@ public class RequestConnextor<T> {
                 return response.newBuilder()
                         .removeHeader("Pragma")//清除头信息，因为服务器如果不支持，会返回一些干扰信息，不清除下面无法生效
                         .header("Cache-Control", cacheControl)
-                         .build();
+//                        .header("utoken", AESUtils.getInstance().encrypt2(System.currentTimeMillis()+""))
+                        .build();
             }
 
         }
@@ -193,16 +213,18 @@ public class RequestConnextor<T> {
             }
         })
         * */
+
         File httpCacheDirectory = new File(Environment.getExternalStorageDirectory(), "Novel");//这里为了方便直接把文件放在了SD卡根目录的HttpCache中，一般放在context.getCacheDir()中
         int cacheSize = 10 * 1024 * 1024;//设置缓存文件大小为10M
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
         okhttp = new OkHttpClient.Builder()
           .addInterceptor(interceptor)//离线
-          .followRedirects(true)
+//          .followRedirects(true)
           .connectTimeout(10, TimeUnit.SECONDS)
           .readTimeout(10, TimeUnit.SECONDS)
           .writeTimeout(10, TimeUnit.SECONDS)
           .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)//添加自定义缓存拦截器（后面讲解），注意这里需要使用.addNetworkInterceptor
+          .addNetworkInterceptor(new TokenHeaderInterceptor())
           .cache(cache)//把缓存添加进来
           .build();
 //        Request request = new Request.Builder().url(url).removeHeader("User-Agent").addHeader("User-Agent",

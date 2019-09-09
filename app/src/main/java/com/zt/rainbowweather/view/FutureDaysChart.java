@@ -151,13 +151,13 @@ public class FutureDaysChart extends View {
     }
 
     public void setDatas(List<OutLookWeather> datas) {
+        if(datas == null){
+            return;
+        }
         this.datas = datas;
-
         lineSize = datas.size();
-
         minHigh = datas.get(0).getHighTemperature();
         maxHigh = datas.get(0).getHighTemperature();
-
         minLow = datas.get(0).getLowTemperature();
         maxLow = datas.get(0).getLowTemperature();
         for (int i = 1; i < datas.size(); i++) {
@@ -178,8 +178,8 @@ public class FutureDaysChart extends View {
         }
 
         //转换比例，找出最大和最小进行换算每个梯度所占像素
-        perHeightTop = (eachChartHeight / (maxHigh - minHigh)==0?1:(maxHigh - minHigh));
-        perHeightBottom = (eachChartHeight / (maxLow - minLow))==0?1:(maxLow - minLow);
+        perHeightTop = (eachChartHeight / (maxHigh - minHigh)==0?1:(maxHigh - minHigh)>9?9:(maxHigh - minHigh));
+        perHeightBottom = (eachChartHeight / (maxLow - minLow))==0?1:(maxLow - minLow)>9?9:(maxLow - minLow);
 
         postInvalidate();
     }
@@ -211,7 +211,7 @@ public class FutureDaysChart extends View {
         for (int i = 0; i < lineSize; i++) {
             float x = eachWidth / 2f + i * eachWidth;
             float y = chartHeight / 2f - padding / 2 - (datas.get(i).getHighTemperature() -
-                    minHigh) * perHeightTop + 50;
+                    minHigh) * perHeightTop + 70;
              linePaint.setColor(DEFAULT_Y);
             //先画一个颜色为背景颜色的实心园覆盖掉折线拐角
             pointPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -228,7 +228,7 @@ public class FutureDaysChart extends View {
                 if (Float.isNaN(currentPointX)) {
                     currentPointX = eachWidth / 2f + i * eachWidth;
                     currentPointY = chartHeight / 2f - padding / 2 - (datas.get(i)
-                            .getHighTemperature() - minHigh) * perHeightTop + 50;
+                            .getHighTemperature() - minHigh) * perHeightTop + 70;
                 }
                 if (Float.isNaN(previousPointX)) {
                     if (i > 0) {
@@ -281,9 +281,8 @@ public class FutureDaysChart extends View {
                             secondDiffX);
                     final float secondControlPointY = currentPointY - (LINE_SMOOTHNESS *
                             secondDiffY);
-
-                    path.cubicTo(firstControlPointX, firstControlPointY+50, secondControlPointX,
-                            secondControlPointY+50, currentPointX, currentPointY+50);
+                    path.cubicTo(firstControlPointX, firstControlPointY+70, secondControlPointX,
+                            secondControlPointY+70, currentPointX, currentPointY+70);
                 }
 
                 // Shift values by one back to prevent recalculation of values that have
@@ -322,7 +321,7 @@ public class FutureDaysChart extends View {
         for (int i = 0; i < lineSize; i++) {
             float x = eachWidth / 2f + i * eachWidth;
             float y = chartHeight - padding / 2 - (datas.get(i).getLowTemperature() - minLow) *
-                    perHeightBottom - 50;
+                    perHeightBottom - 20;
 
             linePaint.setColor(DEFAULT_BULE);
             //先画一个颜色为背景颜色的实心园覆盖掉折线拐角
@@ -340,7 +339,7 @@ public class FutureDaysChart extends View {
                 if (Float.isNaN(currentPointX)) {
                     currentPointX = eachWidth / 2f + i * eachWidth;
                     currentPointY = chartHeight - padding / 2 - (datas.get(i).getLowTemperature()
-                            - minLow) * perHeightBottom - 50;
+                            - minLow) * perHeightBottom - 20;
                 }
                 if (Float.isNaN(previousPointX)) {
                     if (i > 0) {
@@ -391,8 +390,8 @@ public class FutureDaysChart extends View {
                             secondDiffX);
                     final float secondControlPointY = currentPointY - (LINE_SMOOTHNESS *
                             secondDiffY);
-                    path.cubicTo(firstControlPointX, firstControlPointY -50, secondControlPointX,
-                            secondControlPointY -50, currentPointX, currentPointY -50);
+                    path.cubicTo(firstControlPointX, firstControlPointY - 20, secondControlPointX,
+                            secondControlPointY - 20, currentPointX, currentPointY - 20);
                 }
 
                 // Shift values by one back to prevent recalculation of values that have

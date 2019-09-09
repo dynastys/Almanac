@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.constellation.xylibrary.R;
+import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.ui.activity.login.LoginRequest;
@@ -19,13 +20,14 @@ import com.xy.xylibrary.ui.activity.login.UserActiveInfo;
 import com.xy.xylibrary.ui.activity.login.UserMessage;
 import com.xy.xylibrary.ui.fragment.task.WithdrawDepositActivity;
 import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.ToastUtils;
 import com.xy.xylibrary.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class LookOverDetailActivity extends BaseActivity implements View.OnClickListener{
+public class LookOverDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView listBar;
     private ImageView finishMyWalletHead;
@@ -37,11 +39,12 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
     private LinearLayout benefitsOfGold;
     private TextView detail;
     private RecyclerView recyclerLayoutDetailList;
-    private TextView look_over_add_up_gold,look_over_taday_gold;
-    private TextView look_over_RMB,look_over_gold;
+    private TextView look_over_add_up_gold, look_over_taday_gold;
+    private TextView look_over_RMB, look_over_gold;
 
     private List<String> lists = new ArrayList<>();
     private UserMessage userMessages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +62,6 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void loadViewLayout() {
-
         try {
             look_over_gold = findViewById(R.id.look_over_gold);
             look_over_RMB = findViewById(R.id.look_over_RMB);
@@ -85,23 +87,17 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    @Override
-    protected void bindViews() {
-
-    }
-
-    @Override
-    protected void processLogic(Bundle savedInstanceState) {
+    private void initData() {
         try {
             AppContext.getUserInfo(LookOverDetailActivity.this, "", SaveShare.getValue(LookOverDetailActivity.this, "userId"), new AppContext.UserGold() {
                 @Override
                 public void gold(UserMessage userMessage) {
                     try {
-                        if(userMessage != null){
+                        if (userMessage != null) {
                             userMessages = userMessage;
-                            look_over_gold.setText(userMessage.gold+"");
-                            look_over_RMB.setText("约"+Utils.doubleToString(userMessage.gold/10000)+"元");
-                            look_over_add_up_gold.setText(userMessage.gold+"");
+                            look_over_gold.setText(userMessage.gold + "");
+                            look_over_RMB.setText("约" + Utils.doubleToString((double)userMessage.gold / 10000) + "元");
+                            look_over_add_up_gold.setText(userMessage.gold + "");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -121,15 +117,25 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
 
                 @Override
                 public void onNext(UserActiveInfo userActiveInfo) {
-                    if(userActiveInfo != null && userActiveInfo.getData() != null && userActiveInfo.getData().getUserActiveVms().size() > 0){
-                        look_over_taday_gold.setText(userActiveInfo.getData().getToDayGold()+"");
-                        LookOverDetailLogic.getLookOverDetailLogic().setGoldDetail(LookOverDetailActivity.this,recyclerLayoutDetailList,userActiveInfo.getData().getUserActiveVms());
+                    if (userActiveInfo != null && userActiveInfo.getData() != null && userActiveInfo.getData().getUserActiveVms().size() > 0) {
+                        look_over_taday_gold.setText(userActiveInfo.getData().getToDayGold() + "");
+                        LookOverDetailLogic.getLookOverDetailLogic().setGoldDetail(LookOverDetailActivity.this, recyclerLayoutDetailList, userActiveInfo.getData().getUserActiveVms());
                     }
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void bindViews() {
+
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
+        initData();
     }
 
     @Override
@@ -148,14 +154,34 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(look_over_gold != null){
+            initData();
+        }
+        MobclickAgent.onPageStart("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
+        MobclickAgent.onResume(this); //统计时长
+    }
+
+    @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.finish_my_wallet_head) {
             finish();
-        }else if(i == R.id.my_wallet_withdraw){
-            if(userMessages != null){
+        } else if (i == R.id.my_wallet_withdraw) {
+            if (userMessages != null) {
                 intentActivity(WithdrawDepositActivity.class);
+            }else {
+                ToastUtils.showLong("请先登录哦！");
             }
         }
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
+        MobclickAgent.onPause(this);
     }
 }

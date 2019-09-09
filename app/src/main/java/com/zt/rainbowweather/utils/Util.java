@@ -389,32 +389,21 @@ public class Util {
     public static Bitmap rsBlur(Context context, Bitmap source, int radius) {
         int width = Math.round(source.getWidth() / 4);
         int height = Math.round(source.getHeight() / 4);
-
         Bitmap inputBmp = Bitmap.createScaledBitmap(source, width, height, false);
-
         RenderScript renderScript = RenderScript.create(context);
-
         // Allocate memory for Renderscript to work with
-
         final Allocation input = Allocation.createFromBitmap(renderScript, inputBmp);
         final Allocation output = Allocation.createTyped(renderScript, input.getType());
-
         // Load up an instance of the specific script that we want to use.
         ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
         scriptIntrinsicBlur.setInput(input);
-
         // Set the blur radius
         scriptIntrinsicBlur.setRadius(radius);
-
         // Start the ScriptIntrinisicBlur
         scriptIntrinsicBlur.forEach(output);
-
         // Copy the output to the blurred bitmap
         output.copyTo(inputBmp);
-
         renderScript.destroy();
-
-
         return inputBmp;
     }
 

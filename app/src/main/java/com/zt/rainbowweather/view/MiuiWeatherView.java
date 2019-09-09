@@ -53,6 +53,7 @@ public class MiuiWeatherView extends View {
     private float pointGap; //折线单位高度差
     private int defaultPadding; //折线坐标图四周留出来的偏移量
     private float iconWidth;  //天气图标的边长
+    private float indicateiconWidth;//指示图标长度
     private int viewHeight;
     private int viewWidth;
     private int screenWidth;
@@ -62,6 +63,7 @@ public class MiuiWeatherView extends View {
     private Paint textPaint; //文字画笔
     private Paint circlePaint; //圆点画笔
     private Paint p;
+    private Paint numberTextPaint;
     private List<WeatherBean> data = new ArrayList<>(); //元数据
     private List<Pair<Integer, Integer>> weatherDatas = new ArrayList<>();  //对元数据中天气分组后的集合
     private List<Float> dashDatas = new ArrayList<>(); //不同天气之间虚线的x坐标集合
@@ -119,6 +121,7 @@ public class MiuiWeatherView extends View {
         textSize = sp2pxF(c, 10);
         defaultPadding = (int) (0.5 * minPointHeight);  //默认0.5倍
         iconWidth = (1.0f / 2.0f) * lineInterval; //默认1/3倍
+        indicateiconWidth = dp2pxF(context, 30);
     }
 
     /**
@@ -153,6 +156,11 @@ public class MiuiWeatherView extends View {
 
         circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         circlePaint.setStrokeWidth(dp2pxF(c, 1));
+
+        numberTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        numberTextPaint.setTextSize(sp2pxF(c, 10));
+        numberTextPaint.setColor(Color.parseColor("#727272"));
+        numberTextPaint.setStrokeWidth(dp2pxF(c, 10));
     }
     private int mWidth;
     private int mHeight;
@@ -266,13 +274,11 @@ public class MiuiWeatherView extends View {
         } else {
             viewHeight = minViewHeight;
         }
-
         int totalWidth = 0;
         if (data.size() > 1) {
-            totalWidth = 2 * defaultPadding/3*2 + lineInterval * (data.size() - 1);
+            totalWidth = 2 * defaultPadding/3*2 + lineInterval * (data.size() - 1)+ (int)dp2pxF(context, 10f);
         }
         viewWidth = Math.max(screenWidth, totalWidth);  //默认控件最小宽度为屏幕宽度
-
         setMeasuredDimension(viewWidth, viewHeight);
         calculatePontGap();
     }
@@ -285,11 +291,8 @@ public class MiuiWeatherView extends View {
         }
         drawAxis(canvas);
          drawLinesAndPoints(canvas);
-
 //        drawTemperature(canvas);
-
         drawWeatherDash(canvas);
-
         drawWeatherIcon(canvas);
 //        addColor(canvas);
     }
@@ -303,10 +306,9 @@ public class MiuiWeatherView extends View {
         canvas.save();
         linePaint.setColor(DEFAULT_GRAY);
         linePaint.setStrokeWidth(dp2px(getContext(), 1));
-
         canvas.drawLine(defaultPadding/3*2,
                 viewHeight - defaultPadding,
-                viewWidth - defaultPadding/3*2,
+                viewWidth - defaultPadding/3*2 - (int)dp2pxF(context, 10f),
                 viewHeight - defaultPadding,
                 linePaint);
 
@@ -316,8 +318,14 @@ public class MiuiWeatherView extends View {
             String text = data.get(i).time;
             centerX = defaultPadding/3*2 + i * lineInterval;
             Paint.FontMetrics m = textPaint.getFontMetrics();
-            canvas.drawText(text, 0, text.length(), centerX, centerY - (m.ascent + m.descent) /
-                    2, textPaint);
+//            if(i == (data.size()-1)){
+//                canvas.drawText(text, 0, text.length(), centerX, centerY - (m.ascent + m.descent) /
+//                        2, textPaint);
+//            }else{
+                canvas.drawText(text, 0, text.length(), centerX, centerY - (m.ascent + m.descent) /
+                        2, textPaint);
+//            }
+
         }
         canvas.restore();
     }
@@ -384,24 +392,55 @@ public class MiuiWeatherView extends View {
         }
 //        canvas.drawPath(linePath, linePaint); //画出折线
         //接下来画折线拐点的园
-        float x, y;
-        for (int i = 0; i < points.size(); i++) {
-            x = points.get(i).x;
-            y = points.get(i).y;
-
+        float x, y = 0;
+        int scrollX = getScrollX();  //范围控制在0 ~ viewWidth-screenWidth
+        float f = (float) viewWidth/(viewWidth - screenWidth);
+        x = points.get(0).x+scrollX*f;
+        if(scrollX >= (viewWidth - screenWidth)){
+            x = x - 10;
+        }
+//            y = points.get(0).y;
+        if(x > points.get((points.size() - 1)).x){
+            x = points.get((points.size() - 1)).x;
+        }
+        float j = (viewWidth - screenWidth) / data.size();
+        float f1 = (points.get((points.size() - 1)).x - points.get(0).x)/points.size();//先获取高度差
+        int f3 = (int) ( scrollX / j);
+        if(f3 >= data.size() - 1){
+            f3 = data.size() - 1;
+        }
+        for (int i = 0; i < data.size(); i++) {
+            if(f3 == i){
+                float f2 = scrollX % f1;
+                y = points.get(i).y + f2/(f1 / 10) * (points.get((i+ 1) >= points.size()-1?points.size() -1:(i+ 1)).y - points.get((i) >= points.size()-1?points.size()-1:(i)).y)/10;
+                Bitmap icon = getIcon(R.mipmap.indicate);
+                 if(x >= ((viewWidth - icon.getWidth() - (int)dp2pxF(context, 10f)))){
+                    x = x - icon.getWidth()/2;
+                }
+                //经过上述校正之后可以得到图标和文字的绘制区域
+                RectF iconRect = new RectF(x - icon.getWidth()/2,
+                        y - icon.getHeight() * 5/3,
+                        x + icon.getWidth() * 3/2+(icon.getWidth())*(((float)data.get(i).weather.weather.length()/2)-1),
+                        y);
+//                canvas.drawBitmap(icon, (float) x-icon.getHeight()/2, (float)y-icon.getHeight(), null);
+                canvas.drawBitmap(icon, null, iconRect, null);  //画图标
+//            //画下方文字
+            canvas.drawText(data.get(i).temperature +"°"+ data.get(i).weather.weather,
+                    x - dp2pxF(getContext(), 8), y - icon.getHeight() * 2 / 3.0f, numberTextPaint);
+             }
+        }
 //            //先画一个颜色为背景颜色的实心园覆盖掉折线拐角
 //            circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 //            circlePaint.setColor(backgroundColor);
 //            canvas.drawCircle(x, y,
 //                    pointRadius + dp2pxF(getContext(), 1),
 //                    circlePaint);
-//            //再画出正常的空心园
+////            //再画出正常的空心园
 //            circlePaint.setStyle(Paint.Style.FILL);
 //            circlePaint.setColor(DEFAULT_BULE);
 //            canvas.drawCircle(x, y,
 //                    pointRadius,
-//                    circlePaint);
-        }
+//                    numberTextPaint);
         canvas.restore();
     }
 
@@ -484,7 +523,6 @@ public class MiuiWeatherView extends View {
                 path.lineTo(calculate_x.get(i).eval(u), calculate_y.get(i)
                         .eval(u));
             }
-
         }
         path.lineTo(mWidth,mHeight/3*2+dp2px(context,10));
         path.lineTo(0,mHeight/3*2+dp2px(context,10));
@@ -504,20 +542,17 @@ public class MiuiWeatherView extends View {
          * by using row operations to convert the matrix to upper triangular and
          * then back sustitution. The D[i] are the derivatives at the knots.
          */
-
         gamma[0] = 1.0f / 2.0f;
         for (i = 1; i < n; i++) {
             gamma[i] = 1 / (4 - gamma[i - 1]);
         }
         gamma[n] = 1 / (2 - gamma[n - 1]);
-
         delta[0] = 3 * (x.get(1) - x.get(0)) * gamma[0];
         for (i = 1; i < n; i++) {
             delta[i] = (3 * (x.get(i + 1) - x.get(i - 1)) - delta[i - 1])
                     * gamma[i];
         }
         delta[n] = (3 * (x.get(n) - x.get(n - 1)) - delta[n - 1]) * gamma[n];
-
         D[n] = delta[n];
         for (i = n - 1; i >= 0; i--) {
             D[i] = delta[i] - gamma[i] * D[i + 1];
@@ -609,9 +644,7 @@ public class MiuiWeatherView extends View {
         for (int i = 0; i < dashDatas.size() - 1; i++) {
             left = dashDatas.get(i);
             right = dashDatas.get(i + 1);
-
             //以下校正的情况为：两条虚线都在屏幕内或只有一条在屏幕内
-
             if (left < scrollX &&    //仅左虚线在屏幕外
                     right < scrollX + screenWidth) {
                 left = scrollX;
@@ -622,7 +655,6 @@ public class MiuiWeatherView extends View {
                 right = scrollX + screenWidth;
                 rightUsedScreenRight = true;
             }
-
             if (right - left > iconWidth) {    //经过上述校正之后左右距离还大于图标宽度
                 iconX = left + (right - left) / 2.0f;
             } else {                          //经过上述校正之后左右距离小于图标宽度，则贴着在屏幕内的虚线
@@ -632,9 +664,7 @@ public class MiuiWeatherView extends View {
                     iconX = left + iconWidth / 2.0f;
                 }
             }
-
             //以下校正的情况为：两条虚线都在屏幕之外
-
             if (right < scrollX) {  //两条都在屏幕左侧，图标紧贴右虚线
                 iconX = right - iconWidth / 2.0f;
             } else if (left > scrollX + screenWidth) {   //两条都在屏幕右侧，图标紧贴左虚线
@@ -654,17 +684,14 @@ public class MiuiWeatherView extends View {
 //            //画下方文字
 //            canvas.drawText(WeatherUtils.getWeatherStatus(weatherDatas.get(i).second).weather,
 //                    iconX, textY - (metrics.ascent + metrics.descent) / 2, textPaint);
-
             leftUsedScreenLeft = rightUsedScreenRight = false; //重置标志位
         }
-
         textPaint.setTextSize(textSize);
         canvas.restore();
     }
 
 
-    private Bitmap getWeatherIcon(Integer weatherId) {
-        int resId = WeatherUtils.getWeatherStatus(weatherId).iconRes;
+    public Bitmap getIcon(int resId) {
         Bitmap bmp;
         int outWdith, outHeight;
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -681,6 +708,11 @@ public class MiuiWeatherView extends View {
         options.inJustDecodeBounds = false;
         bmp = BitmapFactory.decodeResource(getResources(), resId, options);
         return bmp;
+    }
+
+    private Bitmap getWeatherIcon(Integer weatherId) {
+        int resId = WeatherUtils.getWeatherStatus(weatherId).iconRes;
+        return getIcon(resId);
     }
 
     private float lastX = 0;

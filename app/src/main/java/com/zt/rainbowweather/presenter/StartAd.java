@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
@@ -20,10 +21,15 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.ui.activity.login.UserMessage;
+import com.yilan.sdk.common.util.FSLogcat;
 import com.yilan.sdk.ui.YLUIInit;
+import com.yilan.sdk.user.YLUser;
 import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.feedback.CustomUserProvider;
 import com.zt.xuanyin.controller.NativeAd;
+
+import org.litepal.LitePal;
 
 import cn.leancloud.chatkit.LCChatKit;
 import cn.leancloud.chatkit.LCChatProfileProvider;
@@ -64,6 +70,7 @@ public class StartAd {
                             .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI, TTAdConstant.NETWORK_STATE_3G) //允许直接下载的网络状态集合
                             .supportMultiProcess(false) //是否支持多进程，true支持
                             .build());
+
 //            // 初始化SDK
 //            UMConfigure.init(context, "5d07585d3fc195c9ba001330", "tg_1", UMConfigure.DEVICE_TYPE_PHONE, null);
 //            UMConfigure.init(context, "5d07585d3fc195c9ba001330", "tg_1", UMConfigure.DEVICE_TYPE_PHONE, "e583e679267b3542c272b1b36337687b");
@@ -105,10 +112,6 @@ public class StartAd {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LCChatKit.getInstance().setProfileProvider((LCChatProfileProvider) CustomUserProvider.getInstance());
-            LCChatKit.getInstance().init(BasicApplication.getBasicApplication(), "vnB7DYkxpxsC1Gz6nMpBcdYO-gzGzoHsz", "Nmpeus4pLkxx19cXD0jyyUtq");
-
-
 
             //如果明确某个进程不会使用到广告SDK，可以只针对特定进程初始化广告SDK的content
             //if (PROCESS_NAME_XXXX.equals(processName)) {
@@ -120,6 +123,7 @@ public class StartAd {
                     .setAccessKey("ylj9beit69ar")
                     .setAccessToken("6x1k831m4yasqb458v5ilocvo1cmd9u8")
                     .build();
+            FSLogcat.DEBUG = true;
         }
     }
     /*穿山甲*/

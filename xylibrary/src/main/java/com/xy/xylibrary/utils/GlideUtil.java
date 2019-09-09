@@ -46,8 +46,12 @@ public class GlideUtil {
 
     public void setImages(Context context, String url, ImageView imageView, int type) {
         try {
+             int size = 10;
+            if(type == 20){
+                size = 20;
+            }
             //设置图片圆角角度
-            RoundedCorners roundedCorners= new RoundedCorners(10);
+            RoundedCorners roundedCorners= new RoundedCorners(size);
             RequestOptions options = new RequestOptions().bitmapTransform(roundedCorners)
     //                .placeholder(R.drawable.image_bg)	//加载成功之前占位图     
                     .error(R.drawable.image_bg)//加载错误之后的错误图 

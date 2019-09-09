@@ -22,7 +22,9 @@ public class PreferencesHelper {
     private SharedPreferences mPreferences;
 
     private PreferencesHelper(Context context) {
-        mPreferences = context.getSharedPreferences("app-prefs", Context.MODE_PRIVATE);
+        if (context != null) {
+            mPreferences = context.getSharedPreferences("app-prefs", Context.MODE_PRIVATE);
+        }
     }
 
     public static PreferencesHelper getInstance() {

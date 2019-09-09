@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 
 public class RomUtils {
+    /*公共的市场*/
+    public static String app_youm_code = "tg_1";
     public static final String MIUI = "MIUI";
     public static final String FLYME = "FLYME";
     public static final String ANDROID_NATIVE = "ANDROID_NATIVE";

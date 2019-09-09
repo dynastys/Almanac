@@ -13,6 +13,7 @@ import com.xy.xylibrary.ui.fragment.task.TaskFragment;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import com.yilan.sdk.ui.littlevideo.LittleVideoFragment;
+import com.zt.rainbowweather.ui.activity.MainActivity;
 import com.zt.rainbowweather.ui.fragment.AlmanacFragment;
 import com.zt.rainbowweather.ui.fragment.HomeFragment;
 import com.zt.rainbowweather.ui.fragment.NewsFragment;
@@ -39,6 +40,7 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                        return false;
                    }
                }
+//               SaveShare.saveValue(context,"JB", Utils.getOldDate(0));
                return true;
            case 3:
                if(context != null){
@@ -47,6 +49,7 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                        return false;
                    }
                }
+
                return true;
            case 4:
                return false;
@@ -183,10 +186,8 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
                     return new TaskFragment();
                 case 3:
                     //        小视频
-//                    LittleVideoFragment littleVideoFragment = LittleVideoFragment.newInstance();
-                    return  LittleVideoFragment.newInstance();
-//                    return new NewsFragment("http://ssp.xuanad.com/page/f1e294cc-8546-438b-b0af-801ca170b2d0");
-                case 4:
+                     return  LittleVideoFragment.newInstance();
+                 case 4:
                     return new ServeFragment();
             }
         }else{

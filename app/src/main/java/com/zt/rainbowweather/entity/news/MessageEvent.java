@@ -2,8 +2,10 @@ package com.zt.rainbowweather.entity.news;
 
 public class MessageEvent {
     private String message;
-    public  MessageEvent(String message){
-        this.message=message;
+    private String cityName;
+    public  MessageEvent(String message,String cityName){
+        this.message = message;
+        this.cityName = cityName;
     }
     public String getMessage() {
         return message;
@@ -11,5 +13,13 @@ public class MessageEvent {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCityName() {
+        return cityName;
     }
 }

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:cardCornerRadius="8dp">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -7,31 +13,33 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        android:textColor="@color/broken_line_s"
-        android:textSize="20sp" />
+        android:textColor="#ff222222"
+        android:gravity="center"
+        android:textSize="17sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15sp"
-        android:textColor="@color/nb_text_common_h2"
-        android:textSize="17sp"
-
+        android:textColor="#5F5E5E"
+        android:textSize="15sp"
         android:id="@+id/hint_content"
         android:padding="10dp"
-
         />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:background="#EDEDED"
+        android:layout_marginTop="@dimen/dp_10"
+        />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp" >
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+         >
 
         <TextView
             android:id="@+id/confirm"
@@ -41,9 +49,12 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:gravity="center"
-            android:textColor="@color/broken_line_s"
-            android:textSize="@dimen/sp_14" />
-
+            android:textColor="#D22334"
+            android:textSize="@dimen/sp_15" />
+        <View
+            android:layout_width="0.4dp"
+            android:layout_height="match_parent"
+            android:background="#EDEDED"/>
         <TextView
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
@@ -52,8 +63,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="10dp"
-            android:textColor="@color/broken_line_s"
-            android:textSize="@dimen/sp_14" />
+            android:textColor="#0090FF"
+            android:textSize="@dimen/sp_15" />
     </LinearLayout>
 
 </LinearLayout>
+</android.support.v7.widget.CardView>

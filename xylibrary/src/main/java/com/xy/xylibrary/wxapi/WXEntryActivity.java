@@ -31,10 +31,11 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WXEntryActivity extends Activity implements IWXAPIEventHandler,RequestSyntony<WeChatLogin>{
+public class WXEntryActivity extends Activity implements IWXAPIEventHandler, RequestSyntony<WeChatLogin> {
     private static final int RETURN_MSG_TYPE_LOGIN = 1;
     private static final int RETURN_MSG_TYPE_SHARE = 2;
     private UserMessage userMessageData;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler,Requ
                             //拿到了微信返回的code,立马再去请求access_token
                             String code = ((SendAuth.Resp) resp).code;
                             WeChatLogin(code);
-                            //就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
+//                            Log.e("code", "onResp: "+code );
                             break;
                         case RETURN_MSG_TYPE_SHARE:
                             ToastUtils.showLong("微信分享成功");
@@ -81,12 +82,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler,Requ
     //LoginActivity的login方法
     public void WeChatLogin(String verifyCode) {
         try {
-            if(AppContext.ISLOGIN){
-                Log.e("code", "WeChatLogin: "+verifyCode);
-                LoginRequest.getWeatherRequest().getWeChatLoginData(WXEntryActivity.this,verifyCode, WXEntryActivity.this);
-            }else{
+            if (AppContext.ISLOGIN) {
+                LoginRequest.getWeatherRequest().getWeChatLoginData(WXEntryActivity.this, verifyCode, WXEntryActivity.this);
+            } else {
                 userMessageData = LitePal.findLast(UserMessage.class);
-                LoginRequest.getWeatherRequest().getBindWechatData(WXEntryActivity.this, verifyCode,userMessageData.uesrid, new RequestSyntony<BindWechat>() {
+                LoginRequest.getWeatherRequest().getBindWechatData(WXEntryActivity.this, verifyCode, userMessageData.uesrid, new RequestSyntony<BindWechat>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -97,14 +97,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler,Requ
 
                     @Override
                     public void onNext(BindWechat bindWechat) {
-                        List<UserMessage> list = new ArrayList<>();
-                        userMessageData.openid = bindWechat.getData().getOpenid();
-                        userMessageData.nickname = bindWechat.getData().getNickname();
-                        userMessageData.sex = bindWechat.getData().getSex();
-                        userMessageData.headimgurl = bindWechat.getData().getHeadimgurl();
-                        userMessageData.unionid = bindWechat.getData().getUnionid();
-                        list.add(userMessageData);
-                        LitePal.saveAll(list);
+                        if (bindWechat != null && bindWechat.getData() != null) {
+                            List<UserMessage> list = new ArrayList<>();
+                            userMessageData.openid = bindWechat.getData().getOpenid();
+                            userMessageData.nickname = bindWechat.getData().getNickname();
+                            userMessageData.sex = bindWechat.getData().getSex();
+                            userMessageData.headimgurl = bindWechat.getData().getHeadimgurl();
+                            userMessageData.unionid = bindWechat.getData().getUnionid();
+                            SaveShare.saveValue(WXEntryActivity.this, "nickname", userMessageData.nickname);
+                            SaveShare.saveValue(WXEntryActivity.this, "headimgurl", userMessageData.headimgurl);
+                            list.add(userMessageData);
+                            LitePal.saveAll(list);
+                        } else {
+                            ToastUtils.showLong("绑定微信失败");
+                        }
+
                         finish();
 
                     }
@@ -115,6 +122,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler,Requ
         }
 
     }
+
     public void onResume() {
         super.onResume();
     }
@@ -125,12 +133,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler,Requ
 
     @Override
     public void onCompleted() {
-        finish();
+
     }
 
     @Override
     public void onError(Throwable e) {
-        Log.e("TAG", "onError: "+e.getMessage());
+        Log.e("TAG", "onError: " + e.getMessage());
         ToastUtils.showLong("登录失败");
         finish();
     }
@@ -138,21 +146,49 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler,Requ
     @Override
     public void onNext(WeChatLogin weChat) {
         try {
-            LitePal.deleteAll(UserMessage.class);
-            List<UserMessage> list = new ArrayList<>();
-            if(userMessageData == null){
-                userMessageData = new UserMessage();
+            if (weChat != null && weChat.getData() != null) {
+                LitePal.deleteAll(UserMessage.class);
+                List<UserMessage> list = new ArrayList<>();
+                if (userMessageData == null) {
+                    userMessageData = new UserMessage();
+                }
+                userMessageData.openid = weChat.getData().getOpenid();
+                userMessageData.nickname = weChat.getData().getNickname();
+                userMessageData.sex = weChat.getData().getSex();
+                userMessageData.headimgurl = weChat.getData().getHeadimgurl();
+                userMessageData.unionid = weChat.getData().getUnionid();
+                userMessageData.uesrid = weChat.getData().getUserVm().getId();
+                if (weChat.getData().getUserVm().getMobile() == 0) {
+                    Intent intent = new Intent(WXEntryActivity.this, LoginActivity.class);
+                    intent.putExtra("type", "微信");
+                    startActivity(intent);
+                } else {
+                    if (weChat.getData().getUserVm() != null) {
+                        userMessageData.uesrid = weChat.getData().getUserVm().getId();
+                        userMessageData.mobile = weChat.getData().getUserVm().getMobile();
+                        userMessageData.name = weChat.getData().getUserVm().getName();
+                        userMessageData.passWord = weChat.getData().getUserVm().getPassWord();
+                        userMessageData.wxid = weChat.getData().getUserVm().getWxid();
+                        userMessageData.openid = weChat.getData().getUserVm().getWxid();
+                        userMessageData.img = weChat.getData().getUserVm().getImg();
+                        userMessageData.gold = weChat.getData().getUserVm().getGold();
+//            userMessageData.vCode = weChat.getData().getUserVm().getVCode();
+                        userMessageData.active = weChat.getData().getUserVm().getActive();
+                        userMessageData.createTime = weChat.getData().getUserVm().getCreateTime();
+                        userMessageData.updateTime = weChat.getData().getUserVm().getUpdateTime();
+                        userMessageData.isDelete = weChat.getData().getUserVm().isIsDelete();
+                        SaveShare.saveValue(WXEntryActivity.this, "userId", weChat.getData().getUserVm().getId());
+                        SaveShare.saveValue(WXEntryActivity.this, "Phone", weChat.getData().getUserVm().getMobile() + "");
+                    }
+                    ToastUtils.showLong("登录成功");
+                }
+                list.add(userMessageData);
+                LitePal.saveAll(list);
+                finish();
+            } else {
+                ToastUtils.showLong("登录失败");
+                finish();
             }
-            userMessageData.openid = weChat.getData().getOpenid();
-            userMessageData.nickname = weChat.getData().getNickname();
-            userMessageData.sex = weChat.getData().getSex();
-            userMessageData.headimgurl = weChat.getData().getHeadimgurl();
-            userMessageData.unionid = weChat.getData().getUnionid();
-            list.add(userMessageData);
-            LitePal.saveAll(list);
-            Intent intent = new Intent(WXEntryActivity.this, LoginActivity.class);
-            intent.putExtra("type", "微信");
-            startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }

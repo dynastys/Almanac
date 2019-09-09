@@ -9,8 +9,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp" 
-        android:src="@mipmap/ad"
+        android:layout_height="200dp"
         android:id="@+id/type_ad"
         android:scaleType="fitXY"
         />

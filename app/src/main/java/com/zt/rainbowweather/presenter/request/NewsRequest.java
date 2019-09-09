@@ -113,6 +113,7 @@ public class NewsRequest {
             requestData.put("county", userData.county);
             requestData.put("longitude", userData.longitude);
             requestData.put("latitude", userData.latitude);
+            requestData.put("channel_code", RomUtils.app_youm_code);
         } catch (JSONException e) {
             e.printStackTrace();
         }

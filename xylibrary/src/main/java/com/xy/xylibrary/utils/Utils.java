@@ -66,6 +66,8 @@ public class Utils {
         throw new NullPointerException("u should init first");
     }
 
+
+
     /**
      * Init utils.
      * <p>Init it in the class of Application.</p>
@@ -75,6 +77,7 @@ public class Utils {
     public static void init(@NonNull final Application app) {
         Utils.sApplication = app;
     }
+    
     /**
      * 获取剪切板数据
      */
