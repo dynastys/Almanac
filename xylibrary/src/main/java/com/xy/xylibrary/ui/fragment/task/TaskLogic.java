@@ -229,7 +229,7 @@ public class TaskLogic {
                                 context.startActivity(intent1);
                                 return;
                             }
-                            if(beans.get(position).isU_IsComplete()){
+                            if(beans.get(position).isU_IsComplete() && beans.get(position).getU_CompleteNumber() == beans.get(position).getCompleteNumber()){
                                 return;
                             }
                             if (receive_btn.getText().equals("立即领取")) {

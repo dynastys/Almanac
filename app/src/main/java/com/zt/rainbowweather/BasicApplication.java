@@ -217,9 +217,9 @@ public class BasicApplication extends LitePalApplication {
             //魅族
 //            MeizuRegister.register(this,"", "");
             //华为
-            HuaWeiRegister.register(this);
+//            HuaWeiRegister.register(this);
             //OPPO通道，参数1为app key，参数2为app secret
-            OppoRegister.register(this, "266ee86d3d314ef6bc1fea232346c81f", "9ce20d95d5e142b18896f13344cacd67");
+//            OppoRegister.register(this, "266ee86d3d314ef6bc1fea232346c81f", "9ce20d95d5e142b18896f13344cacd67");
             registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
                 @Override
                 public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

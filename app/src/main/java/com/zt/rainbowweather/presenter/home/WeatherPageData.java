@@ -158,13 +158,13 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     /**
      * 使用自定义webview播放视频
      */
-    public void startPlay(org.salient.artplayer.VideoView x5VideoWebview, String vedioUrl,String ImagrBg) {
+    public void startPlay(org.salient.artplayer.VideoView x5VideoWebview, String vedioUrl,String ImagrBg,String source) {
         x5VideoWebview.setUp(vedioUrl);
         final ControlPanel controlPanel = new ControlPanel(context);
         x5VideoWebview.setControlPanel(controlPanel);
         ((ImageView) controlPanel.findViewById(R.id.video_cover)).setImageResource(0);
         TextView tvTitle = controlPanel.findViewById(R.id.tvTitle);
-        tvTitle.setText("天气预报");
+        tvTitle.setText(source);
         MediaPlayerManager.instance().setMute(true);
         ((CheckBox)controlPanel.findViewById(R.id.ivVolume)).setChecked(false);
         GlideUtil.getGlideUtil().setImages(context,ImagrBg,(ImageView) controlPanel.findViewById(R.id.video_cover));
@@ -220,8 +220,8 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             public void onNext(WeatherVideo weatherVideo) {
                 if(weatherVideo != null && weatherVideo.getData() != null){
 //                    GlideUtil.getGlideUtil().setImages1(context,weatherVideo.getData().getCover(),imageView);
-                    videoT.setText(weatherVideo.getData().getTitle());
-                    startPlay(x5VideoWebview,weatherVideo.getData().getVideourl(),weatherVideo.getData().getCover());
+                    videoT.setText(weatherVideo.getData().getType());
+                    startPlay(x5VideoWebview,weatherVideo.getData().getVideourl(),weatherVideo.getData().getCover(),weatherVideo.getData().getSource());
                 }
             }
         });
