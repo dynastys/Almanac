@@ -104,7 +104,6 @@ public class CityWeatherQuantity {
                     fragments.add(WeatherFragment.newInstance(locatedCity,i+"", homeFragment));
                 }
             }
-
             mAdapter = new BaseFragmentPagerAdapter(homeFragment.getChildFragmentManager(), fragments);
             viewPager.setAdapter(mAdapter);
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -155,9 +154,17 @@ public class CityWeatherQuantity {
         return -1;
     }
     public List<City> getAllCities() {
-        List<City> cities = new ArrayList<>();
-        for (BaseFragment fragment : mAdapter.getFragments()) {
-            cities.add(((WeatherFragment) fragment).getAddressBean().city);
+        List<City> cities = null;
+        try {
+            cities = new ArrayList<>();
+            if(mAdapter == null){
+                return cities;
+            }
+            for (BaseFragment fragment : mAdapter.getFragments()) {
+                cities.add(((WeatherFragment) fragment).getAddressBean().city);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return cities;
     }

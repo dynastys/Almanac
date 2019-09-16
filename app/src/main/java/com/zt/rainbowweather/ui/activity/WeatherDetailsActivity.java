@@ -93,7 +93,7 @@ public class WeatherDetailsActivity extends BaseActivity {
             listBar.setLayoutParams(layoutParams);
             finishFileHead.setVisibility(View.VISIBLE);
             fileHeadTitle.setText(City);
-            Drawable resource = SaveShare.getDrawable(WeatherDetailsActivity.this, "icon");
+            Drawable resource = SaveShare.getDrawable(WeatherDetailsActivity.this, City);
             if(resource != null){
                 weatherDetailsLin.setBackground(new BitmapDrawable(Util.rsBlur(WeatherDetailsActivity.this, Util.drawable2Bitmap(resource), 20)));
             }else{
@@ -120,17 +120,14 @@ public class WeatherDetailsActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-
     }
 
     @Override
     protected void setListener() {
-
     }
 
     @Override
     public void granted() {
-
     }
 
     @Override

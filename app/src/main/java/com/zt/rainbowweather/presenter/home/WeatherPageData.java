@@ -629,6 +629,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 ConventionWeatherData(city,rainAlarmPro,rainAlarmProLin,requestSyntony,airQualityListener);
             }
         }else{
+            WeatherDataCacheGain(city,requestSyntony);
             ConventionWeatherData(city,rainAlarmPro,rainAlarmProLin,requestSyntony,airQualityListener);
         }
 
@@ -1129,34 +1130,41 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     }
 
     public void AirForecast(String air_forecast, int i, TextView tvAirQuality) {
-        switch (air_forecast) {
-            case "优":
-                tvAirQuality.setText("优质");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_1));
-                break;
-            case "良":
-                tvAirQuality.setText("良好");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_2));
-                break;
-            case "轻度污染":
-                tvAirQuality.setText("轻度");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_3));
-                break;
-            case "中度污染":
-                tvAirQuality.setText("中度");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_4));
-                break;
-            case "重度污染":
-                tvAirQuality.setText("重度");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_5));
-                break;
-            case "严重污染":
-                tvAirQuality.setText("严重");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_6));
-                break;
-            default:
-                tvAirQuality.setText("良好");
-                tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30));
+        try {
+            if(TextUtils.isEmpty(air_forecast)){
+                return;
+            }
+            switch (air_forecast) {
+                case "优":
+                    tvAirQuality.setText("优质");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_1));
+                    break;
+                case "良":
+                    tvAirQuality.setText("良好");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_2));
+                    break;
+                case "轻度污染":
+                    tvAirQuality.setText("轻度");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_3));
+                    break;
+                case "中度污染":
+                    tvAirQuality.setText("中度");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_4));
+                    break;
+                case "重度污染":
+                    tvAirQuality.setText("重度");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_5));
+                    break;
+                case "严重污染":
+                    tvAirQuality.setText("严重");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30_6));
+                    break;
+                default:
+                    tvAirQuality.setText("良好");
+                    tvAirQuality.setBackground(context.getResources().getDrawable(R.drawable.search30));
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
 
     }
@@ -1165,13 +1173,17 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     private boolean banner2 = true;
 
     public void AdShow(boolean b1, boolean b2) {
-        if (nativelogic != null && banner1 && b1) {
-            banner1 = false;
-            nativelogic.AdShow(null);
-        }
-        if (nativelogic1 != null && banner2 && b2) {
-            banner2 = false;
-            nativelogic1.AdShow(null);
+        try {
+            if (nativelogic != null && banner1 && b1) {
+                banner1 = false;
+                nativelogic.AdShow(null);
+            }
+            if (nativelogic1 != null && banner2 && b2) {
+                banner2 = false;
+                nativelogic1.AdShow(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1271,83 +1283,88 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
 //        Log.i("AD_DEMO", "GDTBanner: "+nativelogic1.nativeObject.appid + nativelogic1.nativeObject.posid);
 
 
-        UnifiedBannerView banner = new UnifiedBannerView(context, nativelogic1.nativeObject.appid, nativelogic1.nativeObject.posid, new UnifiedBannerADListener() {
-            @Override
-            public void onNoAD(AdError adError) {
-                Log.i("AD_DEMO", "BannerNoAD，eCode=" + adError.getErrorCode() + adError.getErrorMsg());
-                try {
-                    relatAd.setVisibility(View.GONE);
-                    if (nativelogic1 != null) {
-                        nativelogic1.OnRequest(adError.getErrorCode() + "", adError.getErrorMsg());
+        UnifiedBannerView banner = null;
+        try {
+            banner = new UnifiedBannerView(context, nativelogic1.nativeObject.appid, nativelogic1.nativeObject.posid, new UnifiedBannerADListener() {
+                @Override
+                public void onNoAD(AdError adError) {
+                    Log.i("AD_DEMO", "BannerNoAD，eCode=" + adError.getErrorCode() + adError.getErrorMsg());
+                    try {
+                        relatAd.setVisibility(View.GONE);
+                        if (nativelogic1 != null) {
+                            nativelogic1.OnRequest(adError.getErrorCode() + "", adError.getErrorMsg());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onADReceive() {
-                try {
-                    relatAd.setVisibility(View.VISIBLE);
-                    if (nativelogic1 != null) {
-                        nativelogic1.OnRequest("0", "msg");
+                @Override
+                public void onADReceive() {
+                    try {
+                        relatAd.setVisibility(View.VISIBLE);
+                        if (nativelogic1 != null) {
+                            nativelogic1.OnRequest("0", "msg");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.i("AD_DEMO", "onADReceive");
                 }
-                Log.i("AD_DEMO", "onADReceive");
-            }
 
-            @Override
-            public void onADExposure() {
-                Log.i("AD_DEMO", "onADExposure");
-                try {
-                    if (nativelogic1 != null) {
-                        nativelogic1.AdShow(relatAd);
+                @Override
+                public void onADExposure() {
+                    Log.i("AD_DEMO", "onADExposure");
+                    try {
+                        if (nativelogic1 != null) {
+                            nativelogic1.AdShow(relatAd);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onADClosed() {
-                Log.i("AD_DEMO", "onADClosed");
-            }
+                @Override
+                public void onADClosed() {
+                    Log.i("AD_DEMO", "onADClosed");
+                }
 
-            @Override
-            public void onADClicked() {
-                Log.i("AD_DEMO", "onADClicked");
-                try {
-                    if (nativelogic1 != null) {
-                        nativelogic1.OnClick(relatAd);
+                @Override
+                public void onADClicked() {
+                    Log.i("AD_DEMO", "onADClicked");
+                    try {
+                        if (nativelogic1 != null) {
+                            nativelogic1.OnClick(relatAd);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onADLeftApplication() {
-                Log.i("AD_DEMO", "onADLeftApplication");
-            }
+                @Override
+                public void onADLeftApplication() {
+                    Log.i("AD_DEMO", "onADLeftApplication");
+                }
 
-            @Override
-            public void onADOpenOverlay() {
+                @Override
+                public void onADOpenOverlay() {
 
-            }
+                }
 
-            @Override
-            public void onADCloseOverlay() {
+                @Override
+                public void onADCloseOverlay() {
 
-            }
-        });
-        //设置广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
-        banner.setRefresh(30);
+                }
+            });
+            //设置广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
+            banner.setRefresh(30);
 
-        relatAd.addView(banner);
-        /* 发起广告请求，收到广告数据后会展示数据     */
-        banner.loadAD();
+            relatAd.addView(banner);
+            /* 发起广告请求，收到广告数据后会展示数据     */
+            banner.loadAD();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return banner;
     }
 

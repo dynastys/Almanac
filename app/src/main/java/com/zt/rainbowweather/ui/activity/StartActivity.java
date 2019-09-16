@@ -20,39 +20,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bytedance.sdk.openadsdk.TTAdConfig;
-import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
-import com.check.ox.sdk.LionSDK;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
-import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.commonsdk.UMConfigure;
-import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.DisplayUtil;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
-import com.yilan.sdk.ui.YLUIInit;
 import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.api.RequestSyntony;
 import com.zt.rainbowweather.entity.background.AppSpread;
 import com.zt.rainbowweather.entity.news.Switch;
-import com.zt.rainbowweather.feedback.CustomUserProvider;
-import com.zt.rainbowweather.presenter.PangolinBannerAd;
 import com.zt.rainbowweather.presenter.StartAd;
 import com.zt.rainbowweather.presenter.almanac.AlmanacLogic;
 import com.zt.rainbowweather.presenter.map.MapLocation;
 import com.zt.rainbowweather.presenter.request.BackgroundRequest;
 import com.zt.rainbowweather.presenter.request.NewsRequest;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
+import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.RxCountDown;
-import com.zt.rainbowweather.utils.SizeUtils;
-import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.view.ShapeTextView;
 import com.zt.weather.R;
@@ -130,6 +120,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
     private void loadAd() {
         try {
             // 获得开屏对象
+            Ad.setKeyword(ConstUtils.app_market_code);
             Ad.getAd().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "9432a40d-9fa7-4d1a-b760-58a32edc9465", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
@@ -191,8 +182,9 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
                 @Override
                 public void onAdFailedToLoad(String error) {
-                    ImageBg();
                     tvSkip.setOnClickListener(v -> skip());
+                    ImageBg();
+
                 }
             });
         } catch (Exception e) {
@@ -252,7 +244,11 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                 if (mapLocation != null)
                     //启动定位
                     mapLocation.startLocation();
-                 intentActivity(MainActivity.class);
+                if (TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "Guide"))) {
+                    startActivity(new Intent(StartActivity.this, GuideActivity.class));
+                } else {
+                    intentActivity(MainActivity.class);
+                }
  //                mapLocation.setData();
                 this.finish();
             }

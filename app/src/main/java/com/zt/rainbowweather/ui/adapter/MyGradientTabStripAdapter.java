@@ -13,10 +13,8 @@ import com.xy.xylibrary.ui.fragment.task.TaskFragment;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import com.yilan.sdk.ui.littlevideo.LittleVideoFragment;
-import com.zt.rainbowweather.ui.activity.MainActivity;
 import com.zt.rainbowweather.ui.fragment.AlmanacFragment;
 import com.zt.rainbowweather.ui.fragment.HomeFragment;
-import com.zt.rainbowweather.ui.fragment.NewsFragment;
 import com.zt.rainbowweather.ui.fragment.ServeFragment;
 import com.zt.weather.R;
 import com.zt.rainbowweather.utils.ConstUtils;
@@ -34,7 +32,7 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
            case 1:
                return false;
            case 2:
-               if(context != null){
+               if(context != null && !TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                    String JB = SaveShare.getValue(context,"JB");
                    if(!TextUtils.isEmpty(JB) && JB.equals(Utils.getOldDate(0))){
                        return false;
@@ -172,7 +170,6 @@ public class MyGradientTabStripAdapter extends GradientTabStripAdapter {
 
     }
 
-   public NewsFragment newsFragment;
     @Override
     public Fragment getItem(int position){
         if(ConstUtils.take_a_look){

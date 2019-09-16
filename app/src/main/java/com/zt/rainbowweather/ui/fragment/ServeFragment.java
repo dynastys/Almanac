@@ -23,8 +23,6 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.bumptech.glide.Glide;
-import com.check.ox.sdk.LionListener;
-import com.check.ox.sdk.LionStreamerView;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.qq.e.ads.banner2.UnifiedBannerADListener;
 import com.qq.e.ads.banner2.UnifiedBannerView;
@@ -81,7 +79,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @time 2019-3-8
  * 外接服务
  */
-public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>, LionListener {
+public class ServeFragment extends BaseFragment implements RequestSyntony<Icons> {
 
     @BindView(R.id.finish_file_head)
     ImageView finishFileHead;
@@ -96,8 +94,6 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     RecyclerView recyclerService;
     @BindView(R.id.list_bar)
     TextView listBar;
-    @BindView(R.id.TMBrView)
-    LionStreamerView TMBrView;
     @BindView(R.id.serve_txt)
     TextView serveTxt;
     @BindView(R.id.img_avatar)
@@ -295,6 +291,9 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
     public void onResume() {
         super.onResume();
         IsWeChat();
+        if (phoneDta != null && !TextUtils.isEmpty(phoneDta.headimgurl) && imgAvatar!= null) {
+            GlideUtil.getGlideUtil().setImages(getActivity(),phoneDta.headimgurl, imgAvatar);
+        }
         MobclickAgent.onPageStart("ServiceFragment"); //统计页面("MainScreen"为页面名称，可自定义)
     }
 
@@ -450,29 +449,6 @@ public class ServeFragment extends BaseFragment implements RequestSyntony<Icons>
         ServerManager.getServerManager().setProgramaData(getActivity(), serveTxt, serviceList, ListRecycler);
     }
 
-    @Override
-    public void onReceiveAd() {
-    }
-
-    @Override
-    public void onFailedToReceiveAd() {
-    }
-
-    @Override
-    public void onLoadFailed() {
-    }
-
-    @Override
-    public void onCloseClick() {
-    }
-
-    @Override
-    public void onAdClick() {
-    }
-
-    @Override
-    public void onAdExposure() {
-    }
 
     @OnClick({R.id.sw_night_mode, R.id.open_notification_bar, R.id.skin_is_set, R.id.clear_cache, R.id.message_feedback, R.id.about_us, R.id.widget, R.id.img_avatar,R.id.binding_weChat,R.id.setting})
     public void onClick(View view) {

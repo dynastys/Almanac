@@ -77,7 +77,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     private ExtraFunction extraFunction;
     private List<City> cities = new ArrayList<>();
     private CountDownTimer timer;
-
+    private int time;
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         try {
@@ -86,37 +86,45 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                 try {
                     SaveShare.saveValue(MainActivity.this,"video", Utils.getOldDate(0));
                     TaskType taskType3 = LitePal.where("tasktype = ?", "4").findFirst(TaskType.class);
-                    if(taskType3 == null){
+                    if(taskType3 == null || taskType3.taskfinishsize >= taskType3.tasksize){
                         return;
                     }
                     myGradientTabStripAdapter.isTagEnable(3);
                     String Sp = SaveShare.getValue(MainActivity.this, "SP");
                     if (!TextUtils.isEmpty(Sp) && Sp.equals("4")) {
-                        int time = (int)taskType3.CompleteMinTime;
+                        time = (int)taskType3.CompleteMinTime;
+//                        if(taskType3.schedule != 0){
+//                            time = taskType3.schedule;
+//                        }
                         if(time == 0){
                             time = 60*1000;
                         }
-                        timer = new CountDownTimer(time, 1000) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                Log.e("timer", "onTick: "+ millisUntilFinished);
-                            }
 
-                            @Override
-                            public void onFinish() {
-                                if(taskType3.tasksize > 1 && taskType3.taskfinishsize < taskType3.tasksize){
-                                    taskType3.taskfinishsize++;
+                            timer = new CountDownTimer(time, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    Log.e("timer", "onTick: "+ millisUntilFinished);
+                                    taskType3.schedule = (int)millisUntilFinished;
                                     taskType3.save();
-                                    TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
-                                    timer.start();
-                                }else{
-                                    SaveShare.saveValue(MainActivity.this, "JB", "");
-                                    taskType3.ISStartTask = true;
-                                    taskType3.save();
-                                    EventBus.getDefault().post("");
-                                 }
-                            }
-                        };
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    if(taskType3.tasksize > 1 && taskType3.taskfinishsize < taskType3.tasksize){
+                                        taskType3.taskfinishsize++;
+                                        taskType3.schedule = 0;
+                                        taskType3.save();
+                                        TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
+                                        timer.start();
+                                    }else{
+                                        SaveShare.saveValue(MainActivity.this, "JB", "");
+                                        taskType3.ISStartTask = true;
+                                        taskType3.schedule = 0;
+                                        taskType3.save();
+                                        EventBus.getDefault().post("");
+                                    }
+                                }
+                            };
                         timer.start();
                     }
                     WeatherRequest.getWeatherRequest().getLookAtData(MainActivity.this, "看一看", "进入视频");

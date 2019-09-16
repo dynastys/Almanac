@@ -186,7 +186,10 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
             layoutParams1.height = Utils.getStatusBarHeight(getActivity());
             listBar.setLayoutParams(layoutParams1);
             tvTitle.setText("城市管理");
-            Drawable resource = SaveShare.getDrawable(getActivity(), "icon");
+            Drawable resource = null;
+            if(cities != null && cities.size()>0){
+                resource = SaveShare.getDrawable(getActivity(), cities.get(0).name);
+            }
             if (resource != null) {
                 addressWetherBgRel.setBackground(new BitmapDrawable(Util.rsBlur(getActivity(), Util.drawable2Bitmap(resource), 20)));
             } else {
@@ -200,7 +203,10 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
 
     protected void bindViews() {
         try {
-             Drawable resource = SaveShare.getDrawable(getActivity(), "icon");
+            Drawable resource = null;
+            if(cities != null && cities.size()>0){
+                resource = SaveShare.getDrawable(getActivity(), cities.get(0).name);
+            }
             if (resource != null) {
                 addressWetherBgRel.setBackground(new BitmapDrawable(Util.rsBlur(getActivity(), Util.drawable2Bitmap(resource), 20)));
             } else {

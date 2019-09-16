@@ -2,31 +2,18 @@ package com.zt.rainbowweather.presenter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.ColorUtils;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.check.ox.sdk.LionListener;
-import com.check.ox.sdk.LionWallView;
 import com.zt.weather.R;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnMultiPurposeListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
-import com.zt.rainbowweather.entity.City;
-import com.zt.rainbowweather.presenter.home.WeatherPageData;
 import com.zt.rainbowweather.ui.fragment.HomeFragment;
-import com.zt.rainbowweather.ui.fragment.WeatherFragment;
 import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.view.MiuiWeatherView;
 import com.zt.rainbowweather.view.TranslucentActionBar;
@@ -91,21 +78,6 @@ public class WeatherLogic {
             e.printStackTrace();
         }
 
-    }
-
-    /*广告*/
-    public void setAd(LionWallView TMAw1, LionListener lionListener){
-        try {
-            String ISAD = SaveShare.getValue(activity, "ISAD");
-            if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")){
-                //推啊
-                TMAw1.setAdListener(lionListener);
-                TMAw1.loadAd(273281);
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /*动态标题栏*/

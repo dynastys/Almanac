@@ -10,31 +10,17 @@ import android.widget.RelativeLayout;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
-import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
-import com.check.ox.sdk.LionSDK;
 import com.tencent.smtt.sdk.QbSdk;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.commonsdk.UMConfigure;
-import com.umeng.message.IUmengRegisterCallback;
-import com.umeng.message.PushAgent;
 import com.xy.xylibrary.base.AppContext;
-import com.xy.xylibrary.ui.activity.login.UserMessage;
 import com.yilan.sdk.common.util.FSLogcat;
 import com.yilan.sdk.ui.YLUIInit;
-import com.yilan.sdk.user.YLUser;
 import com.zt.rainbowweather.BasicApplication;
-import com.zt.rainbowweather.feedback.CustomUserProvider;
 import com.zt.xuanyin.controller.NativeAd;
-
-import org.android.agoo.huawei.HuaWeiRegister;
 import org.android.agoo.oppo.OppoRegister;
-import org.litepal.LitePal;
-
-import cn.leancloud.chatkit.LCChatKit;
-import cn.leancloud.chatkit.LCChatProfileProvider;
+import org.android.agoo.vivo.VivoRegister;
 
 public class StartAd {
     private static final String TAG = "SplashActivity";
@@ -60,8 +46,10 @@ public class StartAd {
         if(BasicApplication.getBasicApplication() != null){
             AppContext.getUserInfo(context,"","",null);
             //华为
-            HuaWeiRegister.register(BasicApplication.getBasicApplication());
-            //OPPO通道，参数1为app key，参数2为app secret
+//            HuaWeiRegister.register(BasicApplication.getBasicApplication());
+             //vivo 通道
+            VivoRegister.register(context);
+//            //OPPO通道，参数1为app key，参数2为app secret
             OppoRegister.register(context, "266ee86d3d314ef6bc1fea232346c81f", "9ce20d95d5e142b18896f13344cacd67");
             //穿山甲广告强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
             TTAdSdk.init(BasicApplication.getBasicApplication(),
@@ -98,7 +86,6 @@ public class StartAd {
 //            });
 //            // 选用AUTO页面采集模式
 //            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
-            LionSDK.init(context);
             try {
                 QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
 
