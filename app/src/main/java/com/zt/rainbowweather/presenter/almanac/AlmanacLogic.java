@@ -40,6 +40,7 @@ import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.view.MyEditText;
 import com.zt.rainbowweather.presenter.PangolinBannerAd;
 import com.zt.weather.R;
@@ -1006,6 +1007,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                 });
                 baseAdapter = new BaseAdapter<>(R.layout.popup_recycler_item, linksBeans, (viewHolder, item) -> {
                     try {
+
                         viewHolder.setText(R.id.popup_recycler_tv, item.getTitle());
                         GlideUtil.getGlideUtil().setImages(context, item.getCover(), viewHolder.getView(R.id.popup_recycler_image));
                     } catch (Exception e) {
@@ -1022,6 +1024,7 @@ public class AlmanacLogic implements BaseQuickAdapter.OnItemClickListener, Reque
                             break;
                         default:
                     }
+                    DotRequest.getDotRequest().getIcon(context,linksBeans.get(position).getIcon_id());
                 });
                 ListRecycler.setAdapter(baseAdapter);
             }

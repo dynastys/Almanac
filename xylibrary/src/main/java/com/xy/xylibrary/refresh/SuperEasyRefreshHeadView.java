@@ -29,7 +29,8 @@ import com.constellation.xylibrary.R;
  *
  * 下拉刷新的头部view，这个view可以任意修改样式
  */
-public class SuperEasyRefreshHeadView extends LinearLayout {
+public class
+SuperEasyRefreshHeadView extends LinearLayout {
 
      public int headViewHeight;
     public TextView textView;

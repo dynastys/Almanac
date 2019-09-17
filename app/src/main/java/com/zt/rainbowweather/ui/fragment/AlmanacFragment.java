@@ -420,6 +420,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
     @Override
     public void onResume() {
         super.onResume();
+
         MobclickAgent.onPageStart("AlmanacFragment"); //统计页面("MainScreen"为页面名称，可自定义)
         if (novelInputBox != null) {
             IMEClose(novelInputBox);

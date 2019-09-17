@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.ui.fragment.task.TaskLogic;
 import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.DeeplinkUtils;
@@ -84,6 +85,23 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        switch (position){
+            case 0:
+                DotRequest.getDotRequest().getActivity(getContext(),"首页-主页");
+                break;
+            case 1:
+                DotRequest.getDotRequest().getActivity(getContext(),"黄历-主页");
+                break;
+            case 2:
+                DotRequest.getDotRequest().getActivity(getContext(),"任务-主页");
+                break;
+            case 3:
+                DotRequest.getDotRequest().getActivity(getContext(),"看一看-主页");
+                break;
+            case 4:
+                DotRequest.getDotRequest().getActivity(getContext(),"服务-主页");
+                break;
+        }
         try {
             setIsUserLightMode(false);
             if (position == 3) {
@@ -254,6 +272,8 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
 
     @Override
     public void onPageSelected(int position) {
+
+
         this.position = position;
     }
 
@@ -326,7 +346,6 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
         try {
             EventBus.getDefault().register(this);
             PushAgent.getInstance(this).onAppStart();
-
 //          floatWindow();
         } catch (Exception e) {
             e.printStackTrace();

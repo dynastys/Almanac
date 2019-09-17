@@ -110,7 +110,7 @@ public class NativeNewsLogic {
                 userColumnList2.add(outLookWeathers.get(i).week +"\n"+outLookWeathers.get(i).date);
             }
             columnHorizontalPackage = new ColumnHorizontalPackage<String>(context, column, viewpagerColumn);
-            columnHorizontalPackage.TextviewColor(R.color.white,R.color.white_3, com.constellation.xylibrary.R.drawable.ic_remove_w);
+            columnHorizontalPackage.TextviewColor(R.color.main_bg3,R.color.white, com.constellation.xylibrary.R.drawable.ic_remove_w);
             columnHorizontalPackage.initData(null, mRadioGroupContent, fragmentList, userColumnList2);
         } catch (Exception e) {
             e.printStackTrace();

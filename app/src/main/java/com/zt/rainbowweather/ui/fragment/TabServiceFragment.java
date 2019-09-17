@@ -3,9 +3,12 @@ package com.zt.rainbowweather.ui.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.xy.xylibrary.presenter.DotRequest;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseAdapter;
 import com.xy.xylibrary.base.BaseFragment;
@@ -74,6 +77,7 @@ public class TabServiceFragment extends BaseFragment {
                         break;
                     default:
                 }
+                DotRequest.getDotRequest().getIcon(getContext(),iconsBeanList.get(position).getIcon_id());
             });
             recyclerService.setAdapter(baseAdapter);
         }

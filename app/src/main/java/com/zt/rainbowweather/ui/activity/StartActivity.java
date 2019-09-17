@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +38,7 @@ import com.zt.rainbowweather.presenter.StartAd;
 import com.zt.rainbowweather.presenter.almanac.AlmanacLogic;
 import com.zt.rainbowweather.presenter.map.MapLocation;
 import com.zt.rainbowweather.presenter.request.BackgroundRequest;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.zt.rainbowweather.presenter.request.NewsRequest;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
 import com.zt.rainbowweather.utils.ConstUtils;
@@ -55,7 +55,6 @@ import com.zt.xuanyin.view.AdLinkActivity;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.BuildConfig;
 import rx.Subscriber;
 import rx.Subscription;
@@ -105,6 +104,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
             e.printStackTrace();
         }
 
+        DotRequest.getDotRequest().getActivity(getContext(),"App启动");
     }
 
     @Override

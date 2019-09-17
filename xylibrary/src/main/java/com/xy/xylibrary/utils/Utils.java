@@ -190,6 +190,19 @@ public class Utils {
 
         return mIMEI;
     }
+    public static String getVersionString() {
+        String mVersionString = Build.VERSION.RELEASE;
+        return mVersionString;
+    }
+
+    public static String getDeviceBrand() {
+        String mDeviceBrand = Build.BRAND;
+        return mDeviceBrand;
+    }
+    public static String getDeviceModel() {
+        String mDeviceModel = Build.MODEL;
+        return mDeviceModel;
+    }
 
     @SuppressLint("MissingPermission")
     private static NetworkInfo getNetworkInfo(Context context) {

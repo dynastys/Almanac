@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.xy.xylibrary.ui.adapter.GradientTabStripAdapter;
 import com.xy.xylibrary.ui.fragment.task.TaskFragment;

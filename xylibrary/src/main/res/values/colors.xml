@@ -4,6 +4,7 @@
     <color name="nb_text_common_h1">#212121</color>
     <!--通用二级标题的颜色-->
     <color name="nb_text_common_h2">#727272</color>
+    <color name="main_bg3">#FFA89BB1</color>
     <color name="main_bg4">#469DF9</color>
     <color name="divider">#727272</color>
     <color name="show_bg">#4f000000</color>

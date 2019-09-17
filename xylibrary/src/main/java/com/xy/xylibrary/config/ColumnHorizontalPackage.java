@@ -156,7 +156,6 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
             e.printStackTrace();
         }
     }
-
     private int selectcolor = R.color.main_bg4;
     private int noselectcolor = R.color.nb_text_common_h2;
     private int draw = R.drawable.ic_remove;
@@ -184,7 +183,7 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                 columnTextView = new TextView(context);
                 columnTextView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
                 columnTextView.setTextScaleX(1);
-                columnTextView.setTextSize(16);
+                columnTextView.setTextSize(15);
                 columnTextView.setGravity(Gravity.CENTER_HORIZONTAL);
                 columnTextView.setLayoutParams(params);
                 columnTextView.setPadding(5, 5, 5, 5);
@@ -254,7 +253,7 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                 if (i == tab_postion) {
                     checkView.setTextColor(context.getResources().getColor(selectcolor));
                     checkView.setCompoundDrawablesWithIntrinsicBounds(null,null,null,context.getResources().getDrawable(draw));
-                    checkView.setTextSize(16);
+                    checkView.setTextSize(15);
                     TextPaint p = checkView.getPaint();
                     p.setFakeBoldText(true);//中文英文都可以粗体
                     int k = checkView.getMeasuredWidth();
@@ -268,7 +267,7 @@ public class ColumnHorizontalPackage<T> implements ViewPager.OnPageChangeListene
                     TextPaint p = checkView.getPaint();
                     p.setFakeBoldText(false);//中文英文都可以粗体
                     checkView.setTextColor(context.getResources().getColor(noselectcolor));
-                    checkView.setTextSize(16);
+                    checkView.setTextSize(15);
                     mRadioGroup_content.getChildAt(i).setSelected(i == tab_postion);
                 }
             }
