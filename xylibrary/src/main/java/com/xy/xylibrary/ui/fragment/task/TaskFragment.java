@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -15,14 +16,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.constellation.xylibrary.R;
+import com.timmy.tdialog.TDialog;
+import com.timmy.tdialog.base.BindViewHolder;
+import com.timmy.tdialog.listener.OnViewClickListener;
 import com.xy.xylibrary.Interface.SwipeRefreshListener;
 import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.base.BaseFragment;
 import com.xy.xylibrary.config.SwipeRefreshOnRefresh;
+import com.xy.xylibrary.indicate.IndicatePage;
 import com.xy.xylibrary.refresh.SuperEasyRefreshLayout;
 import com.xy.xylibrary.signin.AppSignInList;
 import com.xy.xylibrary.signin.StepsView;
@@ -36,7 +42,7 @@ import com.xy.xylibrary.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class TaskFragment extends BaseFragment implements SwipeRefreshListener, View.OnClickListener, SignInRort {
+public class TaskFragment extends BaseFragment implements SwipeRefreshListener, View.OnClickListener, SignInRort,OnViewClickListener,AppContext.UserGold {
 
     private StepsView stepView;
     private Button linxiasamo;
@@ -93,6 +99,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 9, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 14, 16, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             signIn15.setText(spannableString);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,7 +114,6 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
 //        for (int i = 0; i < 6; i++) {
 //            lists.add("任务" + i);
 //        }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,6 +123,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && stepView != null) {
+//            IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
             this.isVisibleToUser = isVisibleToUser;
             InitData();
         }
@@ -127,10 +134,17 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
             if (stepView != null) {
                 TaskLogic.getTaskLogic().getAppTaskList(getActivity(), recyclerLayoutList);
                 TaskLogic.getTaskLogic().initData(stepView, this);
+                TaskLogic.getTaskLogic().setUserGold(this);
                 TaskLogic.getTaskLogic().loadVideoAd("923044756", TTAdConstant.VERTICAL);
                 if (AppContext.userMessageData != null && gold != null) {
                     gold.setText(AppContext.userMessageData.gold + "");
                     gold_RMB.setText("约" + Utils.doubleToString((double) AppContext.userMessageData.gold / 10000) + "元");
+                }
+                long loginTime = Long.parseLong((TextUtils.isEmpty(SaveShare.getValue(getActivity(), "loginTime"))? "0" : SaveShare.getValue(getActivity(), "loginTime")));
+                //判断是否登录和是否在三天内未登录再次弹出登录提示框
+                if (TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId")) && System.currentTimeMillis() - loginTime > 24*3*60*1000) {//
+                    SaveShare.saveValue(getActivity(), "loginTime",System.currentTimeMillis()+"");
+                    TaskLogic.getTaskLogic().LoadDialog((AppCompatActivity) getActivity(),TaskFragment.this);
                 }
             }
         } catch (Exception e) {
@@ -160,18 +174,10 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                         promptly_sign_bg.setBackground(getResources().getDrawable(R.drawable.promptly_sign_bg));
                         linxiasamo.setBackground(getResources().getDrawable(R.drawable.search_5));
                         linxiasamo.setText("已签到");
-                        TaskLogic.getTaskLogic().requestSuccessData(stepView, new AppContext.UserGold() {
+                         TaskLogic.getTaskLogic().requestSuccessData(stepView, new AppContext.UserGold() {
                             @Override
                             public void gold(UserMessage userMessage) {
-                                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"), new AppContext.UserGold() {
-                                    @Override
-                                    public void gold(UserMessage userMessage) {
-                                        if (userMessage != null) {
-                                            gold.setText(userMessage.gold == 0 ? "==" : userMessage.gold + "");
-                                            gold_RMB.setText("约" + Utils.doubleToString((double) userMessage.gold / 10000) + "元");
-                                        }
-                                    }
-                                });
+                                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
                             }
                         });
                     }
@@ -250,15 +256,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
         super.onResume();
         try {
             if (isVisibleToUser && gold != null) {
-                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"), new AppContext.UserGold() {
-                    @Override
-                    public void gold(UserMessage userMessage) {
-                        if (userMessage != null) {
-                            gold.setText(userMessage.gold == 0 ? "==" : userMessage.gold + "");
-                            gold_RMB.setText("约" + Utils.doubleToString((double) userMessage.gold / 10000) + "元");
-                        }
-                    }
-                });
+                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
                 TaskLogic.getTaskLogic().getAppTaskList(getActivity(), recyclerLayoutList);
                 TaskLogic.getTaskLogic().initData(stepView, this);
             }
@@ -266,5 +264,29 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
+        int i = view.getId();
+        if (i == R.id.login_see_btn) {
+            Intent intent1 = new Intent(getActivity(), LoginTypeActivity.class);
+            getActivity().startActivity(intent1);
+        } else if (i == R.id.ad_dialog_cancel) {
+            tDialog.dismiss();
+        }else if(i == R.id.sign_see_btn){
+//            TaskLogic.getTaskLogic().loadVideoAd("923044756", TTAdConstant.VERTICAL);
+
+        }else if(i == R.id.sign_ad_dialog_cancel){
+            tDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void gold(UserMessage userMessage) {
+        if (userMessage != null) {
+            gold.setText(userMessage.gold == 0 ? "==" : userMessage.gold + "");
+            gold_RMB.setText("约" + Utils.doubleToString((double) userMessage.gold / 10000) + "元");
+        }
     }
 }

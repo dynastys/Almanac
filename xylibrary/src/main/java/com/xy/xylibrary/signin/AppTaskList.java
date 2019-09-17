@@ -1,14 +1,13 @@
 package com.xy.xylibrary.signin;
 
-import org.litepal.crud.LitePalSupport;
-
 import java.util.List;
 
 public class AppTaskList {
 
+
     /**
-     * total : 6
-     * data : [{"id":"28cc8264-b564-4986-8f77-d08615b73533","name":"测试任务2","startTime":"2019-08-06T20:20:39.42","endTime":"2019-08-30T20:20:39.42","completeNumber":5,"completeIntervalType":1,"completeIntervalNumber":5,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":500,"multitaskingType":1,"desc":"","isDouble":false,"link":"","completeMinTime":1,"showMaxGold":10000,"showMinGold":1000,"createTime":"2019-08-06T20:20:39.42","updateTime":"2019-08-06T20:20:39.42","isDelete":false,"u_CompleteNumber":1,"u_IsComplete":false,"u_NextCompleteTime":"2020-01-15T18:20:36.5902123"},{"id":"28cc8264-b564-4986-8f77-d08625b73533","name":"测试任务2","startTime":"2019-08-06T20:20:39.42","endTime":"2019-08-30T20:20:39.42","completeNumber":5,"completeIntervalType":1,"completeIntervalNumber":5,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":500,"multitaskingType":1,"desc":"","isDouble":false,"link":"","completeMinTime":1,"showMaxGold":10000,"showMinGold":1000,"createTime":"2019-08-06T20:20:39.42","updateTime":"2019-08-06T20:20:39.42","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null},{"id":"28cc8264-b564-4986-8f77-d08645373533","name":"测试任务2","startTime":"2019-08-06T20:20:39.42","endTime":"2019-08-30T20:20:39.42","completeNumber":5,"completeIntervalType":1,"completeIntervalNumber":5,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":500,"multitaskingType":1,"desc":"","isDouble":false,"link":"","completeMinTime":1,"showMaxGold":10000,"showMinGold":1000,"createTime":"2019-08-06T20:20:39.42","updateTime":"2019-08-06T20:20:39.42","isDelete":false,"u_CompleteNumber":1,"u_IsComplete":false,"u_NextCompleteTime":"2020-01-15T18:38:12.4736165"},{"id":"28cc8264-b564-4986-8f77-d08645b63533","name":"测试任务2","startTime":"2019-08-06T20:20:39.42","endTime":"2019-08-30T20:20:39.42","completeNumber":5,"completeIntervalType":1,"completeIntervalNumber":5,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":500,"multitaskingType":1,"desc":"","isDouble":false,"link":"","completeMinTime":1,"showMaxGold":10000,"showMinGold":1000,"createTime":"2019-08-06T20:20:39.42","updateTime":"2019-08-06T20:20:39.42","isDelete":false,"u_CompleteNumber":1,"u_IsComplete":false,"u_NextCompleteTime":"2020-01-16T11:29:53.4867682"},{"id":"28cc8264-b564-4986-8f77-d08645b73533","name":"测试任务2","startTime":"2019-08-06T20:20:39.42","endTime":"2019-08-30T20:20:39.42","completeNumber":5,"completeIntervalType":1,"completeIntervalNumber":5,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":500,"multitaskingType":1,"desc":"","isDouble":false,"link":"","completeMinTime":1,"showMaxGold":10000,"showMinGold":1000,"createTime":"2019-08-06T20:20:39.42","updateTime":"2019-08-06T20:20:39.42","isDelete":false,"u_CompleteNumber":1,"u_IsComplete":false,"u_NextCompleteTime":"2020-01-16T11:51:11.9137482"},{"id":"28cc8264-b564-4986-8f77-d08645b75533","name":"测试任务2","startTime":"2019-08-06T20:20:39.42","endTime":"2019-08-30T20:20:39.42","completeNumber":5,"completeIntervalType":1,"completeIntervalNumber":5,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":500,"multitaskingType":1,"desc":"","isDouble":false,"link":"","completeMinTime":1,"showMaxGold":10000,"showMinGold":1000,"createTime":"2019-08-06T20:20:39.42","updateTime":"2019-08-06T20:20:39.42","isDelete":false,"u_CompleteNumber":1,"u_IsComplete":false,"u_NextCompleteTime":"2020-01-16T12:05:10.4791904"}]
+     * total : 9
+     * data : [{"id":"a672a633-7abf-4d73-b723-2cd4fb3fdd47","name":"看运势-领60金币","startTime":"2019-08-01T00:00:00","endTime":"2020-09-01T00:00:00","completeNumber":1,"completeIntervalType":2,"completeIntervalNumber":1,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":60,"minGold":60,"active":10,"multitaskingType":6,"desc":"每天看一看，关注运势与节假日历","isDouble":true,"link":null,"completeMinTime":0,"showMaxGold":60,"showMinGold":60,"createTime":"2019-08-26T17:48:05.3141697","updateTime":"2019-09-01T01:10:05.493438","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"d1af5f9e-1654-4574-bcc6-404ab38fd12c","name":"阅读资讯","startTime":"2019-08-01T00:00:00","endTime":"2020-09-01T00:00:00","completeNumber":5,"completeIntervalType":5,"completeIntervalNumber":60,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":80,"minGold":40,"active":10,"multitaskingType":1,"desc":"热门资讯抢先看，阅读就能赚金币","isDouble":true,"link":null,"completeMinTime":45000,"showMaxGold":500,"showMinGold":300,"createTime":"2019-08-23T14:13:38.3158722","updateTime":"2019-09-01T01:08:55.8591554","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"0d25dc64-1a54-4194-bef6-649ee39f58ec","name":"看天气-天天赚120金币","startTime":"2019-08-01T00:00:00","endTime":"2020-09-01T00:00:00","completeNumber":1,"completeIntervalType":3,"completeIntervalNumber":2,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":120,"minGold":120,"active":100,"multitaskingType":3,"desc":"每日查看天气变化，轻松拿现金","isDouble":false,"link":null,"completeMinTime":0,"showMaxGold":120,"showMinGold":120,"createTime":"2019-08-20T20:01:04.4197883","updateTime":"2019-09-01T01:10:29.2268632","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"e5b55575-ea9d-497a-888d-8e2626bb09f5","name":"跳转任务","startTime":"2019-09-17T00:00:00","endTime":"2019-09-20T00:00:00","completeNumber":1,"completeIntervalType":0,"completeIntervalNumber":0,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1111,"minGold":1111,"active":111,"multitaskingType":9,"desc":null,"isDouble":false,"link":"https://www.baidu.com/","completeMinTime":111000,"showMaxGold":2222,"showMinGold":2222,"createTime":"2019-09-17T10:56:37.1185754","updateTime":"2019-09-17T10:56:37.118579","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"bcb09f1f-4082-4bdf-8343-a4f79f09061b","name":"下载任务","startTime":"2019-09-17T00:00:00","endTime":"2019-09-20T00:00:00","completeNumber":1,"completeIntervalType":0,"completeIntervalNumber":0,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1000,"minGold":100,"active":300,"multitaskingType":8,"desc":null,"isDouble":false,"link":"http://dl.hdslb.com/mobile/latest/iBiliPlayer-bilibili263.apk","completeMinTime":100000,"showMaxGold":2000,"showMinGold":200,"createTime":"2019-09-17T10:55:46.2292518","updateTime":"2019-09-17T10:55:46.2296134","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"0276410b-9fe9-40df-8764-a6e47dbd0c9e","name":"查看7天预报免费领金币","startTime":"2019-08-27T00:00:00","endTime":"2021-08-30T00:00:00","completeNumber":1,"completeIntervalType":3,"completeIntervalNumber":2,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":40,"minGold":40,"active":10,"multitaskingType":5,"desc":"查看天气变化趋势，领40金币","isDouble":false,"link":null,"completeMinTime":0,"showMaxGold":40,"showMinGold":40,"createTime":"2019-08-26T17:35:04.7010256","updateTime":"2019-08-27T15:19:42.9258422","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"f19cba04-f31b-4000-9d7a-d24502494769","name":"阅读广告","startTime":"2019-09-17T00:00:00","endTime":"2019-09-20T00:00:00","completeNumber":1,"completeIntervalType":0,"completeIntervalNumber":1,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1111,"minGold":111,"active":111,"multitaskingType":11,"desc":null,"isDouble":false,"link":null,"completeMinTime":111000,"showMaxGold":2222,"showMinGold":222,"createTime":"2019-09-17T10:59:40.2081325","updateTime":"2019-09-17T10:59:40.2081369","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"12e5937c-b03c-4906-9969-e4331b5aa747","name":"看小视频","startTime":"2019-08-01T00:00:00","endTime":"2020-09-01T00:00:00","completeNumber":4,"completeIntervalType":5,"completeIntervalNumber":60,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":90,"minGold":50,"active":100,"multitaskingType":4,"desc":"看热门小视频，最高可获得1000金币","isDouble":false,"link":null,"completeMinTime":120000,"showMaxGold":1000,"showMinGold":200,"createTime":"2019-08-20T20:01:41.2273202","updateTime":"2019-09-01T01:09:23.6555615","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null},{"id":"d3cbf6a2-4906-45e0-b867-e72efce7c07b","name":"deeplink任务","startTime":"2019-09-17T00:00:00","endTime":"2019-09-20T00:00:00","completeNumber":1,"completeIntervalType":0,"completeIntervalNumber":1,"appID":"08c1948f-48fc-4fd6-899e-eda7672b2250","appName":null,"maxGold":1111,"minGold":111,"active":111,"multitaskingType":10,"desc":null,"isDouble":false,"link":"youku://http?action=http&source=youkushijiebei&refer=youkushijiebei_operation.liuxiao.liux_qudao23_007000_NJZF7f_18061109&url=https%3A%2F%2Facz.youku.com%2Fwow%2Fyktopic%2Fact%2FAEN9G4GP%3FisNeedBaseImage%3D1%26_wvUseWKWebView%3DYES","completeMinTime":111000,"showMaxGold":2222,"showMinGold":222,"createTime":"2019-09-17T10:57:22.106658","updateTime":"2019-09-17T10:57:22.1066672","isDelete":false,"u_CompleteNumber":0,"u_IsComplete":false,"u_NextCompleteTime":null,"pkgName":null}]
      * isSuccess : true
      * message :
      * errorCode : 0
@@ -62,31 +61,32 @@ public class AppTaskList {
 
     public static class DataBean {
         /**
-         * id : 28cc8264-b564-4986-8f77-d08615b73533
-         * name : 测试任务2
-         * startTime : 2019-08-06T20:20:39.42
-         * endTime : 2019-08-30T20:20:39.42
-         * completeNumber : 5
-         * completeIntervalType : 1
-         * completeIntervalNumber : 5
+         * id : a672a633-7abf-4d73-b723-2cd4fb3fdd47
+         * name : 看运势-领60金币
+         * startTime : 2019-08-01T00:00:00
+         * endTime : 2020-09-01T00:00:00
+         * completeNumber : 1
+         * completeIntervalType : 2
+         * completeIntervalNumber : 1
          * appID : 08c1948f-48fc-4fd6-899e-eda7672b2250
          * appName : null
-         * maxGold : 1000
-         * minGold : 100
-         * active : 500
-         * multitaskingType : 1
-         * desc :
-         * isDouble : false
-         * link :
-         * completeMinTime : 1
-         * showMaxGold : 10000
-         * showMinGold : 1000
-         * createTime : 2019-08-06T20:20:39.42
-         * updateTime : 2019-08-06T20:20:39.42
+         * maxGold : 60
+         * minGold : 60
+         * active : 10
+         * multitaskingType : 6
+         * desc : 每天看一看，关注运势与节假日历
+         * isDouble : true
+         * link : null
+         * completeMinTime : 0
+         * showMaxGold : 60
+         * showMinGold : 60
+         * createTime : 2019-08-26T17:48:05.3141697
+         * updateTime : 2019-09-01T01:10:05.493438
          * isDelete : false
-         * u_CompleteNumber : 1
+         * u_CompleteNumber : 0
          * u_IsComplete : false
-         * u_NextCompleteTime : 2020-01-15T18:20:36.5902123
+         * u_NextCompleteTime : null
+         * pkgName : null
          */
 
         private String id;
@@ -113,7 +113,8 @@ public class AppTaskList {
         private boolean isDelete;
         private int u_CompleteNumber;
         private boolean u_IsComplete;
-        private String u_NextCompleteTime;
+        private Object u_NextCompleteTime;
+        private Object pkgName;
 
         public String getId() {
             return id;
@@ -307,12 +308,20 @@ public class AppTaskList {
             this.u_IsComplete = u_IsComplete;
         }
 
-        public String getU_NextCompleteTime() {
+        public Object getU_NextCompleteTime() {
             return u_NextCompleteTime;
         }
 
-        public void setU_NextCompleteTime(String u_NextCompleteTime) {
+        public void setU_NextCompleteTime(Object u_NextCompleteTime) {
             this.u_NextCompleteTime = u_NextCompleteTime;
+        }
+
+        public Object getPkgName() {
+            return pkgName;
+        }
+
+        public void setPkgName(Object pkgName) {
+            this.pkgName = pkgName;
         }
     }
 }

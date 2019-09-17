@@ -80,25 +80,29 @@ public class RequestConnextor<T> {
   static  Interceptor interceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request()
-                    .newBuilder()
-                    .removeHeader("User-Agent")//移除旧的
-                    .addHeader("User-Agent", WebSettings.getDefaultUserAgent(context))//添加真正的头部
-                    .build();
-            /**
-             * 未联网获取缓存数据
-             */
-            if (!Utils.isNetworkAvailable(context)) {
-                //在20秒缓存有效，此处测试用，实际根据需求设置具体缓存有效时间
-                CacheControl cacheControl = new CacheControl.Builder()
-                        .maxStale(365, TimeUnit.DAYS)
+            try {
+                Request request = chain.request()
+                        .newBuilder()
+                        .removeHeader("User-Agent")//移除旧的
+                        .addHeader("User-Agent", WebSettings.getDefaultUserAgent(context))//添加真正的头部
                         .build();
-                request = request.newBuilder()
-                        .cacheControl(cacheControl)
-                        .build();
+                /**
+                 * 未联网获取缓存数据
+                 */
+                if (!Utils.isNetworkAvailable(context)) {
+                    //在20秒缓存有效，此处测试用，实际根据需求设置具体缓存有效时间
+                    CacheControl cacheControl = new CacheControl.Builder()
+                            .maxStale(365, TimeUnit.DAYS)
+                            .build();
+                    request = request.newBuilder()
+                            .cacheControl(cacheControl)
+                            .build();
+                }
+                return chain.proceed(request);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-             return chain.proceed(request);
+            return null;
         }
     };
 

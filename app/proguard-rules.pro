@@ -388,7 +388,10 @@ public static final int *;
 -keep class com.zt.rainbowweather.SophixStubApplication$RealApplicationStub
 
 -keep public class * extends android.app.Service
-
+-dontwarn com.vivo.push.**
+-keep class com.vivo.push.**{*; }
+-keep class com.vivo.vms.**{*; }
+-keep class xxx.xxx.xxx.PushMessageReceiverImpl{*;}
 ##微信登录
 -keep class com.tencent.mm.opensdk.** {
 *;

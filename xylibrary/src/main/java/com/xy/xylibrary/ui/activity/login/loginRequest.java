@@ -266,8 +266,8 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppTaskList(JSONObjectData(context,requestData.toString()))
+        //测试
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,"http://47.110.52.151:8012/").AppTaskList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<AppTaskList>() {
@@ -305,7 +305,7 @@ public class LoginRequest {
             e.printStackTrace();
         }
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).FinishTask(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,"http://47.110.52.151:8012/").FinishTask(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<FinishTask>() {

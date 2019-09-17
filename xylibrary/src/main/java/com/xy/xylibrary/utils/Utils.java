@@ -40,6 +40,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,13 +61,20 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 public class Utils {
     @SuppressLint("StaticFieldLeak")
     private static Application sApplication;
-
+    public static final String DOWNLOADFILENAME = "tint";
     public static Application getContext() {
         if (sApplication != null) return sApplication;
         throw new NullPointerException("u should init first");
     }
-
-
+    public static String getFileNameBasedOnSystemTime() {
+        long time = System.currentTimeMillis();
+        String name = time + ".apk";
+        return name;
+    }
+    public static boolean createFileFolder(String folderName) {
+        File folder = new File(folderName);
+        return (folder.exists() && folder.isDirectory()) ? true : folder.mkdirs();
+    }
 
     /**
      * Init utils.

@@ -15,12 +15,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.xy.xylibrary.ui.fragment.task.TaskLogic;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
+import com.xy.xylibrary.utils.SaveShare;
+import com.zt.rainbowweather.ui.activity.MainActivity;
 import com.zt.rainbowweather.ui.service.DownLoadService;
 import com.zt.xuanyin.controller.DownService;
+
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -285,6 +292,14 @@ public final class utils {
                 // 会返回结果,回调方法onActivityResul
             }
             context.startActivity(intent);
+            if(!TextUtils.isEmpty(SaveShare.getValue(context,"down"))){
+                TaskType taskType3 = LitePal.where("tasktype = ?", SaveShare.getValue(context,"down")).findFirst(TaskType.class);
+                SaveShare.saveValue(context, "JB", "");
+                taskType3.ISStartTask = true;
+                taskType3.save();
+                SaveShare.saveValue(context,"down","");
+                TaskLogic.getTaskLogic().FinishTask2(context,"",taskType3.taskId,false);
+            }
 
         } catch (Exception e) {
             System.out.println("安装错误------>" + e.getMessage());
