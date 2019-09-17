@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseActivity;
@@ -86,6 +88,7 @@ public class DXiangLiActivity extends BaseActivity implements RequestSyntony<Hua
     };
 
     public static void startActivity(Activity context, DanXiangLi danXiangLi) {
+        DotRequest.getDotRequest().getActivity(context,"黄历-单向历");
         Intent intent = new Intent(context, DXiangLiActivity.class);
         intent.putExtra("danXiangLi", danXiangLi);
         context.overridePendingTransition(com.constellation.xylibrary.R.anim.in_from_right, com.constellation.xylibrary.R.anim.out_to_left);

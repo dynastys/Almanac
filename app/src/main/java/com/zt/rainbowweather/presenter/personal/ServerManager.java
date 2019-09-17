@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.xy.xylibrary.presenter.DotRequest;
 import com.zt.rainbowweather.view.tab.SlidingTabLayout;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseAdapter;
@@ -131,6 +133,7 @@ public class ServerManager {
                         break;
                     default:
                 }
+                DotRequest.getDotRequest().getIcon(context,serviceList.getData().get(position).getIcon_id());
             });
             recyclerService.setAdapter(baseAdapter2);
         } catch (Exception e) {

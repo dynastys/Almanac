@@ -7,6 +7,7 @@ import java.util.List;
 public class NewColumn  extends LitePalSupport {
 
 
+
     /**
      * code : 200
      * msg : 查询成功

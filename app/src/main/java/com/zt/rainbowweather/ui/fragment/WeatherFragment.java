@@ -415,6 +415,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         assert rootView != null;
         unbinder = ButterKnife.bind(this, rootView);

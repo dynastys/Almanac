@@ -12,13 +12,13 @@
         android:visibility="gone"
         android:id="@+id/iv_title_rel"
         android:layout_width="match_parent"
-        android:layout_height="90dp">
+        android:layout_height="87dp">
         <ImageView
             android:id="@+id/iv_title"
             android:layout_width="110dp"
             android:layout_height="70dp"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="@dimen/dp_10"
             android:background="@drawable/shape_line_drawable"
             android:scaleType="fitXY"
@@ -30,20 +30,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="13dp"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_toRightOf="@+id/iv_title"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="清洁很重要 但要适度才能不伤肌肤"
-            android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textColor="#FF5F5E5E"
+            android:textSize="13sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="12dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_toRightOf="@+id/iv_title"
@@ -55,16 +55,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="新浪"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp" />
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp"
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -74,13 +74,15 @@
         android:visibility="gone"
         android:id="@+id/iv_title_r_rel"
         android:layout_width="match_parent"
-        android:layout_height="90dp">
+        android:layout_height="87dp">
 
         <ImageView
             android:id="@+id/iv_title_r"
             android:layout_width="110dp"
             android:layout_height="70dp"
-            android:layout_margin="@dimen/dp_10"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/shape_line_drawable"
             android:layout_alignParentRight="true"
             android:scaleType="fitXY"
@@ -91,22 +93,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="13dp"
             android:layout_toLeftOf="@+id/iv_title_r"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="清洁很重要 但要适度才能不伤肌肤"
-            android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textColor="#FF5F5E5E"
+            android:textSize="13sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="12dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv_title_r"
             android:orientation="horizontal">
 
@@ -116,15 +118,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="新浪"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp" />
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp"
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp"
                 android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
@@ -146,13 +148,16 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="清洁很重要 但要适度才能不伤肌肤"
-            android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textColor="#FF5F5E5E"
+            android:textSize="13sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="@dimen/dp_4"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             >
             <ImageView
                 android:id="@+id/iv_image_x1"
@@ -189,7 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="12dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/iv_title_r"
@@ -201,15 +206,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="新浪"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp" />
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp"
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
@@ -227,25 +232,31 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:layout_toLeftOf="@+id/iv_title_r"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="清洁很重要 但要适度才能不伤肌肤"
-            android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textColor="#FF5F5E5E"
+            android:textSize="13sp" />
         <FrameLayout
             android:id="@+id/iv_listitem_video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="8dp"
             android:visibility="gone"
             android:scaleType="centerCrop" />
         <ImageView
             android:id="@+id/iv_image_d"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_margin="@dimen/dp_4"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/shape_line_drawable"
             android:scaleType="fitXY"
             android:layout_weight="1"
@@ -254,7 +265,7 @@
             android:id="@+id/tv_from_d_lin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="9dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:orientation="horizontal">
@@ -265,21 +276,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="新浪"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp" />
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-03-20"
-                android:textColor="#b6b6b6"
-                android:textSize="13sp"
+                android:textColor="#FFBCBCBC"
+                android:textSize="11sp"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.4dp"
-        android:background="@color/nb_divider_narrow"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/back_view"
         />
 </LinearLayout>

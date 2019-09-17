@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.SaveShare;
@@ -142,6 +143,7 @@ public class WeatherDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          ButterKnife.bind(this);
+         DotRequest.getDotRequest().getActivity(getContext(),"首页-天气详情");
     }
 
     @OnClick(R.id.finish_file_head)

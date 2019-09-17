@@ -1013,7 +1013,8 @@
                         <com.xy.xylibrary.view.ColumnHorizontalScrollView
                             android:id="@+id/column"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            >
 
                             <LinearLayout
                                 android:id="@+id/mRadioGroup_content"

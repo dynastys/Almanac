@@ -10,7 +10,16 @@ import java.io.Serializable;
 
 public class City extends LitePalSupport implements Serializable {
 
-
+    /**
+     * affiliation : 北京, 中国
+     * key :
+     * latitude : 39.904
+     * locationKey : weathercn:101010100
+     * longitude : 116.408
+     * name : 北京
+     * status : 0
+     * timeZoneShift : 28800
+     */
 
     public String affiliation = "";
     public double latitude;

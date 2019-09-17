@@ -267,4 +267,9 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
         }
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 }

@@ -2,8 +2,6 @@ package com.xy.xylibrary.ui.activity.login;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
-
 import com.xy.xylibrary.signin.AppInviteList;
 import com.xy.xylibrary.signin.AppSignInList;
 import com.xy.xylibrary.signin.AppTaskList;
@@ -15,10 +13,8 @@ import com.xy.xylibrary.ui.activity.task.WithdrawalRecord;
 import com.xy.xylibrary.utils.AESUtils;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rx.Observer;
@@ -34,7 +30,7 @@ public class LoginRequest {
     private String SignID = "A5AE4ED9-214C-4082-902A-3A8E31996417";//签到ID
 //    private String userID = "e7a3695d-c7e7-4821-8ac3-e8a05eb9c698";//    用户ID
     private String TaskID = "28CC8264-B564-4986-8F77-D08645B73533";//任务ID
-    private String AppID = "08C1948F-48FC-4FD6-899E-EDA7672B2250"; // appid
+    public static String AppID = "08C1948F-48FC-4FD6-899E-EDA7672B2250"; // appid
     private String multitaskingID = "28CC8264-B564-4986-8F77-D08615B73533";
     public static LoginRequest getWeatherRequest() {
         if(loginRequest == null){
