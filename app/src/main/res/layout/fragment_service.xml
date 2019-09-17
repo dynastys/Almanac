@@ -233,12 +233,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="4dp" />
 
-            <com.check.ox.sdk.LionStreamerView
-                android:id="@+id/TMBrView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:TMBr_size="TMBr" />
         </LinearLayout>
 
         <com.zt.rainbowweather.view.MineRowView

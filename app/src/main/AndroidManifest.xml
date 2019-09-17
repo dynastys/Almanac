@@ -77,7 +77,14 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
+        <!--vivo push参数声明 -->
+        <!-- vivo start-->
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="06816195-ad5d-4b6c-ab7c-21275d1035a8" />
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="15330" />
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="3af17746850fe4f6a1a92618182052af" />
@@ -89,7 +96,11 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
+        <activity
+            android:name="com.zt.rainbowweather.ui.activity.GuideActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.zt.rainbowweather.ui.activity.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -270,12 +281,7 @@
         <!-- 即时通讯模块、推送（均需要加入以下声明） START -->
         <!-- 即时通讯模块、推送都要使用 PushService -->
         <!--<service android:name="com.avos.avoscloud.PushService" />-->
-        <service
-            android:name="com.coloros.mcssdk.PushService"     android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
-            <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
-            </intent-filter>
-        </service>
+
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

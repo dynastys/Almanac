@@ -41,6 +41,7 @@ import com.zt.rainbowweather.presenter.request.BackgroundRequest;
 import com.xy.xylibrary.presenter.DotRequest;
 import com.zt.rainbowweather.presenter.request.NewsRequest;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
+import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.RxCountDown;
 import com.zt.rainbowweather.utils.Util;
 import com.zt.rainbowweather.view.ShapeTextView;
@@ -119,6 +120,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
     private void loadAd() {
         try {
             // 获得开屏对象
+            Ad.setKeyword(ConstUtils.app_market_code);
             Ad.getAd().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "9432a40d-9fa7-4d1a-b760-58a32edc9465", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
@@ -180,8 +182,9 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
                 @Override
                 public void onAdFailedToLoad(String error) {
-                    ImageBg();
                     tvSkip.setOnClickListener(v -> skip());
+                    ImageBg();
+
                 }
             });
         } catch (Exception e) {
@@ -241,7 +244,11 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                 if (mapLocation != null)
                     //启动定位
                     mapLocation.startLocation();
-                 intentActivity(MainActivity.class);
+                if (TextUtils.isEmpty(SaveShare.getValue(StartActivity.this, "Guide"))) {
+                    startActivity(new Intent(StartActivity.this, GuideActivity.class));
+                } else {
+                    intentActivity(MainActivity.class);
+                }
  //                mapLocation.setData();
                 this.finish();
             }

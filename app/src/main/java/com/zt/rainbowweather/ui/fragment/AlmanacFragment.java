@@ -176,18 +176,22 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
     @Override
     protected void initData(View view) {
-        if (!ConstUtils.almanac_icon) {
-            almanacMore.setVisibility(View.GONE);
-        }
-        if (!ConstUtils.almanac_news) {
-            almanacNewsLin.setVisibility(View.GONE);
-        }
-        dynamicStateRel.setOnClickListener(v -> {
-            danXiangLis.setData(bean);
-            MobclickAgent.onEvent(getActivity(), "yun_shi_danxiangli", "yun_shi_danxiangli");
-            DXiangLiActivity.startActivity(getActivity(), danXiangLis);
-        });
+        try {
+            if (!ConstUtils.almanac_icon) {
+                almanacMore.setVisibility(View.GONE);
+            }
+            if (!ConstUtils.almanac_news) {
+                almanacNewsLin.setVisibility(View.GONE);
+            }
+            dynamicStateRel.setOnClickListener(v -> {
+                danXiangLis.setData(bean);
+                MobclickAgent.onEvent(getActivity(), "yun_shi_danxiangli", "yun_shi_danxiangli");
+                DXiangLiActivity.startActivity(getActivity(), danXiangLis);
+            });
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private View view0;
@@ -371,7 +375,11 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 //                ObjectAnimator.ofFloat(mCalendarLayout, "translationY", 0).start();
 //                nestedScrollView.fling(mCalendarView.getHeight()- mCalendarLayout.getHeight());//添加上这句滑动才有效
 //                nestedScrollView.scrollTo(0, mCalendarView.getHeight() - 200);
+                nestedScrollView.setOnScrollChangeListener(AlmanacFragment.this);
+                nestedScrollView1.setOnScrollChangeListener(AlmanacFragment.this);
+                nestedScrollView.setOnTouchListener(AlmanacFragment.this);
 
+                nestedScrollView.smoothScrollBy(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() +30);
                 danXiangLis = new DanXiangLi();
                 bean = new DanXiangLi.DataBean();
                 ViewGroup.LayoutParams layoutParams = actionBarSize.getLayoutParams();
@@ -399,10 +407,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
                 IMEClose(novelInputBox);
                 novelInputBox.Clear(AlmanacFragment.this);
                 almanacLogic.setNoveInputBox(getActivity(), novelInputBox, usedSearchRec, almanacInformationRec);
-                nestedScrollView.setOnScrollChangeListener(AlmanacFragment.this);
-                nestedScrollView1.setOnScrollChangeListener(AlmanacFragment.this);
-                nestedScrollView.setOnTouchListener(AlmanacFragment.this);
-                nestedScrollView.smoothScrollBy(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() + 30);
+//                nestedScrollView.smoothScrollBy(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() + 30);
             }
         }
     }
@@ -498,31 +503,39 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
     @Override
     public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        almanacLogic.Message();
-        almanacLogic.BannerShow(adLin.getLocalVisibleRect(new Rect()));
-        mCalendarView.setmWeekPagerVisibility(getActivity(), scrollY);
-        this.scrollY = scrollY;
-        if (scrollY < (mCalendarView.getHeight()) / 3) {
-            ObjectAnimator.ofFloat(mCalendarLayout, "translationY", -mCalendarLayout.getHeight()).setDuration(100).start();
-            if (!ISUP) {
-                nestedScrollView.scrollTo(0, 0);
-//                ISUP = true;
+
+        try {
+            if(almanacLogic == null){
+                return;
             }
-        } else if (scrollY >= (mCalendarView.getHeight()) / 3 && scrollY < mCalendarView.getHeight()) {
-            ObjectAnimator.ofFloat(mCalendarLayout, "translationY", 0).setDuration(100).start();
-            if (!ISUP) {
-                nestedScrollView.scrollTo(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() + 30);
-//                ISUP = true;
+            almanacLogic.Message();
+            almanacLogic.BannerShow(adLin.getLocalVisibleRect(new Rect()));
+            mCalendarView.setmWeekPagerVisibility(getActivity(), scrollY);
+            this.scrollY = scrollY;
+            if (scrollY < (mCalendarView.getHeight()) / 3) {
+                ObjectAnimator.ofFloat(mCalendarLayout, "translationY", -mCalendarLayout.getHeight()).setDuration(100).start();
+                if (!ISUP) {
+                    nestedScrollView.scrollTo(0, 0);
+    //                ISUP = true;
+                }
+            } else if (scrollY >= (mCalendarView.getHeight()) / 3 && scrollY < mCalendarView.getHeight()) {
+                ObjectAnimator.ofFloat(mCalendarLayout, "translationY", 0).setDuration(100).start();
+                if (!ISUP) {
+                    nestedScrollView.scrollTo(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() + 30);
+    //                ISUP = true;
+                }
+            } else if (scrollY > mCalendarView.getHeight()) {
+                ObjectAnimator.ofFloat(mCalendarLayout, "translationY", -mCalendarLayout.getHeight()).setDuration(100).start();
             }
-        } else if (scrollY > mCalendarView.getHeight()) {
-            ObjectAnimator.ofFloat(mCalendarLayout, "translationY", -mCalendarLayout.getHeight()).setDuration(100).start();
-        }
 //        if(scrollY < mCalendarView.getHeight()/2){
 //            nestedScrollView.setScaleY(0);
 //        }else{
 //
 //        }
 //        mCalendarLayout.setContentView(mCalendarView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

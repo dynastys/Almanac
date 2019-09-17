@@ -5,53 +5,33 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bytedance.sdk.openadsdk.TTAdConfig;
-import com.bytedance.sdk.openadsdk.TTAdConstant;
-import com.bytedance.sdk.openadsdk.TTAdManager;
-import com.bytedance.sdk.openadsdk.TTAdSdk;
-import com.check.ox.sdk.LionSDK;
-import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengMessageHandler;
-import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
 import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
-import com.yilan.sdk.ui.YLUIInit;
 import com.zt.rainbowweather.entity.City;
 import com.zt.rainbowweather.entity.WeatherUtilBean;
 import com.zt.rainbowweather.feedback.CustomUserProvider;
-import com.zt.rainbowweather.ui.activity.AdviseMoreDetailActivity;
-import com.zt.rainbowweather.ui.activity.MainActivity;
-import com.zt.rainbowweather.utils.ConstUtils;
 import com.zt.rainbowweather.utils.WeatherUtils;
 import com.zt.rainbowweather.utils.utils;
 import com.zt.weather.R;
 
 import org.android.agoo.huawei.HuaWeiRegister;
-import org.android.agoo.mezu.MeizuRegister;
-import org.android.agoo.oppo.OppoRegister;
 import org.android.agoo.xiaomi.MiPushRegistar;
 import org.litepal.LitePal;
 import org.litepal.LitePalApplication;
@@ -87,6 +67,7 @@ public class BasicApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         try {
+
             basicApplication = this;
             mContext = this;
             utils.init(this);
@@ -217,9 +198,8 @@ public class BasicApplication extends LitePalApplication {
             //魅族
 //            MeizuRegister.register(this,"", "");
             //华为
-//            HuaWeiRegister.register(this);
-            //OPPO通道，参数1为app key，参数2为app secret
-//            OppoRegister.register(this, "266ee86d3d314ef6bc1fea232346c81f", "9ce20d95d5e142b18896f13344cacd67");
+            HuaWeiRegister.register(this);
+
             registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
                 @Override
                 public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -233,12 +213,10 @@ public class BasicApplication extends LitePalApplication {
 
                 @Override
                 public void onActivityResumed(Activity activity) {
-
                 }
 
                 @Override
                 public void onActivityPaused(Activity activity) {
-
                 }
 
                 @Override
