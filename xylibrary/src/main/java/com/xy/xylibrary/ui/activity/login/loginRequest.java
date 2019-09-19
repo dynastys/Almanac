@@ -2,11 +2,12 @@ package com.xy.xylibrary.ui.activity.login;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.xy.xylibrary.signin.ActiveValue;
 import com.xy.xylibrary.signin.AppInviteList;
 import com.xy.xylibrary.signin.AppSignInList;
 import com.xy.xylibrary.signin.AppTaskList;
+import com.xy.xylibrary.signin.CompleteActive;
 import com.xy.xylibrary.signin.FinishTask;
 import com.xy.xylibrary.signin.InvitedUsers;
 import com.xy.xylibrary.signin.SignIn;
@@ -15,10 +16,8 @@ import com.xy.xylibrary.ui.activity.task.WithdrawalRecord;
 import com.xy.xylibrary.utils.AESUtils;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rx.Observer;
@@ -30,11 +29,13 @@ public class LoginRequest {
 
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
     private static LoginRequest loginRequest;
-    private String Url = "http://api.integrals.xingyuntianqi.com/";
+//    private String Url = "http://api.integrals.xingyuntianqi.com/";
+     private String Url =  "http://47.110.52.151:8012/";//测试
+
     private String SignID = "A5AE4ED9-214C-4082-902A-3A8E31996417";//签到ID
 //    private String userID = "e7a3695d-c7e7-4821-8ac3-e8a05eb9c698";//    用户ID
     private String TaskID = "28CC8264-B564-4986-8F77-D08645B73533";//任务ID
-    private String AppID = "08C1948F-48FC-4FD6-899E-EDA7672B2250"; // appid
+    public static String AppID = "08C1948F-48FC-4FD6-899E-EDA7672B2250"; // appid
     private String multitaskingID = "28CC8264-B564-4986-8F77-D08615B73533";
     public static LoginRequest getWeatherRequest() {
         if(loginRequest == null){
@@ -266,7 +267,7 @@ public class LoginRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        //测试
         mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppTaskList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
@@ -398,9 +399,80 @@ public class LoginRequest {
     }
 
     /**
+     * *获取APP活跃值列表
+     * */
+    public void getAllActiveRewardsListData(Context context,final RequestSyntony<ActiveValue> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("appId", AppID);
+            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                requestData.put("userId", SaveShare.getValue(context, "userId"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AllActiveRewardsList(JSONObjectData(context,requestData.toString()))
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<ActiveValue>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(ActiveValue activeValue) {
+                        requestSyntony.onNext(activeValue);
+                    }
+                })
+        );
+    }
+
+    /**
+     * *APP活跃值完成
+     * */
+    public void getCompleteActiveRewardsData(Context context, final String id, final RequestSyntony<CompleteActive> requestSyntony){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("appId", AppID);
+            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                requestData.put("userId", SaveShare.getValue(context, "userId"));
+            }
+            requestData.put("ActiveRewardsID", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).CompleteActiveRewards(JSONObjectData(context,requestData.toString()))
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<CompleteActive>() {
+                    @Override
+                    public void onCompleted() {
+                        requestSyntony.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        requestSyntony.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(CompleteActive completeActive) {
+                        requestSyntony.onNext(completeActive);
+                    }
+                })
+        );
+    }
+
+    /**
      * *签到
      * */
-    public void getSignInData(Context context,String appId,String userId,String SignId,final RequestSyntony<SignIn> requestSyntony){
+    public void getSignInData(Context context,String appId,int Multiple,String userId,String SignId,final RequestSyntony<SignIn> requestSyntony){
         JSONObject requestData = new JSONObject();
         try {
             requestData.put("appId", AppID);
@@ -408,6 +480,7 @@ public class LoginRequest {
                 requestData.put("userId", SaveShare.getValue(context, "userId"));
             }
             requestData.put("signAtureID", SignId);
+            requestData.put("Multiple", Multiple);
         } catch (JSONException e) {
             e.printStackTrace();
         }

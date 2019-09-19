@@ -1,140 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    app:cardCornerRadius="8dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/finish_task_dialog_cancel"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                app:srcCompat="@drawable/list_detail_icon"
-                android:layout_margin="@dimen/dp_10"
-                tools:ignore="VectorDrawableCompat" />
-        </RelativeLayout>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/invite_ad_img"
-            android:scaleType="fitXY"
-            android:id="@+id/finish_task_img"
-
-            />
-        <TextView
-            android:id="@+id/finish_task_title_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="登录登录"
-            android:textColor="#ff5f5e5e"
-            android:textSize="16sp"
-            android:layout_marginLeft="30dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/finish_task_tv"
-            android:textSize="12sp"
-            android:textColor="#949494"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:text="登录登录"
-            android:lineSpacingExtra="8dp"
-            />
-        <FrameLayout
-            android:id="@+id/banner_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <RelativeLayout
-            android:id="@+id/GDT_ad"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-        </RelativeLayout>
-        <include layout="@layout/ad_item" />
         <LinearLayout
-            android:visibility="gone"
+            android:id="@+id/task_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/search_bg_5"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ad_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/finish_task_title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp"
+                android:gravity="center_horizontal"
+                android:text="任务完成"
+                android:textColor="#ff252525"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                 />
+
+            <TextView
+                android:id="@+id/finish_task_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="恭喜您，完成任务啦，立即领取金币吧！"
+                android:textColor="#ff5f5e5e"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:id="@+id/finish_task_get_lin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:visibility="gone"
+                >
+                <Button
+                    android:id="@+id/finish_task_get_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/finish_search_5"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:text="立即领取"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_15" />
+                <Button
+                    android:id="@+id/finish_task_see_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:background="@drawable/finish_task_see_bg"
+                    android:padding="8dp"
+                    android:text="立即翻倍"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_15" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/finish_task_draw_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/search_5"
+                android:padding="@dimen/dp_10"
+                android:text="立即领取"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_18" />
+        </LinearLayout>
+
+    <ImageView
+        android:id="@+id/finish_task_img"
+        android:layout_width="158dp"
+        android:layout_height="103dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/task_draw"
+        android:layout_centerHorizontal="true"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_below="@+id/task_card"
+        android:id="@+id/task_card2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dp_1"
+        app:cardCornerRadius="8dp">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/tv_title_ad_lin"
             >
-            <TextView
-                android:id="@+id/tv_title_ad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/text_black"
-                android:textSize="16sp" />
             <FrameLayout
-                android:id="@+id/iv_listitem_video_ad"
+                android:id="@+id/banner_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:visibility="gone"
-                android:scaleType="centerCrop" />
-            <ImageView
-                android:id="@+id/iv_image_ad"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/GDT_ad"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_margin="@dimen/dp_4"
-                android:background="@drawable/shape_line_drawable"
-                android:scaleType="fitXY"
-                android:layout_weight="1"
-                />
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+            </RelativeLayout>
+
+            <include layout="@layout/ad_item" />
+
             <LinearLayout
-                android:id="@+id/tv_from_ad_lin"
+                android:id="@+id/tv_title_ad_lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/tv_from_ad"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_title_ad"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="广告"
-                    android:textColor="#b6b6b6"
-                    android:textSize="13sp" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp" />
 
+                <FrameLayout
+                    android:id="@+id/iv_listitem_video_ad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_image_ad"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="@dimen/dp_4"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_line_drawable"
+                    android:scaleType="fitXY" />
+
+                <LinearLayout
+                    android:id="@+id/tv_from_ad_lin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_from_ad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="广告"
+                        android:textColor="#b6b6b6"
+                        android:textSize="13sp" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        <Button
-            android:id="@+id/finish_task_see_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/withdraw_search_5"
-            android:textColor="@color/white"
-            android:text="立即翻倍"
-            android:textSize="@dimen/sp_18"
-            android:padding="@dimen/dp_10"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            />
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+    <ImageView
+        android:layout_below="@+id/task_card2"
+        android:id="@+id/finish_task_dialog_cancel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@drawable/detail_icon"
+        tools:ignore="VectorDrawableCompat" />
+
+
+</RelativeLayout>

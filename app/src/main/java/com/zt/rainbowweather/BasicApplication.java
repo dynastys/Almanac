@@ -76,8 +76,6 @@ public class BasicApplication extends LitePalApplication {
             // 初始化LitePal数据库
             LitePal.initialize(BasicApplication.this);
 //        LitePalApplication.initialize(this);
-            LCChatKit.getInstance().setProfileProvider((LCChatProfileProvider) CustomUserProvider.getInstance());
-            LCChatKit.getInstance().init(BasicApplication.getBasicApplication(), "vnB7DYkxpxsC1Gz6nMpBcdYO-gzGzoHsz", "Nmpeus4pLkxx19cXD0jyyUtq");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,6 +86,20 @@ public class BasicApplication extends LitePalApplication {
             UMConfigure.init(this, "5d07585d3fc195c9ba001330", RomUtils.app_youm_code, UMConfigure.DEVICE_TYPE_PHONE, "e583e679267b3542c272b1b36337687b");
             //获取消息推送代理示例
             PushAgent mPushAgent = PushAgent.getInstance(this);
+            //注册推送服务，每次调用register方法都会回调该接口
+            mPushAgent.register(new IUmengRegisterCallback() {
+                @Override
+                public void onSuccess(String deviceToken) {
+                    //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                    SaveShare.saveValue(BasicApplication.this, "deviceToken", deviceToken);
+                    Log.e("TAG", "注册成功：deviceToken：-------->  " + deviceToken);
+                }
+
+                @Override
+                public void onFailure(String s, String s1) {
+                    Log.e("TAG", "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
+                }
+            });
             UmengMessageHandler messageHandler = new UmengMessageHandler() {
 
                 @Override
@@ -174,20 +186,7 @@ public class BasicApplication extends LitePalApplication {
                 }
             };
 
-            //注册推送服务，每次调用register方法都会回调该接口
-            mPushAgent.register(new IUmengRegisterCallback() {
-                @Override
-                public void onSuccess(String deviceToken) {
-                    //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                    SaveShare.saveValue(BasicApplication.this, "deviceToken", deviceToken);
-                    Log.e("TAG", "注册成功：deviceToken：-------->  " + deviceToken);
-                }
 
-                @Override
-                public void onFailure(String s, String s1) {
-                    Log.e("TAG", "注册失败：-------->  " + "s:" + s + ",s1:" + s1);
-                }
-            });
             mPushAgent.setMessageHandler(messageHandler);
 //            // 选用AUTO页面采集模式
             MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);

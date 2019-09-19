@@ -41,13 +41,18 @@ import com.qq.e.ads.nativ.NativeExpressMediaListener;
 import com.qq.e.comm.constants.AdPatternType;
 import com.qq.e.comm.util.AdError;
 import com.tencent.smtt.sdk.WebChromeClient;
+import com.xy.xylibrary.ui.adapter.FragmentPagerAdapter;
 import com.zt.rainbowweather.BasicApplication;
+import com.zt.rainbowweather.entity.Icons;
+import com.zt.rainbowweather.entity.background.PersonalCenterIcon;
 import com.zt.rainbowweather.entity.city.CityEarlyWarning;
 import com.zt.rainbowweather.entity.weather.WeatherVideo;
 import com.zt.rainbowweather.presenter.PangolinBannerAd;
+import com.zt.rainbowweather.presenter.request.AlmanacRequest;
 import com.zt.rainbowweather.ui.activity.IndexDetailsActivity;
 import com.zt.rainbowweather.ui.adapter.MyPagerAdapter;
 import com.zt.rainbowweather.ui.fragment.ListFragment;
+import com.zt.rainbowweather.ui.fragment.TabServiceFragment;
 import com.zt.rainbowweather.ui.fragment.TendencyFragment;
 import com.zt.rainbowweather.view.MyVideoView;
 import com.zt.rainbowweather.view.X5WebView;
@@ -909,19 +914,18 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 }
 
             }
-//            ConventionWeather.HeWeather6Bean.LifestyleBean lifestyleBean = new ConventionWeather.HeWeather6Bean.LifestyleBean();
-//            lifestyleBean.setType("更多>>");
-//            list.add(lifestyleBean);
+
             BaseAdapter baseAdapter = new BaseAdapter<>(R.layout.recycler_item, list, (viewHolder, item) -> {
                 try {
-                    if (TextUtils.isEmpty(item.getTxt())) {
-                        viewHolder.getView(R.id.recycler_image).setVisibility(View.GONE);
-                        viewHolder.setText(R.id.popup_recycler_tv, item.getType());
+
+                    if (viewHolder.getAdapterPosition() > 7) {
+                        GlideUtil.getGlideUtil().setImages(context, item.getBrf(), (ImageView) viewHolder.getView(R.id.recycler_image));
+                        viewHolder.setText(R.id.popup_recycler_tv, item.getTxt());
                         viewHolder.getView(R.id.popup_recycler_tv).setVisibility(View.VISIBLE);
                         ((TextView) viewHolder.getView(R.id.popup_recycler_tv)).setTextColor(Color.WHITE);
                     } else {
-                        viewHolder.setText(R.id.brf, item.getBrf());
-                        viewHolder.setText(R.id.popup_recycler_tv, item.getType() + "指数");
+                        viewHolder.setText(R.id.brf,item.getType() + "指数" );
+                        viewHolder.setText(R.id.popup_recycler_tv, item.getBrf());
                         //                    viewHolder.setImageResource(R.id.popup_recycler_image, imgs[viewHolder.getAdapterPosition()]);
                         GlideUtil.getGlideUtil().setImages(context, images.get(viewHolder.getAdapterPosition()), (ImageView) viewHolder.getView(R.id.recycler_image));
                     }
@@ -931,8 +935,8 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             });
             baseAdapter.setOnItemClickListener((adapter, view, position) -> {
                 try {
-                    if (TextUtils.isEmpty(list.get(position).getTxt())) {
-                        IndexOfLivingActivity.startActivity(context, lifestyleBeans);
+                    if (position > 7) {
+                        AdviseMoreDetailActivity.startActivity(context, list.get(position).getTxt(), list.get(position).getType(),"0");
                     } else {
 //                        AdviseTitleBean adviseTitleBean = new AdviseTitleBean();
 //                        adviseTitleBean.contentUrl = "https://sec-cdn.static.xiaomi.net/secStatic/imgs/b769c44e846b6f0fed3c9780d0bf431aae425f02.png";
@@ -955,6 +959,37 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 }
             });
             recyclerView.setAdapter(baseAdapter);
+            AlmanacRequest.getAlmanacRequest().getGainIconData(context, 1, "", new RequestSyntony<Icons>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Icons icons) {
+                    try {
+                        if(icons != null && icons.getData() != null){
+                            for (int i = 0; i < icons.getData().size(); i++) {
+                                ConventionWeather.HeWeather6Bean.LifestyleBean lifestyleBean = new ConventionWeather.HeWeather6Bean.LifestyleBean();
+                                lifestyleBean.setBrf(icons.getData().get(i).getCover());
+                                lifestyleBean.setType(icons.getData().get(i).getLink());
+                                lifestyleBean.setTxt(icons.getData().get(i).getTitle());
+                                list.add(lifestyleBean);
+                            }
+                            baseAdapter.setNewData(list);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

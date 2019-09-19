@@ -234,12 +234,12 @@
             android:name="com.zt.rainbowweather.ui.service.DaemonService"
             android:enabled="true"
             android:exported="true"
-            android:process=":daemon_service" />
+             />
         <service
             android:name="com.zt.rainbowweather.ui.service.CancelNoticeService"
             android:enabled="true"
             android:exported="true"
-            android:process=":service" />
+             />
 
         <activity
             android:name="com.zt.rainbowweather.ui.activity.SinglePixelActivity"

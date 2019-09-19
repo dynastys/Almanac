@@ -10,11 +10,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.constellation.xylibrary.R;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.ui.adapter.GradientTabStripAdapter;
+import com.xy.xylibrary.ui.fragment.task.TaskLogic;
 import com.xy.xylibrary.ui.fragment.task.TaskType;
+import com.xy.xylibrary.utils.DeeplinkUtils;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.ToastUtils;
@@ -32,7 +35,7 @@ import am.widget.gradienttabstrip.GradientTabStrip;
  * zw
  * 主页面
  */
-public abstract class BaseChoiceActivity extends BaseActivity implements ViewPager.OnPageChangeListener, BaseTabStrip.OnItemClickListener {
+public abstract class BaseChoiceActivity extends BaseActivity implements ViewPager.OnPageChangeListener, BaseTabStrip.OnItemClickListener, View.OnClickListener {
 
 
     private ViewPagerSlide tabVp;
@@ -40,6 +43,21 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     private GradientTabStripAdapter adapter;
     private String Clipboard;
     private TaskType taskType;
+    //    private ImageView indicate_image;
+    private int indicatesize = 0;
+
+    @Override
+    public void onClick(View v) {
+//        if(TextUtils.isEmpty(SaveShare.getValue(this,"indicate"))){
+//            indicatesize++;
+//            ToastUtils.showLong(indicatesize+"");
+//            indicate_image.setImageDrawable(getResources().getDrawable(R.drawable.my_wallet_bg));
+//            if(indicatesize == 3){
+//                indicate_image.setVisibility(View.GONE);
+//                SaveShare.saveValue(this,"indicate","indicate");
+//            }
+//        }
+    }
 
     @Override
     protected Activity getContext() {
@@ -55,19 +73,30 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     public void setCityEvent(TaskType taskType) {
         try {
             this.taskType = taskType;
-            if (taskType.tasktype == 5 || taskType.tasktype == 3|| taskType.tasktype == 1) {
+            if (taskType.tasktype == 5 || taskType.tasktype == 3 || taskType.tasktype == 1) {
                 if (tabVp != null) {
                     tabVp.setCurrentItem(0);
                 }
             } else if (taskType.tasktype == 4) {
                 if (tabVp != null) {
                     tabVp.setCurrentItem(3);
-                    SaveShare.saveValue(BaseChoiceActivity.this,"SP","4");
-                 }
-            }else if (taskType.tasktype == 6) {
+                    SaveShare.saveValue(BaseChoiceActivity.this, "SP", "4");
+                }
+            } else if (taskType.tasktype == 6) {
                 if (tabVp != null) {
                     tabVp.setCurrentItem(1);
-                    SaveShare.saveValue(BaseChoiceActivity.this,"HL","5");
+                    SaveShare.saveValue(BaseChoiceActivity.this, "HL", "5");
+                }
+            } else if (taskType.tasktype == 10) {
+                if (!TextUtils.isEmpty(taskType.link) && DeeplinkUtils.getDeeplinkUtils().CanOpenDeeplink(BaseChoiceActivity.this, taskType.link)) {
+                    TaskType taskType3 = LitePal.where("tasktype = ?", taskType.tasktype + "").findFirst(TaskType.class);
+                    SaveShare.saveValue(BaseChoiceActivity.this, "JB", "");
+                    taskType3.ISStartTask = true;
+                    taskType3.save();
+                    TaskLogic.getTaskLogic().FinishTask2(BaseChoiceActivity.this,"",taskType3.taskId,false);
+                    DeeplinkUtils.getDeeplinkUtils().OpenDeeplink2(BaseChoiceActivity.this, taskType.link);
+                } else {
+                    ToastUtils.showLong("吊起失败");
                 }
             }
         } catch (Exception e) {
@@ -79,14 +108,14 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     @SuppressLint("WrongConstant")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setTabStrip(String s) {
-        if(adapter != null){
+        if (adapter != null) {
             adapter.isTagEnable(2);
-            if(!TextUtils.isEmpty(s) && s.equals("1")){
-                adapter.getSelectedDrawable(1,BaseChoiceActivity.this);
+            if (!TextUtils.isEmpty(s) && s.equals("1")) {
+                adapter.getSelectedDrawable(1, BaseChoiceActivity.this);
                 adapter.getPageTitle(1);
 //                tabVp.setCurrentItem(0);
-            }else{
-                adapter.getSelectedDrawable(0,BaseChoiceActivity.this);
+            } else {
+                adapter.getSelectedDrawable(0, BaseChoiceActivity.this);
                 adapter.getPageTitle(0);
 //                tabVp.setCurrentItem(0);
             }
@@ -97,6 +126,7 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
         }
     }
+
     /**
      * find控件
      */
@@ -104,6 +134,9 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
     protected void bindViews() {
         tabVp = findViewById(R.id.tab_vp);
         gtsGtsTabs = findViewById(R.id.gts_gts_tabs);
+
+//        indicate_image = findViewById(R.id.indicate_image);
+//        indicate_image.setOnClickListener(this);
     }
 
     @Override
@@ -112,7 +145,6 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && gtsGtsTabs != null) {
             SaveShare.saveValue(this, "Height", "" + gtsGtsTabs.getHeight());
-
         }
     }
 
@@ -137,6 +169,10 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
                 }
                 gtsGtsTabs.bindViewPager(tabVp);
                 gtsGtsTabs.setOnItemClickListener(this);
+//                if(TextUtils.isEmpty(SaveShare.getValue(this,"indicate"))){
+//                    indicate_image.setVisibility(View.VISIBLE);
+//                    indicate_image.setImageDrawable(getResources().getDrawable(R.drawable.my_wallet_bg));
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();

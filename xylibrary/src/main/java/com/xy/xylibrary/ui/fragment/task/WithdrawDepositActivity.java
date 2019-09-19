@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.base.BaseAdapter;
 import com.xy.xylibrary.config.ScrollLinearLayoutManager;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.ui.activity.login.LoginRequest;
 import com.xy.xylibrary.ui.activity.login.RequestSyntony;
 import com.xy.xylibrary.ui.activity.login.UserMessage;
@@ -177,6 +179,7 @@ public class WithdrawDepositActivity extends BaseActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
+        DotRequest.getDotRequest().getActivity(getContext(),"任务-钱包-提现");
     }
 
     @Override

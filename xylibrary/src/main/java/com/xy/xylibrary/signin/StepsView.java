@@ -213,12 +213,13 @@ public class StepsView extends View {
         mDefaultIcon = ContextCompat.getDrawable(getContext(), R.drawable.sign_in_default);
         //UP的icon
         mUpIcon = ContextCompat.getDrawable(getContext(), R.drawable.jifendikuai);
-
+        widthMeasureSpec = (int) ((getScreenWidth() - SizeUtils.dip2px(getContext(), 50f) - 7 * mIconWidth));
+        mLineWidth = (widthMeasureSpec)/size;
     }
 
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        this.widthMeasureSpec = 11 * getScreenWidth() / 12;
+        this.widthMeasureSpec = (int) ((getScreenWidth() - SizeUtils.dip2px(getContext(), 50f) - 7 * mIconWidth));
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
 
     }
@@ -231,7 +232,7 @@ public class StepsView extends View {
 
     private void setChange() {
         //图标的中中心Y点
-        mCenterY = SizeUtils.dip2px(getContext(), 28f) + mIconHeight / 2;
+        mCenterY = SizeUtils.dip2px(getContext(), 18f) + mIconHeight / 2;
         //获取左上方Y的位置，获取该点的意义是为了方便画矩形左上的Y位置
         mLeftY = mCenterY - (mCompletedLineHeight / 2);
         //获取右下方Y的位置，获取该点的意义是为了方便画矩形右下的Y位置
@@ -240,7 +241,9 @@ public class StepsView extends View {
         //计算图标中心点
         mCircleCenterPointPositionList.clear();
         //第一个点距离父控件左边14.5dp
-        float size = mIconWidth / 2 + SizeUtils.dip2px(getContext(), 8f);
+//        float size = mIconWidth / 2 + (getScreenWidth() - (11 * getScreenWidth() / 12) - 7*mIconWidth)/2;
+
+        float size = mIconWidth / 2 + SizeUtils.dip2px(getContext(), 10f);
         mCircleCenterPointPositionList.add(size);
 
         for (int i = 1; i < mStepNum; i++) {
@@ -254,8 +257,10 @@ public class StepsView extends View {
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         if (mStepBeanList.size() != 0) {
+            if(widthMeasureSpec > 0){
+                mLineWidth = (widthMeasureSpec - (size*mIconWidth))/size;
+            }
             if (isAnimation) {
                 drawSign(canvas);
             } else {
@@ -270,7 +275,6 @@ public class StepsView extends View {
     @SuppressLint("DrawAllocation")
     private void drawSign(Canvas canvas) {
         for (int i = 0; i < mCircleCenterPointPositionList.size(); i++) {
-
             //绘制线段
             float preComplectedXPosition = mCircleCenterPointPositionList.get(i);
             if (i != mCircleCenterPointPositionList.size() - 1) {
@@ -377,6 +381,10 @@ public class StepsView extends View {
             mCount = 0;
         }
     }
+    private int size = 6;
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     /**
      * 绘制初始状态的view
@@ -385,7 +393,10 @@ public class StepsView extends View {
     private void drawUnSign(Canvas canvas) {
         Log.e("drawSign", "drawSign: "+widthMeasureSpec );
         if(widthMeasureSpec > 0){
-            mLineWidth = (widthMeasureSpec - (7*mIconWidth))/7;
+            mLineWidth = (widthMeasureSpec)/size;
+        }else{
+            widthMeasureSpec = (int) ((getScreenWidth() - SizeUtils.dip2px(getContext(), 50f) - 7 * mIconWidth));
+            mLineWidth = (widthMeasureSpec)/size;
         }
         for (int i = 0; i < mCircleCenterPointPositionList.size(); i++) {
             //绘制线段
@@ -459,8 +470,6 @@ public class StepsView extends View {
                         mCenterY / 2 - SizeUtils.dip2px(getContext(), 0.5f),
                         mTextNumberPaint);
             }
-
-
             //天数文字
             canvas.drawText(stepsBean.getDay(),
                     currentComplectedXPosition - mIconWidth / 2 + SizeUtils.dip2px(getContext(), 5f),
@@ -475,14 +484,12 @@ public class StepsView extends View {
      * @param stepsBeanList 流程步数
      */
     public void setStepNum(List<StepBean> stepsBeanList) {
-
         if (stepsBeanList == null && stepsBeanList.size() == 0) {
             return;
         }
         mStepBeanList = stepsBeanList;
         mStepNum = mStepBeanList.size();
         setChange();//重新绘制
-
         //引起重绘
         postInvalidate();
     }

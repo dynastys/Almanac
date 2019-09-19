@@ -22,15 +22,21 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.presenter.DotRequest;
+import com.xy.xylibrary.signin.AdTask;
 import com.xy.xylibrary.ui.fragment.task.TaskLogic;
 import com.xy.xylibrary.ui.fragment.task.TaskType;
+import com.xy.xylibrary.utils.DeeplinkUtils;
 import com.xy.xylibrary.utils.Utils;
 import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.api.RequestSyntony;
 import com.zt.rainbowweather.presenter.request.WeatherRequest;
 import com.zt.rainbowweather.ui.fragment.HomeFragment;
 import com.zt.rainbowweather.ui.fragment.WeatherFragment;
+import com.zt.rainbowweather.utils.AdDialog;
+import com.zt.rainbowweather.utils.FinishTaskDialog;
 import com.zt.rainbowweather.utils.ToastUtils;
+import com.zt.rainbowweather.utils.utils;
 import com.zt.weather.R;
 import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
@@ -78,53 +84,70 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     private List<City> cities = new ArrayList<>();
     private CountDownTimer timer;
     private int time;
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        switch (position) {
+            case 0:
+                DotRequest.getDotRequest().getActivity(getContext(), "首页-主页");
+                break;
+            case 1:
+                DotRequest.getDotRequest().getActivity(getContext(), "黄历-主页");
+                break;
+            case 2:
+                DotRequest.getDotRequest().getActivity(getContext(), "任务-主页");
+                break;
+            case 3:
+                DotRequest.getDotRequest().getActivity(getContext(), "看一看-主页");
+                break;
+            case 4:
+                DotRequest.getDotRequest().getActivity(getContext(), "服务-主页");
+                break;
+        }
         try {
             setIsUserLightMode(false);
             if (position == 3) {
                 try {
-                    SaveShare.saveValue(MainActivity.this,"video", Utils.getOldDate(0));
+                    SaveShare.saveValue(MainActivity.this, "video", Utils.getOldDate(0));
                     TaskType taskType3 = LitePal.where("tasktype = ?", "4").findFirst(TaskType.class);
-                    if(taskType3 == null || taskType3.taskfinishsize >= taskType3.tasksize){
+                    if (taskType3 == null || taskType3.taskfinishsize >= taskType3.tasksize) {
                         return;
                     }
                     myGradientTabStripAdapter.isTagEnable(3);
                     String Sp = SaveShare.getValue(MainActivity.this, "SP");
                     if (!TextUtils.isEmpty(Sp) && Sp.equals("4")) {
-                        time = (int)taskType3.CompleteMinTime;
+                        time = (int) taskType3.CompleteMinTime;
 //                        if(taskType3.schedule != 0){
 //                            time = taskType3.schedule;
 //                        }
-                        if(time == 0){
-                            time = 60*1000;
+                        if (time == 0) {
+                            time = 60 * 1000;
                         }
+                        timer = new CountDownTimer(time, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                Log.e("timer", "onTick: " + millisUntilFinished);
+                                taskType3.schedule = (int) millisUntilFinished;
+                                taskType3.save();
+                            }
 
-                            timer = new CountDownTimer(time, 1000) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    Log.e("timer", "onTick: "+ millisUntilFinished);
-                                    taskType3.schedule = (int)millisUntilFinished;
+                            @Override
+                            public void onFinish() {
+                                if (taskType3.tasksize > 1 && taskType3.taskfinishsize < taskType3.tasksize) {
+                                    taskType3.taskfinishsize++;
+                                    taskType3.schedule = 0;
                                     taskType3.save();
+                                    TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
+                                    timer.start();
+                                } else {
+                                    SaveShare.saveValue(MainActivity.this, "JB", "");
+                                    taskType3.ISStartTask = true;
+                                    taskType3.schedule = 0;
+                                    taskType3.save();
+                                    EventBus.getDefault().post("");
                                 }
-
-                                @Override
-                                public void onFinish() {
-                                    if(taskType3.tasksize > 1 && taskType3.taskfinishsize < taskType3.tasksize){
-                                        taskType3.taskfinishsize++;
-                                        taskType3.schedule = 0;
-                                        taskType3.save();
-                                        TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
-                                        timer.start();
-                                    }else{
-                                        SaveShare.saveValue(MainActivity.this, "JB", "");
-                                        taskType3.ISStartTask = true;
-                                        taskType3.schedule = 0;
-                                        taskType3.save();
-                                        EventBus.getDefault().post("");
-                                    }
-                                }
-                            };
+                            }
+                        };
                         timer.start();
                     }
                     WeatherRequest.getWeatherRequest().getLookAtData(MainActivity.this, "看一看", "进入视频");
@@ -134,11 +157,12 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
             }
             if (position == 1) {
                 try {
-                    SaveShare.saveValue(MainActivity.this,"almanac", Utils.getOldDate(0));
+                    SaveShare.saveValue(MainActivity.this, "almanac", Utils.getOldDate(0));
                     myGradientTabStripAdapter.isTagEnable(3);
                     String Sp = SaveShare.getValue(MainActivity.this, "HL");
                     if (!TextUtils.isEmpty(Sp) && Sp.equals("5")) {
-                        timer = new CountDownTimer(5 * 1000, 1000) {
+                        SaveShare.saveValue(MainActivity.this, "HL", "");
+                        CountDownTimer timer = new CountDownTimer(5 * 1000, 1000) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                             }
@@ -146,11 +170,23 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                             @Override
                             public void onFinish() {
                                 TaskType taskType3 = LitePal.where("tasktype = ?", "6").findFirst(TaskType.class);
-                                if(taskType3 == null){
+                                if (taskType3 == null) {
                                     return;
                                 }
-                                taskType3.ISStartTask = true;
-                                taskType3.save();
+                                FinishTaskDialog adDialog = new FinishTaskDialog(MainActivity.this, "6", 0);
+                                adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
+                                    @Override
+                                    public void doConfirm(boolean size) {
+                                        TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, size);
+                                        adDialog.dismiss();
+                                    }
+
+                                    @Override
+                                    public void doCancel() {
+                                        adDialog.dismiss();
+                                    }
+                                });
+                                adDialog.show();
                                 EventBus.getDefault().post("1");
                                 SaveShare.saveValue(MainActivity.this, "JB", "");
                             }
@@ -161,13 +197,13 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                     e.printStackTrace();
                 }
             }
-            if(position == 2 || position == 0 || position == 4 ) {
+            if (position == 2 || position == 0 || position == 4) {
                 if (timer != null) {
                     timer.cancel();
                 }
             }
             if (position == 2) {
-                SaveShare.saveValue(MainActivity.this,"JB", Utils.getOldDate(0));
+                SaveShare.saveValue(MainActivity.this, "JB", Utils.getOldDate(0));
                 myGradientTabStripAdapter.isTagEnable(2);
                 setIsUserLightMode(true);
             }
@@ -189,7 +225,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
             getWindow().setFormat(PixelFormat.TRANSLUCENT);
             String ISAD = SaveShare.getValue(this, "ISAD");
             if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
-    //            DialogShow();
+                //            DialogShow();
             }
             cities = LitePal.findAll(City.class);
             if (cities == null || cities.size() == 0) {
@@ -208,12 +244,66 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setCity1Event(TaskType taskType) {
+        try {
+             if (taskType.tasktype == 8) {
+                 SaveShare.saveValue(MainActivity.this, "down", "" + taskType.tasktype);
+                utils.Download(mContext, taskType.link);
+            } else if (taskType.tasktype == 9) {
+                 TaskType taskType3 = LitePal.where("tasktype = ?", "9").findFirst(TaskType.class);
+                if (taskType3 != null) {
+                    SaveShare.saveValue(MainActivity.this, "JB", "");
+                    taskType3.ISStartTask = true;
+                    taskType3.save();
+                    TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
+                    AdviseMoreDetailActivity.startActivity(MainActivity.this, "落地页", taskType3.link, "0");
+                }
+            } else if (taskType.tasktype == 11) {
+                 AdDialog adDialog = new AdDialog(MainActivity.this, "11", 0);
+                adDialog.setClicklistener(new AdDialog.ClickListenerInterface() {
+                    @Override
+                    public void doConfirm(boolean b) {
+//                        TaskType taskType3 = LitePal.where("tasktype = ?", "11").findFirst(TaskType.class);
+//                        if (taskType3 != null) {
+//                            TaskLogic.getTaskLogic().FinishTask2(MainActivity.this, "", taskType3.taskId, b);
+//                        }
+                        EventBus.getDefault().post(new AdTask());
+                        adDialog.dismiss();
+                    }
+
+                    @Override
+                    public void doCancel() {
+                        EventBus.getDefault().post(new AdTask());
+                        adDialog.dismiss();
+                    }
+                });
+                adDialog.show();
+            } else if (taskType.tasktype == -1) {
+                 AdviseMoreDetailActivity.startActivity(MainActivity.this, "福利", "http://link.qukanzixun.com/link/936d38e3-9ae2-4379-af40-26b2f2b14973", "0");
+            } else if (taskType.tasktype == 6) {
+             } else if (taskType.tasktype == 1) {
+             } else if (taskType.tasktype == 3) {
+             } else if (taskType.tasktype == 5) {
+             } else if (taskType.tasktype == 4) {
+             } else if (taskType.tasktype == 7) {
+             } else {
+                 UpdatePort.getUpdatePort().UpdateDialog(MainActivity.this);
+            }
+        } catch (Exception e) {
+            Log.e("Exception", "setCity1Event: "+e.getMessage().toString());
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void setIsUserLight(IsUserLight isUserLight) {
         setIsUserLightMode(isUserLight.getMessage());
     }
 
     @Override
     public void onPageSelected(int position) {
+
+
         this.position = position;
     }
 
@@ -245,17 +335,17 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setTabStrip(String s) {
-        if(myGradientTabStripAdapter != null){
+        if (myGradientTabStripAdapter != null) {
             myGradientTabStripAdapter.isTagEnable(2);
             myGradientTabStripAdapter.isTabTagEnable(2);
 
-             if(!TextUtils.isEmpty(s) && s.equals("1")){
+            if (!TextUtils.isEmpty(s) && s.equals("1")) {
 //                 myGradientTabStripAdapter.isTagEnable(1);
 //                 myGradientTabStripAdapter.notifyDataSetChanged();
-             }else{
+            } else {
 //                 myGradientTabStripAdapter.isTagEnable(0);
 //                 myGradientTabStripAdapter.notifyDataSetChanged();
-             }
+            }
 
         }
     }
@@ -286,7 +376,6 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
         try {
             EventBus.getDefault().register(this);
             PushAgent.getInstance(this).onAppStart();
-
 //          floatWindow();
         } catch (Exception e) {
             e.printStackTrace();
@@ -387,13 +476,13 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     @Override
     public void onResume() {
         super.onResume();
-        if(myGradientTabStripAdapter != null){
+        if (myGradientTabStripAdapter != null) {
             myGradientTabStripAdapter.isTagEnable(2);
         }
         hideInput();
-        Log.e("Phone", "onNext: "+BasicApplication.appCount);
-        if(!TextUtils.isEmpty(BasicApplication.url) && BasicApplication.appCount <= 1){
-            AdviseMoreDetailActivity.startActivity(MainActivity.this, "资讯", BasicApplication.url,"0");
+        Log.e("Phone", "onNext: " + BasicApplication.appCount);
+        if (!TextUtils.isEmpty(BasicApplication.url) && BasicApplication.appCount <= 1) {
+            AdviseMoreDetailActivity.startActivity(MainActivity.this, "资讯", BasicApplication.url, "0");
 //            BasicApplication.url = "";
         }
         MobclickAgent.onPageStart("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)

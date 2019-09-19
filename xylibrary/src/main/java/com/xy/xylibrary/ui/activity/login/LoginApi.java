@@ -1,8 +1,10 @@
 package com.xy.xylibrary.ui.activity.login;
 
+import com.xy.xylibrary.signin.ActiveValue;
 import com.xy.xylibrary.signin.AppInviteList;
 import com.xy.xylibrary.signin.AppSignInList;
 import com.xy.xylibrary.signin.AppTaskList;
+import com.xy.xylibrary.signin.CompleteActive;
 import com.xy.xylibrary.signin.FinishTask;
 import com.xy.xylibrary.signin.InvitedUsers;
 import com.xy.xylibrary.signin.SignIn;
@@ -127,4 +129,16 @@ public interface LoginApi {
      */
     @POST("api/v1/GetAllWithdrawals")
     Observable<WithdrawalRecord> WithdrawalRecordCarousel(@Body RequestBody body);
+
+    /**
+     * 获取活跃值
+     * */
+    @POST("api/v1/GetAllActiveRewardsList")
+    Observable<ActiveValue> AllActiveRewardsList(@Body RequestBody body);
+
+    /**
+     * 活跃值完成
+     * */
+    @POST("api/v1/CompleteActiveRewards")
+    Observable<CompleteActive> CompleteActiveRewards(@Body RequestBody body);
 }

@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
  import android.support.v4.view.ViewPager;
+import android.util.Log;
+
 import am.widget.gradienttabstrip.GradientTabStrip;
 
 /**
@@ -65,7 +67,6 @@ public abstract class GradientTabStripAdapter extends FragmentPagerAdapter imple
 
     @Override
     public Drawable getNormalDrawable(int position, Context context) {
-
        return null;
 
     }

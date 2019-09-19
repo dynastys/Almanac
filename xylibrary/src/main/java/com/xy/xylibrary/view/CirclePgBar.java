@@ -25,6 +25,7 @@ import com.xy.xylibrary.ui.activity.login.LoginRequest;
 import com.xy.xylibrary.ui.activity.login.RequestSyntony;
 import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.SizeUtils;
 import com.xy.xylibrary.utils.ToastUtils;
 
 import org.litepal.LitePal;
@@ -101,12 +102,12 @@ public class CirclePgBar extends View {
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typeArray = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.TasksCompletedView, 0, 0);
-        mRadius = typeArray.getDimension(R.styleable.TasksCompletedView_radius, 80);
-        mStrokeWidth = typeArray.getDimension(R.styleable.TasksCompletedView_strokeWidth, 10);
+        mRadius = typeArray.getDimension(R.styleable.TasksCompletedView_radius, SizeUtils.dip2px(context,28));
+        mStrokeWidth = typeArray.getDimension(R.styleable.TasksCompletedView_strokeWidth,  SizeUtils.dip2px(context,4));
         mCircleColor = typeArray.getColor(R.styleable.TasksCompletedView_circleColor, 0xFFFFFFFF);
         mRingColor = typeArray.getColor(R.styleable.TasksCompletedView_ringColor, 0xFFFFFFFF);
         mRingRadius = mRadius - mStrokeWidth - mStrokeWidth / 2;
-        lightBeam1 = BitmapFactory.decodeResource(getResources(), R.drawable.light_beam);
+        lightBeam1 = BitmapFactory.decodeResource(getResources(), R.drawable.treasure_box);
         lightBeam2 = BitmapFactory.decodeResource(getResources(), R.drawable.light_beam2);
     }
 

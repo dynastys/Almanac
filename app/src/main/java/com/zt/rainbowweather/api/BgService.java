@@ -41,4 +41,10 @@ public interface BgService {
      * */
     @GET("icons/server")
     Observable<PersonalCenterIcon> PersonalCenterIconRxJava(@Query("app_market_code") String app_market_code);
+
+    /**
+     * 获取指数icon
+     * */
+    @GET("icons")
+    Observable<PersonalCenterIcon> IndexIconRxJava(@Query("type_id") String type_id,@Query("app_market_code") String app_market_code);
 }

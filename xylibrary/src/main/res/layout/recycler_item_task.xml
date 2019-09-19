@@ -25,7 +25,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_margin="@dimen/dp_5"
                 >
                 <TextView
                     android:id="@+id/task_title_tv"
@@ -40,9 +39,20 @@
                     android:id="@+id/task_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_5"
                     android:drawableLeft="@drawable/task_list_icon"
-                    android:text="+38888元"
+                    android:text="388"
+                    android:textColor="#ffff6b48"
+                    android:padding="@dimen/dp_5"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:textSize="13sp"
+                    />
+                <TextView
+                    android:id="@+id/task_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/task_list_icon"
+                    android:text="38"
                     android:textColor="#ffff6b48"
                     android:padding="@dimen/dp_5"
                     android:drawablePadding="@dimen/dp_5"
@@ -82,7 +92,14 @@
                 android:layout_centerVertical="true"
                 android:layout_width="80dp"
                 android:layout_height="30dp"/>
-
+            <ImageView
+                android:id="@+id/indicate_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                 android:visibility="gone"
+                android:layout_marginTop="@dimen/dp_10"
+                 android:layout_marginLeft="30dp"
+                />
         </RelativeLayout>
     </LinearLayout>
     <View

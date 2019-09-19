@@ -3,6 +3,7 @@ package com.xy.xylibrary.ui.activity.task;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.constellation.xylibrary.R;
 import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.base.BaseActivity;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.ui.activity.login.LoginRequest;
 import com.xy.xylibrary.ui.activity.login.RequestSyntony;
 import com.xy.xylibrary.ui.activity.login.UserActiveInfo;
@@ -62,6 +64,7 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void loadViewLayout() {
+        DotRequest.getDotRequest().getActivity(getContext(),"任务-钱包");
         try {
             look_over_gold = findViewById(R.id.look_over_gold);
             look_over_RMB = findViewById(R.id.look_over_RMB);

@@ -3,6 +3,8 @@ package com.zt.rainbowweather.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,25 +23,39 @@ import android.widget.TextView;
 import com.androidquery.callback.ImageOptions;
 import com.bumptech.glide.Glide;
 import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
+import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.bytedance.sdk.openadsdk.TTImage;
 import com.bytedance.sdk.openadsdk.TTNativeAd;
 
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.qq.e.ads.banner2.UnifiedBannerADListener;
 import com.qq.e.ads.banner2.UnifiedBannerView;
 import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
+import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.ui.activity.login.UserMessage;
+import com.xy.xylibrary.ui.fragment.task.TaskLogic;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.GlideUtil;
+import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.ToastUtils;
 import com.zt.rainbowweather.presenter.PangolinBannerAd;
+import com.zt.rainbowweather.ui.activity.MainActivity;
 import com.zt.xuanyin.Interface.AdProtogenesisListener;
 import com.zt.xuanyin.controller.Ad;
 import com.zt.xuanyin.controller.NativeAd;
 import com.zt.xuanyin.entity.model.Native;
 import com.zt.weather.R;
+
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,9 +81,12 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
     private FrameLayout bannerContainer;
     private RelativeLayout GDTAd;
     private ImageView adImageBanner;
+    private  ImageView finish_task_dialog_cancel;
+    private TTRewardVideoAd mttRewardVideoAd;
+    private Button hint_content;
 
     public interface ClickListenerInterface {
-        public void doConfirm();
+        public void doConfirm(boolean size);
         public void doCancel();
     }
 
@@ -86,34 +105,47 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
     }
 
     public void init() {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.finish_task_dialog, null);
-        setContentView(view);
-        TextView tvTitle = view.findViewById(R.id.finish_task_title_tv);
-        TextView tvConfirm = view.findViewById(R.id.finish_task_tv);
-        Button hint_content = view.findViewById(R.id.finish_task_see_btn);
-        ImageView index_details_img = view.findViewById(R.id.finish_task_img);
-        ImageView finish_task_dialog_cancel = view.findViewById(R.id.finish_task_dialog_cancel);
-        adLin = view.findViewById(R.id.ad_lin);
-        bannerContainer = view.findViewById(R.id.banner_container);
-        GDTAd = view.findViewById(R.id.GDT_ad);
-        adImageBanner = view.findViewById(R.id.ad_image_banner);
-        tv_title_d_lin = view.findViewById(R.id.tv_title_ad_lin);
-        tv_title_d = view.findViewById(R.id.tv_title_ad);
-        tv_from_ad = view.findViewById(R.id.tv_from_ad);
-        iv_image_ad = view.findViewById(R.id.iv_image_ad);
-        iv_listitem_video_ad = view.findViewById(R.id.iv_listitem_video_ad);
-        tv_from_ad_lin = view.findViewById(R.id.tv_from_ad_lin);
-        //申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdSdk.getAdManager().requestPermissionIfNecessary(context);
+        try {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View view = inflater.inflate(R.layout.ad_dialog, null);
+            setContentView(view);
+            TextView tvTitle = view.findViewById(R.id.finish_task_title_tv);
+            TextView ad_time = view.findViewById(R.id.ad_time);
+            TextView tvConfirm = view.findViewById(R.id.finish_task_tv);
+            hint_content = view.findViewById(R.id.finish_task_see_btn);
+
+            finish_task_dialog_cancel = view.findViewById(R.id.finish_task_dialog_cancel);
+            adLin = view.findViewById(R.id.ad_lin);
+            bannerContainer = view.findViewById(R.id.banner_container);
+            GDTAd = view.findViewById(R.id.GDT_ad);
+            adImageBanner = view.findViewById(R.id.ad_image_banner);
+            tv_title_d_lin = view.findViewById(R.id.tv_title_ad_lin);
+            tv_title_d = view.findViewById(R.id.tv_title_ad);
+            tv_from_ad = view.findViewById(R.id.tv_from_ad);
+            iv_image_ad = view.findViewById(R.id.iv_image_ad);
+            iv_listitem_video_ad = view.findViewById(R.id.iv_listitem_video_ad);
+            tv_from_ad_lin = view.findViewById(R.id.tv_from_ad_lin);
+            //申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
+            TTAdSdk.getAdManager().requestPermissionIfNecessary(context);
 //        BannerAd(adLin,bannerContainer,GDTAd,adImageBanner);
-        VideoAd();
+            VideoAd();
+            loadVideoAd("923044756", TTAdConstant.VERTICAL);
+            ad_time.setVisibility(View.VISIBLE);
+            finish_task_dialog_cancel.setVisibility(View.GONE);
+            new CountDownTimer(5 * 1000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    ad_time.setText(""+(int) (millisUntilFinished/1000+1));
+                }
+
+                @Override
+                public void onFinish() {
+                    finish_task_dialog_cancel.setVisibility(View.VISIBLE);
+                    ad_time.setVisibility(View.GONE);
+                }
+            }.start();
 //        hint_content.setText(notes);
-        if(!TextUtils.isEmpty(title)){
-            tvTitle.setText(title);
-        }else{
-            tvTitle.setVisibility(View.GONE);
-        }
+
 //        if(image != 0){
 //            index_details_img.setImageResource(image);
 //        }
@@ -134,14 +166,36 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
 //        }else{
 //            tvConfirm.setText("加载错误");
 //        }
-        hint_content.setOnClickListener(new clickListener());
-        finish_task_dialog_cancel.setOnClickListener(new clickListener());
-        Window dialogWindow = getWindow();
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-        lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
-        dialogWindow.setAttributes(lp);
-        dialogWindow.setWindowAnimations(R.style.animate_dialog);
+            hint_content.setOnClickListener(new clickListener());
+            finish_task_dialog_cancel.setOnClickListener(new clickListener());
+            Window dialogWindow = getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
+            lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
+            dialogWindow.setAttributes(lp);
+            dialogWindow.setWindowAnimations(R.style.animate_dialog);
+            setCanceledOnTouchOutside(false);
+        } catch (Exception e) {
+            Log.e("Exception", "init: "+e.getMessage());
+            e.printStackTrace();
+        }
+//        setCanceleable(false);//调用这个方法时，按对话框以外的地方不起作用。按返回键也不起作用
+    }
+
+   private boolean isDouble = false;
+
+    @Override
+    public void dismiss() {
+        try {
+            TaskType taskType3 = LitePal.where("tasktype = ?", "11").findFirst(TaskType.class);
+            if(taskType3 != null){
+                TaskLogic.getTaskLogic().FinishTask2(context,"",taskType3.taskId,isDouble);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.dismiss();
+
     }
 
     public void setClicklistener(ClickListenerInterface clickListenerInterface) {
@@ -153,13 +207,30 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
         public void onClick(View v) {
             // TODO Auto-generated method stub
             int id = v.getId();
-            if (id == R.id.login_see_btn) {
-                clickListenerInterface.doCancel();
+            if (id == R.id.finish_task_see_btn) {
+                if(clickListenerInterface != null){
+                    if (mttRewardVideoAd != null) {
+                        //step6:在获取到广告后展示
+                        mttRewardVideoAd.showRewardVideoAd(context);
+                        mttRewardVideoAd = null;
+                        clickListenerInterface.doConfirm(true);
+                        isDouble = true;
+                    } else {
+                        clickListenerInterface.doConfirm(false);
+                        ToastUtils.showLong("暂时不能加倍哦");
+                    }
+                }else {
+                    dismiss();
+                }
             } else if (id == R.id.finish_task_dialog_cancel){
-                clickListenerInterface.doCancel();
+                if(clickListenerInterface != null){
+
+                    clickListenerInterface.doConfirm(false);
+                }else {
+                    dismiss();
+                }
             }
         }
-
     }
 
     /*GDTAD*/
@@ -215,7 +286,7 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
 //                        dateBean.ttFeedAd = ad;
 //                        dateBean.nativelogic = nativelogic;
 //                        dateBean.setFrom_name(TextUtils.isEmpty(ad.getSource()) ? "广告" : ad.getSource());
-
+                         finish_task_dialog_cancel.setVisibility(View.GONE);
                         switch (ad.getImageMode()){
                             case 3://大图
                                 bindData(tv_title_d_lin, ad,nativelogic);
@@ -333,7 +404,7 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
     }
     private void VideoAd(){
         tv_title_d_lin.setVisibility(View.VISIBLE);
-        nativelogic = Ad.getAd().NativeAD(context, "98f8e423-02e0-49f5-989f-af46f5c59203", "80b46cdb-e90f-47fd-aeca-b0b7c00272ff", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
+        nativelogic = Ad.getAd().NativeAD(context, "98f8e423-02e0-49f5-989f-af46f5c59203", "b0e9900d-f030-40a1-8e71-2025d2b00e7b", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
             @Override
             public void onADReady(Native aNative, NativeAd nativeAd) {
                 try {
@@ -581,5 +652,122 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
     @Override
     public void onNoAD(AdError adError) {
 
+    }
+
+
+    /**
+     * 激励视频广告
+     */
+    public void loadVideoAd(String codeId, int orientation) {
+        try {
+            //step1:初始化sdk
+            TTAdManager ttAdManager = TTAdSdk.getAdManager();
+            //step2:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
+            TTAdSdk.getAdManager().requestPermissionIfNecessary(context);
+            //step3:创建TTAdNative对象,用于调用广告请求接口
+            TTAdNative mTTAdNative = ttAdManager.createAdNative(context);
+            //step4:创建广告请求参数AdSlot,具体参数含义参考文档
+            AdSlot adSlot = new AdSlot.Builder()
+                    .setCodeId(codeId)
+                    .setSupportDeepLink(true)
+                    .setImageAcceptedSize(1080, 1920)
+                    .setRewardName("看视频翻倍") //奖励的名称
+                    .setRewardAmount(100)  //奖励的数量
+                    .setUserID(SaveShare.getValue(context, "Phone"))//用户id,必传参数
+                    .setOrientation(orientation) //必填参数，期望视频的播放方向：TTAdConstant.HORIZONTAL 或 TTAdConstant.VERTICAL
+                    .build();
+            //step5:请求广告
+            mTTAdNative.loadRewardVideoAd(adSlot, new TTAdNative.RewardVideoAdListener() {
+                @Override
+                public void onError(int code, String message) {
+                    Log.e("VideoAd", "onError: ");
+                }
+
+                //视频广告加载后，视频资源缓存到本地的回调，在此回调后，播放本地视频，流畅不阻塞。
+                @Override
+                public void onRewardVideoCached() {
+                    Log.e("VideoAd", "onRewardVideoCached: ");
+                }
+
+                //视频广告的素材加载完毕，比如视频url等，在此回调后，可以播放在线视频，网络不好可能出现加载缓冲，影响体验。
+                @Override
+                public void onRewardVideoAdLoad(TTRewardVideoAd ad) {
+                    Log.e("VideoAd", "onRewardVideoAdLoad: ");
+                    mttRewardVideoAd = ad;
+                    //                mttRewardVideoAd.setShowDownLoadBar(false);
+                    mttRewardVideoAd.setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
+
+                        @Override
+                        public void onAdShow() {
+                            Log.e("VideoAd", "onAdShow: ");
+                        }
+
+                        @Override
+                        public void onAdVideoBarClick() {
+                            Log.e("VideoAd", "onAdVideoBarClick: ");
+                        }
+
+                        public void onSkippedVideo() {
+                        }
+
+                        @Override
+                        public void onAdClose() {
+                            try {
+                                TaskType taskType3 = LitePal.where("tasktype = ?", "11").findFirst(TaskType.class);
+                                TaskLogic.getTaskLogic().FinishTask((FragmentActivity) context,"",taskType3.taskId,false);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+//                            loadVideoAd("923044756", TTAdConstant.VERTICAL);
+                        }
+
+                        //视频播放完成回调
+                        @Override
+                        public void onVideoComplete() {
+                        }
+
+                        @Override
+                        public void onVideoError() {
+                            Log.e("VideoAd", "onVideoError: ");
+                        }
+
+                        //视频播放完成后，奖励验证回调，rewardVerify：是否有效，rewardAmount：奖励梳理，rewardName：奖励名称
+                        @Override
+                        public void onRewardVerify(boolean rewardVerify, int rewardAmount, String rewardName) {
+
+                        }
+                    });
+                    mttRewardVideoAd.setDownloadListener(new TTAppDownloadListener() {
+                        @Override
+                        public void onIdle() {
+
+                        }
+
+                        @Override
+                        public void onDownloadActive(long totalBytes, long currBytes, String fileName, String appName) {
+
+                        }
+
+                        @Override
+                        public void onDownloadPaused(long totalBytes, long currBytes, String fileName, String appName) {
+                        }
+
+                        @Override
+                        public void onDownloadFailed(long totalBytes, long currBytes, String fileName, String appName) {
+                        }
+
+                        @Override
+                        public void onDownloadFinished(long totalBytes, String fileName, String appName) {
+                        }
+
+                        @Override
+                        public void onInstalled(String fileName, String appName) {
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

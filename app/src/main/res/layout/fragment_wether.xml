@@ -343,6 +343,7 @@
                             android:layout_height="8dp" />
 
                         <LinearLayout
+                            android:id="@+id/today_tomorrow_rel"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
@@ -1003,7 +1004,8 @@
                         <com.xy.xylibrary.view.ColumnHorizontalScrollView
                             android:id="@+id/column"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            >
 
                             <LinearLayout
                                 android:id="@+id/mRadioGroup_content"
@@ -1057,4 +1059,14 @@
         android:visibility="gone">
 
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/in_browsing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/in_browsing"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="60dp"
+        android:visibility="gone"
+        />
 </RelativeLayout>

@@ -10,8 +10,6 @@ import java.io.Serializable;
 
 public class City extends LitePalSupport implements Serializable {
 
-    //修改
-
     /**
      * affiliation : 北京, 中国
      * key :

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +16,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
+import com.xy.xylibrary.presenter.DotRequest;
+import com.xy.xylibrary.ui.fragment.task.TaskLogic;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
+import com.zt.rainbowweather.utils.AdDialog;
+import com.zt.rainbowweather.utils.FinishTaskDialog;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.SaveShare;
@@ -23,6 +29,10 @@ import com.xy.xylibrary.view.ColumnHorizontalScrollView;
 import com.zt.rainbowweather.entity.OutLookWeather;
 import com.zt.rainbowweather.presenter.news.NativeNewsLogic;
 import com.zt.rainbowweather.utils.Util;
+
+import org.greenrobot.eventbus.EventBus;
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -103,6 +113,42 @@ public class WeatherDetailsActivity extends BaseActivity {
             if (!TextUtils.isEmpty(Size)) {
                 viewpagerWeatherDay.setCurrentItem(Integer.parseInt(Size));
             }
+            TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
+            if(taskType3.ISStartTask && !TextUtils.isEmpty(SaveShare.getValue(WeatherDetailsActivity.this, "7天预报" ))){
+                SaveShare.saveValue(WeatherDetailsActivity.this, "7天预报", "");
+                CountDownTimer timer = new CountDownTimer(5 * 1000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
+                        if (taskType3 == null) {
+                            return;
+                        }
+
+                        FinishTaskDialog adDialog = new FinishTaskDialog(WeatherDetailsActivity.this,"5",0);
+                        adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
+                            @Override
+                            public void doConfirm(boolean b) {
+                                TaskLogic.getTaskLogic().FinishTask(WeatherDetailsActivity.this, "", taskType3.taskId, b);
+                                adDialog.dismiss();
+                            }
+
+                            @Override
+                            public void doCancel() {
+                                adDialog.dismiss();
+                            }
+                        });
+                        adDialog.show();
+                        EventBus.getDefault().post("1");
+                        SaveShare.saveValue(WeatherDetailsActivity.this, "JB", "");
+                    }
+                };
+                timer.start();
+            }
+            EventBus.getDefault().post("");
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -139,6 +185,7 @@ public class WeatherDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          ButterKnife.bind(this);
+         DotRequest.getDotRequest().getActivity(getContext(),"首页-天气详情");
     }
 
     @OnClick(R.id.finish_file_head)

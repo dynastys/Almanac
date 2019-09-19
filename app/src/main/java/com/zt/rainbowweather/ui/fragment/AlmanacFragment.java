@@ -26,6 +26,7 @@ import com.haibin.calendarview.CalendarView;
 import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.Interface.MyEdit;
 import com.xy.xylibrary.base.BaseFragment;
+import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.GlideUtil;
 import com.xy.xylibrary.utils.Utils;
 import com.xy.xylibrary.view.MyEditText;
@@ -45,6 +46,8 @@ import com.zt.rainbowweather.view.InfiniteViewPager;
 import com.zt.weather.R;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +162,8 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
     InfiniteViewPager mMyPager;
     @BindView(R.id.danxiangli_tv_details)
     TextView danxiangliTvDetails;
-
+    @BindView(R.id.almanac_in_browsing)
+    ImageView almanacInBrowsing;
 
     private int mYear;
     private AlmanacLogic almanacLogic;
@@ -168,6 +172,17 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
     private ArrayList<View> test = new ArrayList<>();
     private ListView listView;
     private int scrollY;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setCityEvent(TaskType taskType) {
+        try {
+            if (taskType.tasktype == 6) {
+                almanacInBrowsing.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected int getLayoutRes() {
@@ -220,7 +235,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
             });
             mMyPager.setOnCurrentPageChangeListener(onject -> {
                 new Thread(() -> {
-                    if(almanacLogic != null && !TextUtils.isEmpty(onject.toString())){
+                    if (almanacLogic != null && !TextUtils.isEmpty(onject.toString())) {
                         almanacLogic.getDanXiangLiData(getActivity(), onject.toString());
                     }
                 }).start();
@@ -317,6 +332,11 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         assert rootView != null;
         unbinder = ButterKnife.bind(this, rootView);
+        try {
+            EventBus.getDefault().register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -379,7 +399,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
                 nestedScrollView1.setOnScrollChangeListener(AlmanacFragment.this);
                 nestedScrollView.setOnTouchListener(AlmanacFragment.this);
 
-                nestedScrollView.smoothScrollBy(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() +30);
+                nestedScrollView.smoothScrollBy(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() + 30);
                 danXiangLis = new DanXiangLi();
                 bean = new DanXiangLi.DataBean();
                 ViewGroup.LayoutParams layoutParams = actionBarSize.getLayoutParams();
@@ -420,6 +440,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
     @Override
     public void onResume() {
         super.onResume();
+
         MobclickAgent.onPageStart("AlmanacFragment"); //统计页面("MainScreen"为页面名称，可自定义)
         if (novelInputBox != null) {
             IMEClose(novelInputBox);
@@ -502,9 +523,8 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
     @Override
     public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
         try {
-            if(almanacLogic == null){
+            if (almanacLogic == null) {
                 return;
             }
             almanacLogic.Message();
@@ -515,15 +535,16 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
                 ObjectAnimator.ofFloat(mCalendarLayout, "translationY", -mCalendarLayout.getHeight()).setDuration(100).start();
                 if (!ISUP) {
                     nestedScrollView.scrollTo(0, 0);
-    //                ISUP = true;
+                    //                ISUP = true;
                 }
             } else if (scrollY >= (mCalendarView.getHeight()) / 3 && scrollY < mCalendarView.getHeight()) {
                 ObjectAnimator.ofFloat(mCalendarLayout, "translationY", 0).setDuration(100).start();
                 if (!ISUP) {
                     nestedScrollView.scrollTo(0, mCalendarView.getHeight() - mCalendarLayout.getHeight() + 30);
-    //                ISUP = true;
+                    //                ISUP = true;
                 }
             } else if (scrollY > mCalendarView.getHeight()) {
+                almanacInBrowsing.setVisibility(View.GONE);
                 ObjectAnimator.ofFloat(mCalendarLayout, "translationY", -mCalendarLayout.getHeight()).setDuration(100).start();
             }
 //        if(scrollY < mCalendarView.getHeight()/2){
@@ -567,7 +588,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
 
                 break;
             case R.id.even_more:
-                AdviseMoreDetailActivity.startActivity(getActivity(), "周公解梦", "http://api.xytq.qukanzixun.com/zgjm","0");
+                AdviseMoreDetailActivity.startActivity(getActivity(), "周公解梦", "http://api.xytq.qukanzixun.com/zgjm", "0");
                 break;
         }
     }

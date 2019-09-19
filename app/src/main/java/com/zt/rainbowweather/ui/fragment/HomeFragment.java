@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,13 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.base.BaseFragment;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Shares;
 import com.xy.xylibrary.utils.Utils;
@@ -202,6 +201,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
     }
 
     protected void bindViews() {
+
         try {
             Drawable resource = null;
             if(cities != null && cities.size()>0){
@@ -408,6 +408,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        DotRequest.getDotRequest().getDevice(getContext());
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
         return rootView;
@@ -426,6 +427,7 @@ public class HomeFragment extends BaseFragment implements OnPageChangeListener {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_add:
+                DotRequest.getDotRequest().getActivity(getContext(),"首页-城市选择");
                 try {
                     if (drawerlayout.isDrawerOpen(Gravity.START)) {
                         drawerlayout.closeDrawer(Gravity.START);
