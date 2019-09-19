@@ -22,6 +22,8 @@ import com.zt.rainbowweather.feedback.CustomUserProvider;
 import com.zt.xuanyin.controller.NativeAd;
 import org.android.agoo.oppo.OppoRegister;
 import org.android.agoo.vivo.VivoRegister;
+import cn.leancloud.chatkit.LCChatKit;
+import cn.leancloud.chatkit.LCChatProfileProvider;
 
 import cn.leancloud.chatkit.LCChatKit;
 import cn.leancloud.chatkit.LCChatProfileProvider;

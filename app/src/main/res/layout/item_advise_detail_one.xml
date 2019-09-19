@@ -293,5 +293,6 @@
         android:layout_height="0.5dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="10dp"
-         />
+        android:background="@drawable/back_view"
+        />
 </LinearLayout>

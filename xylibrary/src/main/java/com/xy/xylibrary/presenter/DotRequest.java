@@ -22,7 +22,7 @@ public class DotRequest{
 
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
     private static DotRequest dotRequest;
-    private String url = "http://121.199.63.210:8001/";
+    private String url = "http://api.xytq.qukanzixun.com/";
     public static DotRequest getDotRequest(){
         if (dotRequest == null){
             synchronized (DotRequest.class){
@@ -141,7 +141,49 @@ public class DotRequest{
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
-        mSubscriptions.add(DotConnextor.getConnextor(context).getAppService(DotService.class,"http://121.199.63.210:8002/").AppActivate(requestBody)
+        mSubscriptions.add(DotConnextor.getConnextor(context).getAppService(DotService.class,"http://47.110.52.151:8012/").AppActivate(requestBody)
+                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
+                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object object) {
+
+                    }
+                })
+        );
+    }
+
+    /**
+     * 任务领取打点
+     * @param context
+     */
+    public void getTask(Context context,String task_id){
+        JSONObject requestData = new JSONObject();
+        try {
+            requestData.put("task_action",2);
+            requestData.put("task_id", task_id);
+            requestData.put("date_tiem", System.currentTimeMillis());
+            requestData.put("app_id", LoginRequest.AppID);
+            requestData.put("channel_code", RomUtils.app_youm_code);
+            requestData.put("user_id", SaveShare.getValue(context, "userId"));
+            requestData.put("imei", Utils.getIMEI(context));
+            requestData.put("app_ver", Utils.getVersionString());
+            requestData.put("brand", Utils.getDeviceBrand());
+            requestData.put("model", Utils.getDeviceModel());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),requestData.toString());
+        mSubscriptions.add(DotConnextor.getConnextor(context).getAppService(DotService.class,"http://47.110.52.151:8012/").AppTask(requestBody)
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<Object>() {

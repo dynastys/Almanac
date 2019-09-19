@@ -782,6 +782,7 @@ public class TaskLogic {
      * @param datas
      */
     private void setSignData(List<AppSignInList.DataBean.SignAtureVmsBean> datas, StepsView mStepView) {
+
         try {
             //处理已签到的数据
             //先添加已签到的日期到集合中

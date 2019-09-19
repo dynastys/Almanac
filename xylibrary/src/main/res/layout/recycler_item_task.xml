@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:layout_margin="@dimen/dp_5"
                 >
                 <TextView
                     android:id="@+id/task_title_tv"

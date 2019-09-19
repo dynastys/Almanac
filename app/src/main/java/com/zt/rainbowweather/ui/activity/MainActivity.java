@@ -24,6 +24,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xy.xylibrary.base.AppContext;
 import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.signin.AdTask;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.ui.fragment.task.TaskLogic;
 import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.xy.xylibrary.utils.DeeplinkUtils;
@@ -35,6 +36,7 @@ import com.zt.rainbowweather.ui.fragment.HomeFragment;
 import com.zt.rainbowweather.ui.fragment.WeatherFragment;
 import com.zt.rainbowweather.utils.AdDialog;
 import com.zt.rainbowweather.utils.FinishTaskDialog;
+import com.zt.rainbowweather.utils.AdDialog;
 import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.rainbowweather.utils.utils;
 import com.zt.weather.R;
@@ -102,6 +104,23 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                 break;
             case 4:
                 DotRequest.getDotRequest().getActivity(getContext(), "服务-主页");
+                break;
+        }
+        switch (position){
+            case 0:
+                DotRequest.getDotRequest().getActivity(getContext(),"首页-主页");
+                break;
+            case 1:
+                DotRequest.getDotRequest().getActivity(getContext(),"黄历-主页");
+                break;
+            case 2:
+                DotRequest.getDotRequest().getActivity(getContext(),"任务-主页");
+                break;
+            case 3:
+                DotRequest.getDotRequest().getActivity(getContext(),"看一看-主页");
+                break;
+            case 4:
+                DotRequest.getDotRequest().getActivity(getContext(),"服务-主页");
                 break;
         }
         try {
@@ -339,7 +358,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
             myGradientTabStripAdapter.isTagEnable(2);
             myGradientTabStripAdapter.isTabTagEnable(2);
 
-            if (!TextUtils.isEmpty(s) && s.equals("1")) {
+             if(!TextUtils.isEmpty(s) && s.equals("1")){
 //                 myGradientTabStripAdapter.isTagEnable(1);
 //                 myGradientTabStripAdapter.notifyDataSetChanged();
             } else {
@@ -376,6 +395,7 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
         try {
             EventBus.getDefault().register(this);
             PushAgent.getInstance(this).onAppStart();
+
 //          floatWindow();
         } catch (Exception e) {
             e.printStackTrace();

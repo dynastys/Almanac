@@ -145,6 +145,7 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && gtsGtsTabs != null) {
             SaveShare.saveValue(this, "Height", "" + gtsGtsTabs.getHeight());
+
         }
     }
 

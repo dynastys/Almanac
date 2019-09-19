@@ -75,6 +75,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         super.onCreate(savedInstanceState);
     }
 

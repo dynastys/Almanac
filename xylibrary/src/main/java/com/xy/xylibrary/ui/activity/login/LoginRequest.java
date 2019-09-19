@@ -16,6 +16,8 @@ import com.xy.xylibrary.ui.activity.task.WithdrawalRecord;
 import com.xy.xylibrary.utils.AESUtils;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
+import com.xy.xylibrary.utils.Utils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import okhttp3.MediaType;
@@ -54,16 +56,22 @@ public class LoginRequest {
     public void getQueryEntryData(Context context,String mobile,String vCode,String wxID,final RequestSyntony<Phone> requestSyntony){
         JSONObject requestData = new JSONObject();
         try {
+            requestData.put("channel_code", RomUtils.app_youm_code);
+            requestData.put("user_id", SaveShare.getValue(context, "userId"));
+            requestData.put("imei", Utils.getIMEI(context));
+            requestData.put("app_ver", Utils.getVersionString());
+            requestData.put("brand", Utils.getDeviceBrand());
+            requestData.put("model", Utils.getDeviceModel());
             requestData.put("mobile", mobile);//"1333333333"
             requestData.put("vCode", vCode);//"123"
             requestData.put("wxID",wxID);
             requestData.put("appId",AppID);//"62B0E5C9-F486-48B3-8B57-11F00B676F3E"
-            requestData.put("channel_code", RomUtils.app_youm_code);
+            //requestData.put("channel_code", RomUtils.app_youm_code);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).QueryEntryList(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).QueryEntryList(JSONObjectData(context,requestData.toString()))
                  .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<Phone>() {
@@ -98,7 +106,7 @@ public class LoginRequest {
         }
 
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).QueryRegisteList(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).QueryRegisteList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<RegisteJson>() {
@@ -126,6 +134,11 @@ public class LoginRequest {
     public void getBindingPhoneData(Context context,String mobile,String vCode,String userId,final RequestSyntony<Phone> requestSyntony){
         JSONObject requestData = new JSONObject();
         try {
+            requestData.put("channel_code", RomUtils.app_youm_code);
+            requestData.put("imei", Utils.getIMEI(context));
+            requestData.put("app_ver", Utils.getVersionString());
+            requestData.put("brand", Utils.getDeviceBrand());
+            requestData.put("model", Utils.getDeviceModel());
             requestData.put("mobile", mobile);//"1333333333"
             requestData.put("vCode", vCode);//"123"
             requestData.put("userId", userId);
@@ -134,7 +147,7 @@ public class LoginRequest {
             e.printStackTrace();
         }
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).BindingPhone(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).BindingPhone(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<Phone>() {
@@ -194,7 +207,7 @@ public class LoginRequest {
      * *获取用户信息 访问时带请求头Toke访问验证身份
      * */
     public void getUsersMessageData(Context context,String location,final RequestSyntony<WeChat> requestSyntony){
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,"http://api.xytq.qukanzixun.com/").UsersMessage()
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).UsersMessage()
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<WeChat>() {
@@ -268,7 +281,7 @@ public class LoginRequest {
             e.printStackTrace();
         }
         //测试
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppTaskList(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).AppTaskList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<AppTaskList>() {
@@ -299,6 +312,11 @@ public class LoginRequest {
             if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                 requestData.put("userId", SaveShare.getValue(context, "userId"));
             }
+            requestData.put("channel_code", RomUtils.app_youm_code);
+            requestData.put("imei", Utils.getIMEI(context));
+            requestData.put("app_ver", Utils.getVersionString());
+            requestData.put("brand", Utils.getDeviceBrand());
+            requestData.put("model", Utils.getDeviceModel());
             requestData.put("MultitaskingID", id);
             requestData.put("IsDouble", IsDouble);
             requestData.put("appId",AppID);//"62B0E5C9-F486-48B3-8B57-11F00B676F3E"
@@ -306,7 +324,7 @@ public class LoginRequest {
             e.printStackTrace();
         }
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).FinishTask(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).FinishTask(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<FinishTask>() {
@@ -376,7 +394,7 @@ public class LoginRequest {
             e.printStackTrace();
         }
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AppSignInList(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).AppSignInList(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<AppSignInList>() {
@@ -399,93 +417,26 @@ public class LoginRequest {
     }
 
     /**
-     * *获取APP活跃值列表
-     * */
-    public void getAllActiveRewardsListData(Context context,final RequestSyntony<ActiveValue> requestSyntony){
-        JSONObject requestData = new JSONObject();
-        try {
-            requestData.put("appId", AppID);
-            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
-                requestData.put("userId", SaveShare.getValue(context, "userId"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).AllActiveRewardsList(JSONObjectData(context,requestData.toString()))
-                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
-                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
-                .subscribe(new Observer<ActiveValue>() {
-                    @Override
-                    public void onCompleted() {
-                        requestSyntony.onCompleted();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        requestSyntony.onError(e);
-                    }
-
-                    @Override
-                    public void onNext(ActiveValue activeValue) {
-                        requestSyntony.onNext(activeValue);
-                    }
-                })
-        );
-    }
-
-    /**
-     * *APP活跃值完成
-     * */
-    public void getCompleteActiveRewardsData(Context context, final String id, final RequestSyntony<CompleteActive> requestSyntony){
-        JSONObject requestData = new JSONObject();
-        try {
-            requestData.put("appId", AppID);
-            if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
-                requestData.put("userId", SaveShare.getValue(context, "userId"));
-            }
-            requestData.put("ActiveRewardsID", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).CompleteActiveRewards(JSONObjectData(context,requestData.toString()))
-                .subscribeOn(Schedulers.io())//判断是哪一个线程执行
-                .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
-                .subscribe(new Observer<CompleteActive>() {
-                    @Override
-                    public void onCompleted() {
-                        requestSyntony.onCompleted();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        requestSyntony.onError(e);
-                    }
-
-                    @Override
-                    public void onNext(CompleteActive completeActive) {
-                        requestSyntony.onNext(completeActive);
-                    }
-                })
-        );
-    }
-
-    /**
      * *签到
      * */
-    public void getSignInData(Context context,String appId,int Multiple,String userId,String SignId,final RequestSyntony<SignIn> requestSyntony){
+    public void getSignInData(Context context,String appId,String userId,String SignId,final RequestSyntony<SignIn> requestSyntony){
         JSONObject requestData = new JSONObject();
         try {
             requestData.put("appId", AppID);
+            requestData.put("channel_code", RomUtils.app_youm_code);
+            requestData.put("imei", Utils.getIMEI(context));
+            requestData.put("app_ver", Utils.getVersionString());
+            requestData.put("brand", Utils.getDeviceBrand());
+            requestData.put("model", Utils.getDeviceModel());
             if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                 requestData.put("userId", SaveShare.getValue(context, "userId"));
             }
             requestData.put("signAtureID", SignId);
-            requestData.put("Multiple", Multiple);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).SignIn(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).SignIn(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<SignIn>() {
@@ -604,7 +555,7 @@ public class LoginRequest {
          } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,Url).UserInfo(JSONObjectData(context,requestData.toString()))
+        mSubscriptions.add(LoginConnextor.getConnextor(context).getAppService(LoginApi.class,url).UserInfo(JSONObjectData(context,requestData.toString()))
                 .subscribeOn(Schedulers.io())//判断是哪一个线程执行
                 .observeOn(AndroidSchedulers.mainThread())//在主线程中输出
                 .subscribe(new Observer<UserInfo>() {
@@ -637,7 +588,7 @@ public class LoginRequest {
             if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                 requestData.put("userId", SaveShare.getValue(context, "userId"));
             }
-//            requestData.put("multitaskingID", multitaskingID);
+            requestData.put("multitaskingID", multitaskingID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -714,7 +665,7 @@ public class LoginRequest {
             if(!TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
                 requestData.put("userId", SaveShare.getValue(context, "userId"));
             }
-//            requestData.put("multitaskingID", multitaskingID);
+            requestData.put("multitaskingID", multitaskingID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
