@@ -278,6 +278,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
             mTabLayout_3.setOnTabSelectListener(new OnTabSelectListener() {
                 @Override
                 public void onTabSelect(int position) {
+                    Log.i("TAGAAA","455");
                     vp_3.setCurrentItem(position);
                 }
 

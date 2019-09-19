@@ -110,12 +110,13 @@ public class IndexDetailsFragment extends BaseFragment  implements RequestSynton
             if(headerViewHolder.ivHeader != null && map != null){
                 headerViewHolder.ivHeader.setImageResource(map.get(Integer.parseInt(mAdvise.indexId)));
             }
-            Glide.with(getActivity()).load(mAdvise.headerImgUrl).into(headerViewHolder.ivBg);
+            //Glide.with(getActivity()).load(mAdvise.headerImgUrl).into(headerViewHolder.ivBg);
             mAdapter.addHeaderView(headerViewHolder.rootView);
             View footer = getLayoutInflater().inflate(R.layout.advise_footer,
                     (ViewGroup) rvDetail.getParent(), false);
             mAdapter.addFooterView(footer);
         } catch (Exception e) {
+            Log.i("TAGAAA",e+"");
             e.printStackTrace();
         }
     }
@@ -327,8 +328,6 @@ public class IndexDetailsFragment extends BaseFragment  implements RequestSynton
     class HeaderViewHolder {
         private final Unbinder bind;
         View rootView;
-        @BindView(R.id.iv_bg)
-        ImageView ivBg;
         @BindView(R.id.iv_header)
         ImageView ivHeader;
         @BindView(R.id.tv_header_title)

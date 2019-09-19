@@ -15,4 +15,7 @@ public interface DotService {
 
     @POST("api/v1/device-actocate")
     Observable<Object> AppActivate(@Body RequestBody body);
+
+    @POST("/api/v1/app-task")
+    Observable<Object> AppTask(@Body RequestBody body);
 }

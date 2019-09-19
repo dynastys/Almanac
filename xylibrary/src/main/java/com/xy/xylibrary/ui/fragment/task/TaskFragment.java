@@ -39,7 +39,6 @@ import com.xy.xylibrary.ui.activity.task.SignInActivity;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.ToastUtils;
 import com.xy.xylibrary.utils.Utils;
-
 import org.greenrobot.eventbus.EventBus;
 
 public class TaskFragment extends BaseFragment implements SwipeRefreshListener, View.OnClickListener, SignInRort,OnViewClickListener,AppContext.UserGold {

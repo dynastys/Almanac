@@ -26,6 +26,7 @@ import com.timmy.tdialog.TDialog;
 import com.timmy.tdialog.base.BindViewHolder;
 import com.timmy.tdialog.listener.OnBindViewListener;
 import com.xy.xylibrary.base.AppContext;
+import com.xy.xylibrary.presenter.DotRequest;
 import com.xy.xylibrary.ui.activity.login.LoginTypeActivity;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.UpdateDialog;
@@ -386,7 +387,7 @@ public class TaskLogic {
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
                     }
-
+                    DotRequest.getDotRequest().getTask(context,beans.get(position).getId());
                 }
             });
 
