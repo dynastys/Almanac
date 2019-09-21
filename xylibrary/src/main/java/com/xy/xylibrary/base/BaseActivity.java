@@ -141,6 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Permissi
             setListener();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //权限申请
+                Log.e("getInstence", "initView: " );
                 ApplyForPermissions.getInstence(mContext).ApplyFor(this);
             }
 

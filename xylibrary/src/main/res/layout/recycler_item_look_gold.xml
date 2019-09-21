@@ -52,24 +52,44 @@
             android:padding="@dimen/dp_5"
             android:layout_alignParentRight="true"
             >
-            <TextView
-                android:id="@+id/look_gold_money"
+            <LinearLayout
+                android:id="@+id/look_gold_lin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginLeft="@dimen/dp_10"
-                android:drawableLeft="@drawable/task_list_icon"
-                android:text="+38888元"
-                android:textColor="#ffff6b48"
                 android:layout_alignParentRight="true"
-                android:drawablePadding="@dimen/dp_5"
-                android:textSize="13sp"
-                />
+                android:gravity="center_vertical"
+                >
+                <TextView
+                    android:id="@+id/look_gold_activate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:drawableLeft="@drawable/activate_icon"
+                    android:textColor="#ffff6b48"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:textSize="13sp"
+                    />
+                <TextView
+                    android:id="@+id/look_gold_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/task_list_icon"
+                    android:text="+1000"
+                    android:textColor="#ffff6b48"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:textSize="13sp"
+                    />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/look_gold_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2019-08-13 11:31:35"
-                android:layout_below="@+id/look_gold_money"
+                android:layout_below="@+id/look_gold_lin"
                 android:textColor="#ffadadad"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_alignParentRight="true"

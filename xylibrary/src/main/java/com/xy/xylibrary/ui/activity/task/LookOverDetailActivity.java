@@ -92,6 +92,7 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
 
     private void initData() {
         try {
+
             AppContext.getUserInfo(LookOverDetailActivity.this, "", SaveShare.getValue(LookOverDetailActivity.this, "userId"), new AppContext.UserGold() {
                 @Override
                 public void gold(UserMessage userMessage) {
@@ -160,7 +161,21 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
     public void onResume() {
         super.onResume();
         if(look_over_gold != null){
-            initData();
+            AppContext.getUserInfo(LookOverDetailActivity.this, "", SaveShare.getValue(LookOverDetailActivity.this, "userId"), new AppContext.UserGold() {
+                @Override
+                public void gold(UserMessage userMessage) {
+                    try {
+                        if (userMessage != null) {
+                            userMessages = userMessage;
+                            look_over_gold.setText(userMessage.gold + "");
+                            look_over_RMB.setText("约" + Utils.doubleToString((double)userMessage.gold / 10000) + "元");
+                            look_over_add_up_gold.setText(userMessage.gold + "");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
         MobclickAgent.onPageStart("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
         MobclickAgent.onResume(this); //统计时长
@@ -184,6 +199,7 @@ public class LookOverDetailActivity extends BaseActivity implements View.OnClick
     @Override
     public void onPause() {
         super.onPause();
+        userMessages = null;
         MobclickAgent.onPageEnd("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
         MobclickAgent.onPause(this);
     }

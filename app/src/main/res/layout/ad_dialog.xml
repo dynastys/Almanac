@@ -13,17 +13,25 @@
         >
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            >
             <TextView
-                android:id="@+id/ad_time"
-                android:layout_width="wrap_content"
+                android:id="@+id/finish_task_title_tv"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_10"
-                android:visibility="gone" />
+                android:gravity="center_horizontal"
+                android:text="观看广告"
+                android:textColor="#ff252525"
+                android:layout_centerVertical="true"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                />
             <ImageView
                 android:id="@+id/finish_task_dialog_cancel"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 app:srcCompat="@drawable/list_detail_icon"
                 android:layout_margin="@dimen/dp_10"
@@ -31,16 +39,7 @@
         </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/finish_task_title_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="观看广告"
-            android:textColor="#ff252525"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

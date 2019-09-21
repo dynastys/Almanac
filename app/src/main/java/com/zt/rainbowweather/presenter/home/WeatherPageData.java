@@ -495,10 +495,13 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
     public interface AirQualityListener {
         void AirQuality(List<AirThDay.HeWeather6Bean.AirForecastBean> air_forecast);
     }
-
+    private boolean icons = false;
     public void Icons(ImageView wetherBgImage, int backdrop_theme_id, int current_img_id, ConventionWeather.HeWeather6Bean.BasicBean basicBean, RlSimpleTarget rlSimpleTarget) {
         this.rlSimpleTarget = rlSimpleTarget;
-        BackgroundRequest.getBackgroundRequest().getBackdropThemeIdData(context, backdrop_theme_id, 0, basicBean.getLocation(), basicBean.getParent_city(), basicBean.getAdmin_area(), WeatherPageData.this);
+        if(icons){
+            icons = false;
+            BackgroundRequest.getBackgroundRequest().getBackdropThemeIdData(context, backdrop_theme_id, 0, basicBean.getLocation(), basicBean.getParent_city(), basicBean.getAdmin_area(), WeatherPageData.this);
+        }
     }
 
     /**
@@ -506,6 +509,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
      * */
     public boolean WeatherDataCacheGain(City city,RequestSyntony<ConventionWeather> requestSyntony){
         try {
+            this.city = city;
             ConventionWeather.HeWeather6Bean.BasicBean basicBean =  LitePal.findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class);
 //                    LitePal.where("location = ?",city.name).findFirst(ConventionWeather.HeWeather6Bean.BasicBean.class);
             if(basicBean != null){
@@ -566,6 +570,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
 
     private void addWeatherData(ConventionWeather conventionWeather,TextView rainAlarmPro, LinearLayout rainAlarmProLin,AirQualityListener airQualityListener,RequestSyntony<ConventionWeather> requestSyntony){
         try {
+            icons = true;
             conventionWeatherData = conventionWeather;
             requestSyntony.onNext(conventionWeather);
             SaveShare.saveValue(context, "sunrise", conventionWeather.getHeWeather6().get(0).getDaily_forecast().get(0).getSr());
@@ -620,7 +625,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                     }
                 }
             });
-            WeatherDataCache(conventionWeather);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -635,34 +640,67 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 ConventionWeatherData(city,rainAlarmPro,rainAlarmProLin,requestSyntony,airQualityListener);
             }
         }else{
-            WeatherDataCacheGain(city,requestSyntony);
+//            WeatherDataCacheGain(city,requestSyntony);
             ConventionWeatherData(city,rainAlarmPro,rainAlarmProLin,requestSyntony,airQualityListener);
         }
-
     }
 
     private void ConventionWeatherData(City city,TextView rainAlarmPro,LinearLayout rainAlarmProLin,RequestSyntony<ConventionWeather> requestSyntony, AirQualityListener airQualityListener){
-        WeatherRequest.getWeatherRequest().getConventionWeatherData(context, city.name, new RequestSyntony<ConventionWeather>() {
+        try {
+            WeatherRequest.getWeatherRequest().getConventionWeatherData(context, city.name, new RequestSyntony<ConventionWeather>() {
 
-            @Override
-            public void onCompleted() {
-                requestSyntony.onCompleted();
-            }
+                @Override
+                public void onCompleted() {
+                    requestSyntony.onCompleted();
+                }
 
-            @Override
-            public void onError(Throwable e) {
-                requestSyntony.onError(e);
-            }
+                @Override
+                public void onError(Throwable e) {
+                    requestSyntony.onError(e);
+                }
 
-            @Override
-            public void onNext(ConventionWeather conventionWeather) {
-                if (conventionWeather != null && conventionWeather.getHeWeather6() != null && conventionWeather.getHeWeather6().size() > 0) {
-                    addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+                @Override
+                public void onNext(ConventionWeather conventionWeather) {
+                    if (conventionWeather != null && conventionWeather.getHeWeather6() != null && conventionWeather.getHeWeather6().size() > 0) {
+                        WeatherDataCache(conventionWeather);
+                        if(rainAlarmPro != null){
+                            addWeatherData(conventionWeather,rainAlarmPro,rainAlarmProLin,airQualityListener,requestSyntony);
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ConventionWeatherData(City city){
+        try {
+            WeatherRequest.getWeatherRequest().getConventionWeatherData(context, city.name, new RequestSyntony<ConventionWeather>() {
+
+                @Override
+                public void onCompleted() {
 
                 }
-            }
-        });
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(ConventionWeather conventionWeather) {
+                    if (conventionWeather != null && conventionWeather.getHeWeather6() != null && conventionWeather.getHeWeather6().size() > 0) {
+                        WeatherDataCache(conventionWeather);
+
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
     public void AlterNotification() {
         try {
             if (city != null) {
@@ -918,13 +956,14 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
 
             BaseAdapter baseAdapter = new BaseAdapter<>(R.layout.recycler_item, list, (viewHolder, item) -> {
                 try {
-
                     if (viewHolder.getAdapterPosition() > 7) {
                         GlideUtil.getGlideUtil().setImages(context, item.getBrf(), (ImageView) viewHolder.getView(R.id.recycler_image));
                         viewHolder.setText(R.id.popup_recycler_tv, item.getTxt());
                         viewHolder.getView(R.id.popup_recycler_tv).setVisibility(View.VISIBLE);
+                        viewHolder.getView(R.id.brf).setVisibility(View.GONE);
                         ((TextView) viewHolder.getView(R.id.popup_recycler_tv)).setTextColor(Color.WHITE);
                     } else {
+                        viewHolder.getView(R.id.brf).setVisibility(View.VISIBLE);
                         viewHolder.setText(R.id.brf,item.getType() + "指数" );
                         viewHolder.setText(R.id.popup_recycler_tv, item.getBrf());
                         //                    viewHolder.setImageResource(R.id.popup_recycler_image, imgs[viewHolder.getAdapterPosition()]);
@@ -960,7 +999,7 @@ public class WeatherPageData implements RequestSyntony<BackdropTheme>, RlSimpleT
                 }
             });
             recyclerView.setAdapter(baseAdapter);
-            AlmanacRequest.getAlmanacRequest().getGainIconData(context, 1, "", new RequestSyntony<Icons>() {
+            AlmanacRequest.getAlmanacRequest().getGainIconData(context, 8, "", new RequestSyntony<Icons>() {
                 @Override
                 public void onCompleted() {
 

@@ -207,11 +207,7 @@ public class WeatherDetailsFragment extends BaseFragment implements RequestSynto
         bean.monthY = Util.MonthEnglish(Util.TurnDigital(strings[0]));
         bean.NongLiDay = strings[1] + "";
         WeatherPageData weatherPageData = new WeatherPageData((AppCompatActivity) getActivity());
-
-
-            weatherPageData.AirForecast(outLookWeather.airQuality, 0, weatherDetailsTodayExcellentBg);
-
-
+        weatherPageData.AirForecast(outLookWeather.airQuality, 0, weatherDetailsTodayExcellentBg);
         String[] sunrise = outLookWeather.sr.split(":");
         String[] sunset = outLookWeather.ss.split(":");
         weatherDetailsIcon.setImageResource(WeatherUtils.getWeatherStatus(outLookWeather.weatherDay.iconRes).iconRes);

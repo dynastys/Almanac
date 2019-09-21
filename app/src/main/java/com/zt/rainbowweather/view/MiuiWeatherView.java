@@ -417,16 +417,23 @@ public class MiuiWeatherView extends View {
                  if(x >= ((viewWidth - icon.getWidth() - (int)dp2pxF(context, 10f)))){
                     x = x - icon.getWidth()/2;
                 }
+                Paint pFont = new Paint();
+                android.graphics.Rect rect = new android.graphics.Rect();
+                //返回包围整个字符串的最小的一个Rect区域
+                 pFont.getTextBounds(data.get(i).temperature +"°"+ data.get(i).weather.weather, 0, 1, rect);
+                 int strwid = (data.get(i).temperature +"°").length() * rect.width() + (data.get(i).weather.weather).length() * rect.width()*3 + 2* rect.width();
+                Log.e("strwid", "drawLinesAndPoints: "+strwid );
                 //经过上述校正之后可以得到图标和文字的绘制区域
                 RectF iconRect = new RectF(x - icon.getWidth()/2,
                         y - icon.getHeight() * 5/3,
-                        x + icon.getWidth() * 3/2+(icon.getWidth())*(((float)data.get(i).weather.weather.length()/2)-1),
+                        x +icon.getWidth()/2 + strwid,
                         y);
 //                canvas.drawBitmap(icon, (float) x-icon.getHeight()/2, (float)y-icon.getHeight(), null);
                 canvas.drawBitmap(icon, null, iconRect, null);  //画图标
 //            //画下方文字
+
             canvas.drawText(data.get(i).temperature +"°"+ data.get(i).weather.weather,
-                    x - dp2pxF(getContext(), 8), y - icon.getHeight() * 2 / 3.0f, numberTextPaint);
+                    x - dp2pxF(getContext(), 8)+rect.width(), y - icon.getHeight() * 2 / 3.0f, numberTextPaint);
              }
         }
 //            //先画一个颜色为背景颜色的实心园覆盖掉折线拐角

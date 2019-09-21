@@ -3,6 +3,7 @@ package com.zt.rainbowweather.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.MainThread;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -127,13 +128,16 @@ public class StartAd {
         }
     }
     /*穿山甲*/
-    public void PangolinAd(Activity baseContext, RelativeLayout mSplashContainer,TTSplashAd.AdInteractionListener adInteractionListener,NativeAd nativelogic,PangolinListener pangolinListener){
+    public void PangolinAd(Activity baseContext, String posid,RelativeLayout mSplashContainer,TTSplashAd.AdInteractionListener adInteractionListener,NativeAd nativelogic,PangolinListener pangolinListener){
         try {
+            if(TextUtils.isEmpty(posid)){
+                posid = "823044533";
+            }
             //step2:创建TTAdNative对象
             TTAdNative mTTAdNative = TTAdSdk.getAdManager().createAdNative(baseContext);//baseContext建议为activity
             //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
             AdSlot adSlot = new AdSlot.Builder()
-                    .setCodeId("823044533")//"823044265"
+                    .setCodeId(posid)//"823044265""823044533"
                     .setSupportDeepLink(true)
                     .setImageAcceptedSize(1080, 1920)
                     .build();

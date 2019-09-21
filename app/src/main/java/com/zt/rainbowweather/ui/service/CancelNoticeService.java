@@ -48,9 +48,15 @@ public class CancelNoticeService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2){
-           com.zt.rainbowweather.entity.weather.Notification notification = intent.getParcelableExtra("notification");
-            setAlterData(notification);
+        try {
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2){
+                if(intent != null){
+                    com.zt.rainbowweather.entity.weather.Notification notification = intent.getParcelableExtra("notification");
+                    setAlterData(notification);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return super.onStartCommand(intent, flags, startId);
     }

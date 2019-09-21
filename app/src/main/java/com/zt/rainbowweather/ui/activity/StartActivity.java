@@ -32,6 +32,7 @@ import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.Utils;
 import com.zt.rainbowweather.BasicApplication;
 import com.zt.rainbowweather.api.RequestSyntony;
+import com.zt.rainbowweather.api.TakePhotoPopWinListener;
 import com.zt.rainbowweather.entity.background.AppSpread;
 import com.zt.rainbowweather.entity.news.Switch;
 import com.zt.rainbowweather.presenter.StartAd;
@@ -55,6 +56,7 @@ import com.zt.xuanyin.view.AdLinkActivity;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.BuildConfig;
 import rx.Subscriber;
 import rx.Subscription;
@@ -81,7 +83,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
     private SplashAD splashAD;
     private boolean ISGDTSKIP = true;
     private NativeAd nativelogicDd;
-
+    private TextView actionBarSize;
     @Override
     public void onPause() {
         super.onPause();
@@ -119,6 +121,10 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
 
     private void loadAd() {
         try {
+            actionBarSize = findViewById(R.id.actionBarSize);
+            ViewGroup.LayoutParams layoutParams = actionBarSize.getLayoutParams();
+            layoutParams.height = Utils.getStatusBarHeight(StartActivity.this);
+            actionBarSize.setLayoutParams(layoutParams);
             // 获得开屏对象
             Ad.setKeyword(ConstUtils.app_market_code);
             Ad.getAd().NativeAD(this, "98f8e423-02e0-49f5-989f-af46f5c59203", "9432a40d-9fa7-4d1a-b760-58a32edc9465", "67C53558D3E3485EA681EA21735A5003", new AdProtogenesisListener() {
@@ -134,7 +140,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                             //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
                             TTAdSdk.getAdManager().requestPermissionIfNecessary(StartActivity.this);
                             WeatherRequest.getWeatherRequest().getLookAtData(StartActivity.this, "广告", "请求");
-                            StartAd.getStartAd().PangolinAd(StartActivity.this, container, StartActivity.this, null, new StartAd.PangolinListener() {
+                            StartAd.getStartAd().PangolinAd(StartActivity.this,  nativelogic.nativeObject.posid,container, StartActivity.this, null, new StartAd.PangolinListener() {
                                 @Override
                                 public void onError(int code, String message) {
                                     ImageBg();
@@ -143,10 +149,8 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                                 @SuppressLint("ResourceAsColor")
                                 @Override
                                 public void onSplashAdLoad() {
+                                    actionBarSize.setVisibility(View.VISIBLE);
                                     ad_relative.setVisibility(View.GONE);
-//                                    tvSkip.setTextColor(R.color.white);
-//                                    splash_skip_tv.setVisibility(View.VISIBLE);
-                                    Log.e("Application", "initSophix:222 " + System.currentTimeMillis());
                                 }
                             });
                         }
@@ -177,13 +181,27 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                             return true;
                         });
                     }
-
                 }
-
                 @Override
                 public void onAdFailedToLoad(String error) {
                     tvSkip.setOnClickListener(v -> skip());
-                    ImageBg();
+                    //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
+//                    TTAdSdk.getAdManager().requestPermissionIfNecessary(StartActivity.this);
+                    WeatherRequest.getWeatherRequest().getLookAtData(StartActivity.this, "广告", "请求");
+                    StartAd.getStartAd().PangolinAd(StartActivity.this, "823044533",container, StartActivity.this, null, new StartAd.PangolinListener() {
+                        @Override
+                        public void onError(int code, String message) {
+                            ImageBg();
+                        }
+
+                        @SuppressLint("ResourceAsColor")
+                        @Override
+                        public void onSplashAdLoad() {
+                            ad_relative.setVisibility(View.GONE);
+
+                        }
+                    });
+                     ImageBg();
 
                 }
             });
@@ -229,7 +247,10 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                         @Override
                         public void onNext(Integer integer) {
                             size = integer;
-                            tvSkip.setText(getString(R.string.format_skip, integer));
+                            if(integer == 5){
+                                integer = 4;
+                            }
+                            tvSkip.setText(getString(R.string.format_skip, integer+1));
                         }
                     });
         } catch (Exception e) {
@@ -279,22 +300,17 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
         try {
             ivImage = findViewById(R.id.iv_image);
             initView();
-//            String AppOpenBg = SaveShare.getValue(StartActivity.this, "AppOpenBg");
-//            String Click_url = SaveShare.getValue(StartActivity.this, "Click_url");
-//            if(!TextUtils.isEmpty(AppOpenBg) && !TextUtils.isEmpty(Click_url)){
-//                AppOpenBg();
-//            }
             AlmanacLogic.getAlmanacLogic().getAlmanacData(StartActivity.this, Utils.getDayOfWeekByDate());
-            NewsRequest.getNewsRequest().NewsData(mContext);
-            String ISAD = SaveShare.getValue(mContext, "ISAD");
-            if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
-                loadAd();
-            }
+            NewsRequest.getNewsRequest().NewsData(mContext, date -> {
+                String ISAD = SaveShare.getValue(mContext, "ISAD");
+                if (!TextUtils.isEmpty(ISAD) && ISAD.equals("1")) {
+                    loadAd();
+                }
+            });
             mapLocation = MapLocation.getMapLocation();
             mapLocation.locate(StartActivity.this);
             startCountDown();
             StartAd.getStartAd().Application(StartActivity.this);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

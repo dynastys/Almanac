@@ -61,19 +61,19 @@ public class IndicatePage {
                 .setOnGuideChangedListener(new OnGuideChangedListener() {
                     @Override
                     public void onShowed(Controller controller) {
-                        ToastUtils.showLong( "引导层显示");
+
                      }
 
                     @Override
                     public void onRemoved(Controller controller) {
-                        ToastUtils.showLong( "引导层消失");
+
                      }
                 })
                 .setOnPageChangedListener(new OnPageChangedListener() {
                     @Override
                     public void onPageChanged(int page) {
                         //引导页切换，page 为当前页位置，从 0 开始
-                        ToastUtils.showLong( "引导页切换");
+//                        ToastUtils.showLong( "引导页切换");
                      }
                 })
                 .addGuidePage(//添加一页引导页
@@ -88,7 +88,7 @@ public class IndicatePage {
                                         //引导页布局填充后回调，用于初始化
                                         ImageView tv = view.findViewById(R.id.iv);
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                        layoutParams.leftMargin = view1.getLeft();
+                                        layoutParams.leftMargin = view1.getLeft()+view1.getWidth()/5;
                                         layoutParams.topMargin = view1.getTop() + view1.getHeight();
                                         tv.setLayoutParams(layoutParams);
                                         tv.setImageDrawable(context.getResources().getDrawable(R.drawable.weather_warning));
@@ -110,7 +110,7 @@ public class IndicatePage {
                                         ImageView tv = view.findViewById(R.id.iv);
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                         layoutParams.leftMargin = view2.getLeft();
-                                        layoutParams.topMargin = view2.getTop() * 2 + view2.getHeight()*2;
+                                        layoutParams.topMargin = view2.getTop() * 2 + view2.getHeight()*3/2;
                                         tv.setLayoutParams(layoutParams);
                                         tv.setImageDrawable(context.getResources().getDrawable(R.drawable.weather_conditions));
                                     }
@@ -132,8 +132,8 @@ public class IndicatePage {
                                         //引导页布局填充后回调，用于初始化
                                         ImageView tv = view.findViewById(R.id.iv);
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                        layoutParams.leftMargin = view3.getLeft();
-                                        layoutParams.topMargin = view3.getTop()-view3.getHeight();
+                                        layoutParams.leftMargin = view3.getLeft()+view3.getWidth()/5;
+                                        layoutParams.topMargin = view3.getTop()-view3.getHeight()*2;
                                         tv.setLayoutParams(layoutParams);
                                         tv.setImageDrawable(context.getResources().getDrawable(R.drawable.today_weather_conditions));
                                     }
@@ -164,19 +164,19 @@ public class IndicatePage {
                 .setOnGuideChangedListener(new OnGuideChangedListener() {
                     @Override
                     public void onShowed(Controller controller) {
-                        ToastUtils.showLong( "引导层显示");
+
                     }
 
                     @Override
                     public void onRemoved(Controller controller) {
-                        ToastUtils.showLong( "引导层消失");
+
                     }
                 })
                 .setOnPageChangedListener(new OnPageChangedListener() {
                     @Override
                     public void onPageChanged(int page) {
                         //引导页切换，page 为当前页位置，从 0 开始
-                        ToastUtils.showLong( "引导页切换");
+//                        ToastUtils.showLong( "引导页切换");
                     }
                 })
                 .addGuidePage(//添加一页引导页
@@ -192,7 +192,7 @@ public class IndicatePage {
                                         ImageView tv = view.findViewById(R.id.iv);
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                         layoutParams.leftMargin = view1.getWidth()/3;
-                                        layoutParams.topMargin = view1.getTop()+ view1.getHeight()*2;
+                                        layoutParams.topMargin = view1.getTop()+ view1.getHeight();
                                         tv.setLayoutParams(layoutParams);
                                         tv.setImageDrawable(context.getResources().getDrawable(R.drawable.sign_hint));
 
@@ -213,8 +213,8 @@ public class IndicatePage {
                                         //引导页布局填充后回调，用于初始化
                                         ImageView tv = view.findViewById(R.id.iv);
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                        layoutParams.leftMargin = recyclerLayoutList.getWidth()/3;
-                                        layoutParams.topMargin = recyclerLayoutList.getTop()+recyclerLayoutList.getWidth();
+                                        layoutParams.leftMargin = recyclerLayoutList.getWidth()/5;
+                                        layoutParams.topMargin = recyclerLayoutList.getTop()+ recyclerLayoutList.getWidth()+ recyclerLayoutList.getWidth()/5;
                                         tv.setLayoutParams(layoutParams);
                                         tv.setImageDrawable(context.getResources().getDrawable(R.drawable.finish_task_hint));
                                     }
@@ -224,7 +224,6 @@ public class IndicatePage {
                                 .setEnterAnimation(enterAnimation)//进入动画
                                 .setExitAnimation(exitAnimation)//退出动画
                 )
-
                 .show();
     }
 }

@@ -9,6 +9,7 @@ import com.xy.xylibrary.utils.SaveShare;
 import com.zt.rainbowweather.api.AppService;
 import com.zt.rainbowweather.api.NewsService;
 import com.zt.rainbowweather.api.RequestSyntony;
+import com.zt.rainbowweather.api.TakePhotoPopWinListener;
 import com.zt.rainbowweather.entity.ServiceList;
 import com.zt.rainbowweather.entity.news.AppSwitch;
 import com.zt.rainbowweather.entity.news.Article;
@@ -274,7 +275,7 @@ public class NewsRequest {
     /**
      * 新闻栏目缓存
      * */
-    public void NewsData(Context context){
+    public void NewsData(Context context, TakePhotoPopWinListener takePhotoPopWinListener){
         try {
              LitePal.deleteAll(NewColumn.DataBean.class);
             NewsRequest.getNewsRequest().getAppSwitchData(context, new RequestSyntony<AppSwitch>() {
@@ -304,6 +305,7 @@ public class NewsRequest {
                             } else {
                                 SaveShare.saveValue(context, "ISAD", "0");
                             }
+                            takePhotoPopWinListener.onClick("");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -21,6 +21,7 @@ import com.xy.xylibrary.ui.fragment.task.TaskLogic;
 import com.xy.xylibrary.ui.fragment.task.TaskType;
 import com.zt.rainbowweather.utils.AdDialog;
 import com.zt.rainbowweather.utils.FinishTaskDialog;
+import com.zt.rainbowweather.utils.ToastUtils;
 import com.zt.weather.R;
 import com.xy.xylibrary.base.BaseActivity;
 import com.xy.xylibrary.utils.SaveShare;
@@ -63,6 +64,7 @@ public class WeatherDetailsActivity extends BaseActivity {
     @BindView(R.id.weather_details_lin)
     RelativeLayout weatherDetailsLin;
 
+    private CountDownTimer timer;
     private List<OutLookWeather> outLookWeathers = new ArrayList<>();
     private String Size;
     private String City = "上海市";
@@ -70,12 +72,16 @@ public class WeatherDetailsActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+
         MobclickAgent.onPageStart("WeatherDetailsActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)
         MobclickAgent.onResume(this); //统计时长
     }
     @Override
     public void onPause() {
         super.onPause();
+        if(timer != null){
+            timer.cancel();
+        }
         MobclickAgent.onPageEnd("WeatherDetailsActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
         MobclickAgent.onPause(this);
     }
@@ -98,6 +104,48 @@ public class WeatherDetailsActivity extends BaseActivity {
                     ("datas");
             Size = getIntent().getStringExtra("Size");
             City = getIntent().getStringExtra("City");
+
+            TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
+            Log.e("NumberFormatException", "loadViewLayout: "+taskType3.ISStartTask);
+            if(!TextUtils.isEmpty(SaveShare.getValue(WeatherDetailsActivity.this, "7天预报" ))){
+                SaveShare.saveValue(WeatherDetailsActivity.this, "7天预报", "");
+                timer = new CountDownTimer(5 * 1000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        try {
+                            timer = null;
+                            TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
+                            if (taskType3 == null) {
+                                ToastUtils.showLong("获取任务失败！");
+                                return;
+                            }
+                            FinishTaskDialog adDialog = new FinishTaskDialog(WeatherDetailsActivity.this,"5",0);
+                            adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
+                                @Override
+                                public void doConfirm(boolean b) {
+                                    TaskLogic.getTaskLogic().FinishTask(WeatherDetailsActivity.this, "", taskType3.taskId, b);
+                                    adDialog.dismiss();
+                                }
+
+                                @Override
+                                public void doCancel() {
+                                    adDialog.dismiss();
+                                }
+                            });
+                            adDialog.show();
+                            EventBus.getDefault().post("1");
+                            SaveShare.saveValue(WeatherDetailsActivity.this, "JB", "");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                timer.start();
+            }
             ViewGroup.LayoutParams layoutParams = listBar.getLayoutParams();
             layoutParams.height = Utils.getStatusBarHeight(WeatherDetailsActivity.this);
             listBar.setLayoutParams(layoutParams);
@@ -113,43 +161,9 @@ public class WeatherDetailsActivity extends BaseActivity {
             if (!TextUtils.isEmpty(Size)) {
                 viewpagerWeatherDay.setCurrentItem(Integer.parseInt(Size));
             }
-            TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
-            if(taskType3.ISStartTask && !TextUtils.isEmpty(SaveShare.getValue(WeatherDetailsActivity.this, "7天预报" ))){
-                SaveShare.saveValue(WeatherDetailsActivity.this, "7天预报", "");
-                CountDownTimer timer = new CountDownTimer(5 * 1000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
-                        if (taskType3 == null) {
-                            return;
-                        }
-
-                        FinishTaskDialog adDialog = new FinishTaskDialog(WeatherDetailsActivity.this,"5",0);
-                        adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
-                            @Override
-                            public void doConfirm(boolean b) {
-                                TaskLogic.getTaskLogic().FinishTask(WeatherDetailsActivity.this, "", taskType3.taskId, b);
-                                adDialog.dismiss();
-                            }
-
-                            @Override
-                            public void doCancel() {
-                                adDialog.dismiss();
-                            }
-                        });
-                        adDialog.show();
-                        EventBus.getDefault().post("1");
-                        SaveShare.saveValue(WeatherDetailsActivity.this, "JB", "");
-                    }
-                };
-                timer.start();
-            }
             EventBus.getDefault().post("");
         } catch (NumberFormatException e) {
+            Log.e("NumberFormatException", "loadViewLayout: "+ e.getMessage().toString() );
             e.printStackTrace();
         }
     }

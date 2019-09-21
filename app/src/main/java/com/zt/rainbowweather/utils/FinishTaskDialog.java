@@ -3,11 +3,15 @@ package com.zt.rainbowweather.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -111,58 +115,72 @@ public class FinishTaskDialog extends Dialog implements NativeExpressAD.NativeEx
     }
 
     public void init() {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.finish_task_dialog, null);
-        setContentView(view);
-        TextView tvTitle = view.findViewById(R.id.finish_task_title_tv);
-        TextView ad_time = view.findViewById(R.id.ad_time);
-        TextView tvConfirm = view.findViewById(R.id.finish_task_tv);
-        hint_content = view.findViewById(R.id.finish_task_see_btn);
-        ImageView index_details_img = view.findViewById(R.id.finish_task_img);
-        finish_task_dialog_cancel = view.findViewById(R.id.finish_task_dialog_cancel);
-        finish_task_get_lin = view.findViewById(R.id.finish_task_get_lin);
-        adLin = view.findViewById(R.id.ad_lin);
-        finish_task_get_btn = view.findViewById(R.id.finish_task_get_btn);
-        finish_task_draw_btn = view.findViewById(R.id.finish_task_draw_btn);
-        bannerContainer = view.findViewById(R.id.banner_container);
-        GDTAd = view.findViewById(R.id.GDT_ad);
-        adImageBanner = view.findViewById(R.id.ad_image_banner);
-        tv_title_d_lin = view.findViewById(R.id.tv_title_ad_lin);
-        tv_title_d = view.findViewById(R.id.tv_title_ad);
-        tv_from_ad = view.findViewById(R.id.tv_from_ad);
-        iv_image_ad = view.findViewById(R.id.iv_image_ad);
-        iv_listitem_video_ad = view.findViewById(R.id.iv_listitem_video_ad);
-        tv_from_ad_lin = view.findViewById(R.id.tv_from_ad_lin);
-        //申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-        TTAdSdk.getAdManager().requestPermissionIfNecessary(context);
-        BannerAd(adLin, bannerContainer, GDTAd, adImageBanner);
+        try {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View view = inflater.inflate(R.layout.finish_task_dialog, null);
+            setContentView(view);
+            TextView tvTitle = view.findViewById(R.id.finish_task_title_tv);
+            TextView ad_time = view.findViewById(R.id.ad_time);
+            TextView tvConfirm = view.findViewById(R.id.finish_task_tv);
+            hint_content = view.findViewById(R.id.finish_task_see_btn);
+            ImageView index_details_img = view.findViewById(R.id.finish_task_img);
+            finish_task_dialog_cancel = view.findViewById(R.id.finish_task_dialog_cancel);
+            finish_task_get_lin = view.findViewById(R.id.finish_task_get_lin);
+            adLin = view.findViewById(R.id.ad_lin);
+            finish_task_get_btn = view.findViewById(R.id.finish_task_get_btn);
+            finish_task_draw_btn = view.findViewById(R.id.finish_task_draw_btn);
+            bannerContainer = view.findViewById(R.id.banner_container);
+            GDTAd = view.findViewById(R.id.GDT_ad);
+            adImageBanner = view.findViewById(R.id.ad_image_banner);
+            tv_title_d_lin = view.findViewById(R.id.tv_title_ad_lin);
+            tv_title_d = view.findViewById(R.id.tv_title_ad);
+            tv_from_ad = view.findViewById(R.id.tv_from_ad);
+            iv_image_ad = view.findViewById(R.id.iv_image_ad);
+            iv_listitem_video_ad = view.findViewById(R.id.iv_listitem_video_ad);
+            tv_from_ad_lin = view.findViewById(R.id.tv_from_ad_lin);
+            //申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
+            TTAdSdk.getAdManager().requestPermissionIfNecessary(context);
+            BannerAd(adLin, bannerContainer, GDTAd, adImageBanner);
 //        VideoAd();
-        loadVideoAd("923044756", TTAdConstant.VERTICAL);
+            loadVideoAd("923044756", TTAdConstant.VERTICAL);
 //        ad_time.setVisibility(View.VISIBLE);
 //        hint_content.setText(notes);
-        finish_task_draw_btn.setVisibility(View.VISIBLE);
-        finish_task_get_lin.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(title)) {
-            taskType3 = LitePal.where("tasktype = ?", title).findFirst(TaskType.class);
-            if (taskType3 != null && taskType3.IsDouble) {
-                finish_task_draw_btn.setVisibility(View.GONE);
-                finish_task_get_lin.setVisibility(View.VISIBLE);
-            } else {
-                finish_task_draw_btn.setVisibility(View.VISIBLE);
-                finish_task_get_lin.setVisibility(View.GONE);
+            finish_task_draw_btn.setVisibility(View.VISIBLE);
+            finish_task_get_lin.setVisibility(View.GONE);
+            SpannableString spannableString = null;
+            if (!TextUtils.isEmpty(title)) {
+                taskType3 = LitePal.where("tasktype = ?", title).findFirst(TaskType.class);
+                if (taskType3 != null && taskType3.IsDouble) {
+                    finish_task_draw_btn.setVisibility(View.GONE);
+                    finish_task_get_lin.setVisibility(View.VISIBLE);
+                    spannableString = new SpannableString("恭喜您，完成任务啦，点击立即领取，最高可获得"+taskType3.gold+"金币！翻倍有惊喜哦！");
+                } else {
+                    finish_task_draw_btn.setVisibility(View.VISIBLE);
+                    finish_task_get_lin.setVisibility(View.GONE);
+                    spannableString = new SpannableString("恭喜您，完成任务啦，点击立即领取，最高可获得"+taskType3.gold+"金币！");
+                }
             }
+            finish_task_draw_btn.setOnClickListener(new clickListener());
+            hint_content.setOnClickListener(new clickListener());
+            finish_task_get_btn.setOnClickListener(new clickListener());
+            finish_task_dialog_cancel.setOnClickListener(new clickListener());
+            Window dialogWindow = getWindow();
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
+            lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
+            dialogWindow.setAttributes(lp);
+            dialogWindow.setWindowAnimations(R.style.animate_dialog);
+            setCanceledOnTouchOutside(false);
+            if (taskType3 != null && spannableString != null){
+                String gold = taskType3.gold+"";
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff5f5e5e")), 0, 22, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 22, 22+gold.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tvConfirm.setText(spannableString);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        finish_task_draw_btn.setOnClickListener(new FinishTaskDialog.clickListener());
-        hint_content.setOnClickListener(new FinishTaskDialog.clickListener());
-        finish_task_get_btn.setOnClickListener(new FinishTaskDialog.clickListener());
-        finish_task_dialog_cancel.setOnClickListener(new FinishTaskDialog.clickListener());
-        Window dialogWindow = getWindow();
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        DisplayMetrics d = context.getResources().getDisplayMetrics(); // 获取屏幕宽、高用
-        lp.width = (int) (d.widthPixels * 0.8); // 高度设置为屏幕的0.6
-        dialogWindow.setAttributes(lp);
-        dialogWindow.setWindowAnimations(R.style.animate_dialog);
-        setCanceledOnTouchOutside(false);
 //        setCanceleable(false);//调用这个方法时，按对话框以外的地方不起作用。按返回键也不起作用
     }
 

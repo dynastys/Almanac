@@ -1,5 +1,6 @@
 package com.xy.xylibrary.ui.fragment.task;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -67,7 +68,8 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     public static int Multiple = 1;
     private ActiveValue activeValue;
     private TextView active_value;
-
+    private boolean sign_in = true;
+    private int goldSize;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         try {
@@ -124,7 +126,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void RefreshTask(AdTask adTask) {
         if (recyclerLayoutList != null) {
-            new CountDownTimer(5000, 1000) {
+            new CountDownTimer(500, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
@@ -153,7 +155,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && stepView != null) {
-            IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
+
             this.isVisibleToUser = isVisibleToUser;
             InitData();
         }
@@ -175,13 +177,15 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                 if (AppContext.userMessageData != null && gold != null) {
                     gold.setText(AppContext.userMessageData.gold + "");
                     gold_RMB.setText("约" + Utils.doubleToString((double) AppContext.userMessageData.gold / 10000) + "元");
-                    active_value.setText(AppContext.userMessageData.active + "");
+//                    active_value.setText(AppContext.userMessageData.active + "");
                 }
                 long loginTime = Long.parseLong((TextUtils.isEmpty(SaveShare.getValue(getActivity(), "loginTime"))? "0" : SaveShare.getValue(getActivity(), "loginTime")));
                 //判断是否登录和是否在三天内未登录再次弹出登录提示框
                 if (TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId")) && System.currentTimeMillis() - loginTime > 24*3*60*1000) {//
                     SaveShare.saveValue(getActivity(), "loginTime",System.currentTimeMillis()+"");
                     TaskLogic.getTaskLogic().LoadDialog((AppCompatActivity) getActivity(),TaskFragment.this);
+                }else {
+                    IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
                 }
             }
         } catch (Exception e) {
@@ -212,13 +216,21 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                         promptly_sign_bg.setBackground(getResources().getDrawable(R.drawable.promptly_sign_bg));
                         linxiasamo.setBackground(getResources().getDrawable(R.drawable.search_5));
                         linxiasamo.setText("已签到");
-                         TaskLogic.getTaskLogic().requestSuccessData(stepView,Multiple, new AppContext.UserGold() {
+                        TaskLogic.getTaskLogic().SignInDialog(getActivity(), goldSize,TaskFragment.this,new DialogInterface.OnDismissListener() {
                             @Override
-                            public void gold(UserMessage userMessage) {
-                                TaskLogic.getTaskLogic().SignInDialog(getActivity(), TaskFragment.this);
-                                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
+                            public void onDismiss(DialogInterface dialog) {
+                                if(sign_in){
+                                    TaskLogic.getTaskLogic().requestSuccessData(stepView,Multiple, new AppContext.UserGold() {
+                                        @Override
+                                        public void gold(UserMessage userMessage) {
+                                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
+                                        }
+                                    });
+                                }
+
                             }
                         });
+
                     }
                 } else {
                     Intent intent1 = new Intent(getActivity(), LoginTypeActivity.class);
@@ -245,7 +257,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                          try {
                             int gold = 0;
                             for (int j = 0; j < activeValue.getData().getActiveRewardsVms().size(); j++) {
-                                if(activeValue.getData().getUserActive() > activeValue.getData().getActiveRewardsVms().get(j).getActive() && !activeValue.getData().getActiveRewardsVms().get(j).isU_IsComplete()){
+                                if(activeValue.getData().getUserActive() >= activeValue.getData().getActiveRewardsVms().get(j).getActive() && !activeValue.getData().getActiveRewardsVms().get(j).isU_IsComplete()){
                                      gold = gold + activeValue.getData().getActiveRewardsVms().get(j).getGold();
                                      LoginRequest.getWeatherRequest().getCompleteActiveRewardsData(getActivity(),activeValue.getData().getActiveRewardsVms().get(j).getId(), new RequestSyntony<CompleteActive>() {
                                         @Override
@@ -264,14 +276,14 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     //                                        setActiveData(activeValue,activeValue.getData().getActiveRewardsVms(), ActiveValueStepView);
     //                                        activeListener.Active(activeValue);
     //                                    }
+                                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
+                                            TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(),ActiveValueStepView,TaskFragment.this);
                                         }
                                     });
-
                                 }
                             }
-                            TaskLogic.getTaskLogic().ActiveDialog((AppCompatActivity) getActivity(),TaskFragment.this,gold);
-                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
-                            TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(),ActiveValueStepView,TaskFragment.this);
+                            TaskLogic.getTaskLogic().ActiveDialog((AppCompatActivity) getActivity(),TaskFragment.this,gold,activeValue.getData().getUserActive());
+
                         } catch (Exception e) {
                              e.printStackTrace();
                         }
@@ -304,10 +316,8 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                     linxiasamo.setBackground(getResources().getDrawable(R.drawable.withdraw_search_5));
                     linxiasamo.setText("立即签到");
                 }
-
-//        gold.setText((AppContext.userMessageData.gold+appSignInList.getData().getSignAtureVms().get(0).getGold())+"");
-//        gold_RMB.setText("约"+Utils.doubleToString((AppContext.userMessageData.gold+appSignInList.getData().getSignAtureVms().get(0).getGold())/10000)+"元");
-            sign_fate.setText(appSignInList.getData().getSignCount() + "天");
+                sign_fate.setText(appSignInList.getData().getSignCount() + "天");
+                goldSize = appSignInList.getData().getSignAtureVms().get(appSignInList.getData().getSignCount()).getGold();
             }
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
@@ -350,6 +360,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
 
     }
 
+
     @Override
     public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
         int i = view.getId();
@@ -358,25 +369,26 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                 Intent intent1 = new Intent(getActivity(), LoginTypeActivity.class);
                 getActivity().startActivity(intent1);
             }else{
+                IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
                 tDialog.dismiss();
             }
         } else if (i == R.id.login_img) {
+            IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
             tDialog.dismiss();
         }else if(i == R.id.sign_in_see_btn){
-            tDialog.dismiss();
             TaskFragment.Multiple++;
-            TaskLogic.getTaskLogic().requestSuccessData(stepView,Multiple, new AppContext.UserGold() {
-                @Override
-                public void gold(UserMessage userMessage) {
-                    AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
-                }
-            });
+            if(TaskFragment.Multiple == 3){
+                sign_in = true;
+            }else {
+                sign_in =false;
+            }
+            tDialog.dismiss();
             TaskLogic.getTaskLogic(). DoubleGold();
 
         }else if(i == R.id.sign_img){
+            sign_in = true;
             tDialog.dismiss();
         }else if(i == R.id.login_interaction_ad){
-
             TaskType taskType = new TaskType();
             taskType.tasktype = -1;
             EventBus.getDefault().post(taskType);
@@ -388,12 +400,13 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
         }
     }
 
+
     @Override
     public void gold(UserMessage userMessage) {
         if (userMessage != null) {
             gold.setText(userMessage.gold == 0 ? "==" : userMessage.gold + "");
             gold_RMB.setText("约" + Utils.doubleToString((double) userMessage.gold / 10000) + "元");
-            active_value.setText(userMessage.active + "");
+//            active_value.setText(userMessage.active + "");
         }
     }
 

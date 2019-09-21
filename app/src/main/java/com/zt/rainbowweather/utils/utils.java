@@ -295,8 +295,8 @@ public final class utils {
             if(!TextUtils.isEmpty(SaveShare.getValue(context,"down"))){
                 TaskType taskType3 = LitePal.where("tasktype = ?", SaveShare.getValue(context,"down")).findFirst(TaskType.class);
                 SaveShare.saveValue(context, "JB", "");
-                taskType3.ISStartTask = true;
-                taskType3.save();
+//                taskType3.ISStartTask = true;
+//                taskType3.save();
                 SaveShare.saveValue(context,"down","");
                 TaskLogic.getTaskLogic().FinishTask2(context,"",taskType3.taskId,false);
             }

@@ -9,6 +9,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -39,6 +40,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -99,7 +102,30 @@ public class Utils {
         return "";
 
     }
-
+    /**
+     * 获取到用户已安装应用列表
+     * */
+    public static JSONArray getAppList(Context activity) {
+        PackageManager pm = activity.getPackageManager();
+        // Return a List of all packages that are installed on the device.
+        List<PackageInfo> packages = pm.getInstalledPackages(0);
+        List<String> list = new ArrayList<>();
+        for (PackageInfo packageInfo : packages) {
+            // 判断系统/非系统应用
+            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) // 非系统应用
+            {
+                list.add(packageInfo.packageName);
+                System.out.println("MainActivity.getAppList, packageInfo=" + packageInfo.packageName);
+            } else {
+                // 系统应用
+            }
+        }
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < list.size(); i++) {
+            jsonArray.put(list.get(i));
+        }
+        return jsonArray;
+    }
     /**
      * 判断字符串是否是数字，
      */

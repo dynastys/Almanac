@@ -78,14 +78,15 @@ import java.util.List;
  */
 public class MainActivity extends BaseChoiceActivity implements OnViewClickListener {
 
-    private int position;
+    private int position1;
     private MyGradientTabStripAdapter myGradientTabStripAdapter;
     private NativeAd nativelogic;
     private BindViewHolder MyviewHolder;
     private ExtraFunction extraFunction;
     private List<City> cities = new ArrayList<>();
-    private CountDownTimer timer;
+    private CountDownTimer timer,timer2;
     private int time;
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -106,23 +107,6 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                 DotRequest.getDotRequest().getActivity(getContext(), "服务-主页");
                 break;
         }
-        switch (position){
-            case 0:
-                DotRequest.getDotRequest().getActivity(getContext(),"首页-主页");
-                break;
-            case 1:
-                DotRequest.getDotRequest().getActivity(getContext(),"黄历-主页");
-                break;
-            case 2:
-                DotRequest.getDotRequest().getActivity(getContext(),"任务-主页");
-                break;
-            case 3:
-                DotRequest.getDotRequest().getActivity(getContext(),"看一看-主页");
-                break;
-            case 4:
-                DotRequest.getDotRequest().getActivity(getContext(),"服务-主页");
-                break;
-        }
         try {
             setIsUserLightMode(false);
             if (position == 3) {
@@ -136,11 +120,12 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                     String Sp = SaveShare.getValue(MainActivity.this, "SP");
                     if (!TextUtils.isEmpty(Sp) && Sp.equals("4")) {
                         time = (int) taskType3.CompleteMinTime;
-//                        if(taskType3.schedule != 0){
-//                            time = taskType3.schedule;
-//                        }
                         if (time == 0) {
                             time = 60 * 1000;
+                        }
+                        if(timer != null){
+                            timer.cancel();
+                            timer = null;
                         }
                         timer = new CountDownTimer(time, 1000) {
                             @Override
@@ -152,18 +137,30 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
 
                             @Override
                             public void onFinish() {
-                                if (taskType3.tasksize > 1 && taskType3.taskfinishsize < taskType3.tasksize) {
-                                    taskType3.taskfinishsize++;
-                                    taskType3.schedule = 0;
-                                    taskType3.save();
-                                    TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
-                                    timer.start();
-                                } else {
-                                    SaveShare.saveValue(MainActivity.this, "JB", "");
-                                    taskType3.ISStartTask = true;
-                                    taskType3.schedule = 0;
-                                    taskType3.save();
-                                    EventBus.getDefault().post("");
+                                try {
+                                    if (position1 != 3) {
+                                        if(timer != null){
+                                            timer.cancel();
+                                        }
+                                        return;
+                                    }
+                                    if (taskType3.tasksize > 1 && taskType3.taskfinishsize < taskType3.tasksize) {
+                                        taskType3.taskfinishsize++;
+                                        taskType3.schedule = 0;
+                                        taskType3.save();
+                                        TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
+                                        timer.start();
+                                    } else {
+                                        SaveShare.saveValue(MainActivity.this, "JB", "");
+    //                                    taskType3.ISStartTask = true;
+                                        taskType3.schedule = 0;
+                                        taskType3.save();
+                                        timer = null;
+                                        TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
+                                        EventBus.getDefault().post("");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
                         };
@@ -173,6 +170,10 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else{
+                if(timer != null){
+                    timer.cancel();
+                }
             }
             if (position == 1) {
                 try {
@@ -180,40 +181,54 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                     myGradientTabStripAdapter.isTagEnable(3);
                     String Sp = SaveShare.getValue(MainActivity.this, "HL");
                     if (!TextUtils.isEmpty(Sp) && Sp.equals("5")) {
+                        if(timer != null){
+                            timer.cancel();
+                            timer = null;
+                        }
                         SaveShare.saveValue(MainActivity.this, "HL", "");
-                        CountDownTimer timer = new CountDownTimer(5 * 1000, 1000) {
+                        timer2 = new CountDownTimer(5 * 1000, 1000) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                             }
 
                             @Override
                             public void onFinish() {
-                                TaskType taskType3 = LitePal.where("tasktype = ?", "6").findFirst(TaskType.class);
-                                if (taskType3 == null) {
-                                    return;
-                                }
-                                FinishTaskDialog adDialog = new FinishTaskDialog(MainActivity.this, "6", 0);
-                                adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
-                                    @Override
-                                    public void doConfirm(boolean size) {
-                                        TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, size);
-                                        adDialog.dismiss();
+                                try {
+                                    timer2 = null;
+                                    TaskType taskType3 = LitePal.where("tasktype = ?", "6").findFirst(TaskType.class);
+                                    if (taskType3 == null) {
+                                        ToastUtils.showLong("获取任务失败！");
+                                        return;
                                     }
+                                    FinishTaskDialog adDialog = new FinishTaskDialog(MainActivity.this, "6", 0);
+                                    adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
+                                        @Override
+                                        public void doConfirm(boolean size) {
+                                            TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, size);
+                                            adDialog.dismiss();
+                                        }
 
-                                    @Override
-                                    public void doCancel() {
-                                        adDialog.dismiss();
-                                    }
-                                });
-                                adDialog.show();
-                                EventBus.getDefault().post("1");
-                                SaveShare.saveValue(MainActivity.this, "JB", "");
+                                        @Override
+                                        public void doCancel() {
+                                            adDialog.dismiss();
+                                        }
+                                    });
+                                    adDialog.show();
+                                    EventBus.getDefault().post("1");
+                                    SaveShare.saveValue(MainActivity.this, "JB", "");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         };
-                        timer.start();
+                        timer2.start();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            }else{
+                if (timer2 != null) {
+                    timer2.cancel();
                 }
             }
             if (position == 2 || position == 0 || position == 4) {
@@ -266,38 +281,48 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     public void setCity1Event(TaskType taskType) {
         try {
              if (taskType.tasktype == 8) {
-                 SaveShare.saveValue(MainActivity.this, "down", "" + taskType.tasktype);
-                utils.Download(mContext, taskType.link);
+                 if(TextUtils.isEmpty(SaveShare.getValue(MainActivity.this, "down"))){
+                     ToastUtils.showLong("开始下载，请稍后...");
+                     SaveShare.saveValue(MainActivity.this, "down", "" + taskType.tasktype);
+                     utils.Download(mContext, taskType.link);
+                 }else{
+                     ToastUtils.showLong("任务正在进行中");
+                 }
+
             } else if (taskType.tasktype == 9) {
                  TaskType taskType3 = LitePal.where("tasktype = ?", "9").findFirst(TaskType.class);
                 if (taskType3 != null) {
                     SaveShare.saveValue(MainActivity.this, "JB", "");
-                    taskType3.ISStartTask = true;
-                    taskType3.save();
+//                    taskType3.ISStartTask = true;
+//                    taskType3.save();
                     TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
                     AdviseMoreDetailActivity.startActivity(MainActivity.this, "落地页", taskType3.link, "0");
                 }
             } else if (taskType.tasktype == 11) {
-                 AdDialog adDialog = new AdDialog(MainActivity.this, "11", 0);
-                adDialog.setClicklistener(new AdDialog.ClickListenerInterface() {
-                    @Override
-                    public void doConfirm(boolean b) {
-//                        TaskType taskType3 = LitePal.where("tasktype = ?", "11").findFirst(TaskType.class);
-//                        if (taskType3 != null) {
-//                            TaskLogic.getTaskLogic().FinishTask2(MainActivity.this, "", taskType3.taskId, b);
-//                        }
-                        EventBus.getDefault().post(new AdTask());
-                        adDialog.dismiss();
-                    }
+                 try {
+                     AdDialog adDialog = new AdDialog(MainActivity.this, "11", 0);
+                     adDialog.setClicklistener(new AdDialog.ClickListenerInterface() {
+                         @Override
+                         public void doConfirm(boolean b) {
+     //                        TaskType taskType3 = LitePal.where("tasktype = ?", "11").findFirst(TaskType.class);
+     //                        if (taskType3 != null) {
+     //                            TaskLogic.getTaskLogic().FinishTask2(MainActivity.this, "", taskType3.taskId, b);
+     //                        }
+                             EventBus.getDefault().post(new AdTask());
+                             adDialog.dismiss();
+                         }
 
-                    @Override
-                    public void doCancel() {
-                        EventBus.getDefault().post(new AdTask());
-                        adDialog.dismiss();
-                    }
-                });
-                adDialog.show();
-            } else if (taskType.tasktype == -1) {
+                         @Override
+                         public void doCancel() {
+                             EventBus.getDefault().post(new AdTask());
+                             adDialog.dismiss();
+                         }
+                     });
+                     adDialog.show();
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+             } else if (taskType.tasktype == -1) {
                  AdviseMoreDetailActivity.startActivity(MainActivity.this, "福利", "http://link.qukanzixun.com/link/936d38e3-9ae2-4379-af40-26b2f2b14973", "0");
             } else if (taskType.tasktype == 6) {
              } else if (taskType.tasktype == 1) {
@@ -321,17 +346,15 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
 
     @Override
     public void onPageSelected(int position) {
-
-
-        this.position = position;
+        this.position1 = position;
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         try {
             if (ConstUtils.take_a_look) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && position == 0) {
-                    if (((HomeFragment) myGradientTabStripAdapter.getItem(position)).onKeyDown(keyCode, event)) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && position1 == 0) {
+                    if (((HomeFragment) myGradientTabStripAdapter.getItem(position1)).onKeyDown(keyCode, event)) {
                         return true;
                     }
                 }
@@ -499,6 +522,13 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
         if (myGradientTabStripAdapter != null) {
             myGradientTabStripAdapter.isTagEnable(2);
         }
+        if(timer != null){
+            timer.cancel();
+            timer.start();
+        }
+        if (timer2 != null) {
+            timer2.start();
+        }
         hideInput();
         Log.e("Phone", "onNext: " + BasicApplication.appCount);
         if (!TextUtils.isEmpty(BasicApplication.url) && BasicApplication.appCount <= 1) {
@@ -512,6 +542,12 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
     @Override
     public void onPause() {
         super.onPause();
+        if(timer != null){
+            timer.cancel();
+        }
+        if (timer2 != null) {
+            timer2.cancel();
+        }
         MobclickAgent.onPageEnd("MainActivity"); //手动统计页面("SplashScreen"为页面名称，可自定义)，必须保证 onPageEnd 在 onPause 之前调用，因为SDK会在 onPause 中保存onPageEnd统计到的页面数据。
         MobclickAgent.onPause(this);
     }

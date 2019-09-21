@@ -1,5 +1,6 @@
 package com.xy.xylibrary.signin;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.constellation.xylibrary.R;
 import com.xy.xylibrary.utils.SizeUtils;
@@ -62,15 +64,15 @@ public class ActiveView extends View {
     /**
      * 已经完成的图标
      */
-    private Drawable mCompleteIcon;
+    private Drawable mCompleteIcon1,mCompleteIcon2,mCompleteIcon3;
     /**
      * 正在进行的图标
      */
-    private Drawable mAttentionIcon;
+    private Drawable mAttentionIcon1,mAttentionIcon2,mAttentionIcon3,mAttentionIcon4,mAttentionIcon5,mAttentionIcon6;
     /**
      * 默认的图标
      */
-    private Drawable mDefaultIcon;
+    private Drawable mDefaultIcon1,mDefaultIcon2,mDefaultIcon3;
     /**
      * UP图标
      */
@@ -131,6 +133,7 @@ public class ActiveView extends View {
 
     private Paint mTextNumberPaint;
 
+    private ValueAnimator valueAnimator;
 
     private Paint mTextDayPaint;
 
@@ -169,6 +172,35 @@ public class ActiveView extends View {
         init();
     }
 
+    private boolean ISAnimator = false;
+    private boolean ISAnimator2 = false;
+    private boolean ISAnimator3 = false;
+    public void setProgress(List<StepBean> stepsBeanList) {
+        try {
+            this.size = 2;
+            mStepBeanList = stepsBeanList;
+            mStepNum = mStepBeanList.size();
+            setChange();//重新绘制
+            valueAnimator = ValueAnimator.ofInt(0, 100000);
+            valueAnimator.setDuration(50000000);
+            valueAnimator.setRepeatMode(ValueAnimator.RESTART);
+            valueAnimator.setInterpolator(new LinearInterpolator());
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    if (ISAnimator) {
+                        ISAnimator = true;
+                        postInvalidate();
+                    }
+                }
+            });
+            valueAnimator.start();
+            size++;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * init
      */
@@ -204,15 +236,24 @@ public class ActiveView extends View {
         mTextDayPaint.setTextSize(SizeUtils.sp2px(getContext(), 12f));
 
         //已经完成的icon
-        mCompleteIcon = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box_open);
+        mCompleteIcon1 = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box_open1);
+        mCompleteIcon2 = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box_open2);
+        mCompleteIcon3 = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box_open3);
         //正在进行的icon
-        mAttentionIcon = ContextCompat.getDrawable(getContext(), R.drawable.active__default);
+        mAttentionIcon1 = ContextCompat.getDrawable(getContext(), R.drawable.active__default1);
+        mAttentionIcon2 = ContextCompat.getDrawable(getContext(), R.drawable.active__default2);
+        mAttentionIcon3 = ContextCompat.getDrawable(getContext(), R.drawable.active__default3);
+        mAttentionIcon4 = ContextCompat.getDrawable(getContext(), R.drawable.active__default4);
+        mAttentionIcon5 = ContextCompat.getDrawable(getContext(), R.drawable.active__default5);
+        mAttentionIcon6 = ContextCompat.getDrawable(getContext(), R.drawable.active__default6);
         //未完成的icon
-        mDefaultIcon = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box);
+        mDefaultIcon1 = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box1);
+        mDefaultIcon2 = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box2);
+        mDefaultIcon3 = ContextCompat.getDrawable(getContext(), R.drawable.active_treasure_box3);
         //UP的icon
         mUpIcon = ContextCompat.getDrawable(getContext(), R.drawable.jifendikuai);
         widthMeasureSpec = (int) ((getScreenWidth() - SizeUtils.dip2px(getContext(), 60f) - 3 * mIconWidth));
-        mLineWidth = (widthMeasureSpec)/size;
+        mLineWidth = (widthMeasureSpec) / size;
     }
 
     @Override
@@ -230,7 +271,7 @@ public class ActiveView extends View {
 
     private void setChange() {
         //图标的中中心Y点
-        mCenterY =  SizeUtils.dip2px(getContext(), 8f) + mIconHeight / 2;
+        mCenterY = SizeUtils.dip2px(getContext(), 8f) + mIconHeight / 2;
         //获取左上方Y的位置，获取该点的意义是为了方便画矩形左上的Y位置
         mLeftY = mCenterY - (mCompletedLineHeight / 2);
         //获取右下方Y的位置，获取该点的意义是为了方便画矩形右下的Y位置
@@ -254,11 +295,11 @@ public class ActiveView extends View {
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mStepBeanList.size() != 0) {
-            if (isAnimation) {
-                drawSign(canvas);
-            } else {
+//            if (isAnimation) {
+//                drawSign(canvas);
+//            } else {
                 drawUnSign(canvas);
-            }
+//            }
         }
     }
 
@@ -302,23 +343,30 @@ public class ActiveView extends View {
                     (int) (mCenterY + mIconHeight / 2));
 
             StepBean stepsBean = mStepBeanList.get(i);
-
-            if (i == mPosition && mCount == ANIMATION_TIME) {
-                //当前需要绘制
-                mCompleteIcon.setBounds(rect);
-                mCompleteIcon.draw(canvas);
-            } else {
-                if (stepsBean.getState() == StepBean.STEP_UNDO) {
-                    mDefaultIcon.setBounds(rect);
-                    mDefaultIcon.draw(canvas);
-                } else if (stepsBean.getState() == StepBean.STEP_CURRENT) {
-                    mAttentionIcon.setBounds(rect);
-                    mAttentionIcon.draw(canvas);
-                } else if (stepsBean.getState() == StepBean.STEP_COMPLETED) {
-                    mCompleteIcon.setBounds(rect);
-                    mCompleteIcon.draw(canvas);
-                }
+            switch (i){
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
             }
+//            if (i == mPosition && mCount == ANIMATION_TIME) {
+//                //当前需要绘制
+//                mCompleteIcon.setBounds(rect);
+//                mCompleteIcon.draw(canvas);
+//            } else {
+//                if (stepsBean.getState() == StepBean.STEP_UNDO) {
+//                    mDefaultIcon.setBounds(rect);
+//                    mDefaultIcon.draw(canvas);
+//                } else if (stepsBean.getState() == StepBean.STEP_CURRENT) {
+//                    mAttentionIcon.setBounds(rect);
+//                    mAttentionIcon.draw(canvas);
+//                } else if (stepsBean.getState() == StepBean.STEP_COMPLETED) {
+//                    mCompleteIcon.setBounds(rect);
+//                    mCompleteIcon.draw(canvas);
+//                }
+//            }
 
             //绘制图标
             if (stepsBean.getState() == StepBean.STEP_COMPLETED || (i == mPosition
@@ -373,7 +421,9 @@ public class ActiveView extends View {
             mCount = 0;
         }
     }
+
     private int size = 2;
+
     public void setSize(int size) {
         this.size = size;
     }
@@ -383,13 +433,13 @@ public class ActiveView extends View {
      */
     @SuppressLint("DrawAllocation")
     private void drawUnSign(Canvas canvas) {
-        if(widthMeasureSpec > 0){
-            mLineWidth = (widthMeasureSpec)/size;
-        }else{
+        if (widthMeasureSpec > 0) {
+            mLineWidth = (widthMeasureSpec) / size;
+        } else {
             widthMeasureSpec = (int) ((getScreenWidth() - SizeUtils.dip2px(getContext(), 60f) - 3 * mIconWidth));
-            mLineWidth = (widthMeasureSpec)/size;
+            mLineWidth = (widthMeasureSpec) / size;
         }
-        Log.e("drawSign", "mLineWidth:111 "+mLineWidth );
+        Log.e("drawSign", "mLineWidth:111 " + mLineWidth);
         for (int i = 0; i < mCircleCenterPointPositionList.size(); i++) {
             //绘制线段
             float preComplectedXPosition = mCircleCenterPointPositionList.get(i) + mIconWidth / 2;
@@ -413,19 +463,70 @@ public class ActiveView extends View {
                     (int) (currentComplectedXPosition + mIconWidth / 2),
                     (int) (mCenterY + mIconHeight / 2));
 
-
             StepBean stepsBean = mStepBeanList.get(i);
+            switch (i){
+                case 0:
+                    if (stepsBean.getState() == StepBean.STEP_UNDO) {
+                        mDefaultIcon1.setBounds(rect);
+                        mDefaultIcon1.draw(canvas);
+                    } else if (stepsBean.getState() == StepBean.STEP_CURRENT) {
+                        if (ISAnimator2) {
+                            ISAnimator2 = false;
+                            mAttentionIcon1.setBounds(rect);
+                            mAttentionIcon1.draw(canvas);
+                        } else {
+                            ISAnimator2 = true;
+                            mAttentionIcon2.setBounds(rect);
+                            mAttentionIcon2.draw(canvas);
+                        }
 
-            if (stepsBean.getState() == StepBean.STEP_UNDO) {
-                mDefaultIcon.setBounds(rect);
-                mDefaultIcon.draw(canvas);
-            } else if (stepsBean.getState() == StepBean.STEP_CURRENT) {
-                mAttentionIcon.setBounds(rect);
-                mAttentionIcon.draw(canvas);
-            } else if (stepsBean.getState() == StepBean.STEP_COMPLETED) {
-                mCompleteIcon.setBounds(rect);
-                mCompleteIcon.draw(canvas);
+                    } else if (stepsBean.getState() == StepBean.STEP_COMPLETED) {
+                        mCompleteIcon1.setBounds(rect);
+                        mCompleteIcon1.draw(canvas);
+                    }
+                    break;
+                case 1:
+                    if (stepsBean.getState() == StepBean.STEP_UNDO) {
+                        mDefaultIcon2.setBounds(rect);
+                        mDefaultIcon2.draw(canvas);
+                    } else if (stepsBean.getState() == StepBean.STEP_CURRENT) {
+                        if (ISAnimator3) {
+                            ISAnimator3 = false;
+                            mAttentionIcon3.setBounds(rect);
+                            mAttentionIcon3.draw(canvas);
+                        } else {
+                            ISAnimator3 = true;
+                            mAttentionIcon4.setBounds(rect);
+                            mAttentionIcon4.draw(canvas);
+                        }
+
+                    } else if (stepsBean.getState() == StepBean.STEP_COMPLETED) {
+                        mCompleteIcon2.setBounds(rect);
+                        mCompleteIcon2.draw(canvas);
+                    }
+                    break;
+                case 2:
+                    if (stepsBean.getState() == StepBean.STEP_UNDO) {
+                        mDefaultIcon3.setBounds(rect);
+                        mDefaultIcon3.draw(canvas);
+                    } else if (stepsBean.getState() == StepBean.STEP_CURRENT) {
+                        if (ISAnimator) {
+                            ISAnimator = false;
+                            mAttentionIcon5.setBounds(rect);
+                            mAttentionIcon5.draw(canvas);
+                        } else {
+                            ISAnimator = true;
+                            mAttentionIcon6.setBounds(rect);
+                            mAttentionIcon6.draw(canvas);
+                        }
+
+                    } else if (stepsBean.getState() == StepBean.STEP_COMPLETED) {
+                        mCompleteIcon3.setBounds(rect);
+                        mCompleteIcon3.draw(canvas);
+                    }
+                    break;
             }
+
 
             //绘制增加的分数数目
             if (stepsBean.getState() == StepBean.STEP_COMPLETED) {

@@ -2,10 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
         >
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/login_dialog_bg"
             android:scaleType="fitXY"
             />
@@ -25,16 +24,26 @@
             android:background="@drawable/dialog_bg_10"
             android:orientation="vertical"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             >
             <TextView
                 android:id="@+id/sign_in_tv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="5dp"
                 android:textColor="#ff5f5e5e"
                 android:padding="20dp"
                 android:background="@color/white"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/interaction_ad"
+                    android:scaleType="fitXY"
+                    android:id="@+id/sign_interaction_ad"
+                    />
+
             <Button
                 android:id="@+id/sign_in_see_btn"
                 android:layout_width="match_parent"
@@ -45,28 +54,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_18" />
         </LinearLayout>
-        <android.support.v7.widget.CardView
-            android:layout_below="@+id/task_card"
-            android:id="@+id/task_card2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/dp_1"
-            app:cardCornerRadius="8dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-               <ImageView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/interaction_ad"
-                   android:scaleType="fitXY"
-                   android:id="@+id/sign_interaction_ad"
-                   />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+
 
     </LinearLayout>
     <ImageView

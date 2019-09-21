@@ -7,7 +7,7 @@
     <color name="main_bg3">#FFA89BB1</color>
     <color name="main_bg4">#469DF9</color>
     <color name="divider">#727272</color>
-    <color name="show_bg">#4f000000</color>
+    <color name="show_bg">#5f000000</color>
     <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
     <color name="subscribe_item_normal_bg">#fff5f5f5</color>
     <color name="lucency">#1fffffff</color>

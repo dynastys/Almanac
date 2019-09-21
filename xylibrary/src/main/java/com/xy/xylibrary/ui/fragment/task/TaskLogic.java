@@ -104,135 +104,151 @@ public class TaskLogic {
     /**
      * 登录弹出框
      */
-    public void LoadDialog(FragmentActivity context, TaskFragment taskFragment) {
-        new TDialog.Builder(context.getSupportFragmentManager())
-                .setLayoutRes(R.layout.login_dialog)    //设置弹窗展示的xml布局
-                .setScreenWidthAspect(context, 0.8f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
-                .setScreenHeightAspect(context, 0.8f)  //设置弹窗高度(参数aspect为屏幕宽度比例 0 - 1f)
-                .setCancelableOutside(false)
-                .setOnBindViewListener(new OnBindViewListener() {
-                    @Override
-                    public void bindView(BindViewHolder viewHolder) {
-                        TextView tvTitle = viewHolder.getView(R.id.login_tv);
-                         Button hint_content = viewHolder.getView(R.id.login_see_btn);
-                        ImageView index_details_img = viewHolder.getView(R.id.login_img);
-                        SpannableString spannableString = new SpannableString("登录即送10000金币，今日最高赚88元！");
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 4, 9, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 9, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 17, 19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                         tvTitle.setText(spannableString);
-//                      hint_content.setText(notes);
-//                        if(!TextUtils.isEmpty(title)){
-//                            tvTitle.setText(title);
-//                        }else{
-//                            tvTitle.setVisibility(View.GONE);
-//                        }
-//                        if(image != 0){
-//                            index_details_img.setImageResource(image);
-//                        }
-                    }
-                })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                    }
-                })
-                .addOnClickListener(R.id.login_see_btn, R.id.login_img)
-                .setOnViewClickListener(taskFragment)
-                .setDimAmount(0.6f)     //设置弹窗背景透明度(0-1f)
-                .setDialogAnimationRes(R.style.animate_dialog)  //设置弹窗动画
-                .create()   //创建TDialog
-                .show();    //展示
+    public void LoadDialog(final FragmentActivity context, TaskFragment taskFragment) {
+        try {
+            new TDialog.Builder(context.getSupportFragmentManager())
+                    .setLayoutRes(R.layout.login_dialog)    //设置弹窗展示的xml布局
+                    .setScreenWidthAspect(context, 0.8f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
+                    .setScreenHeightAspect(context, 0.9f)  //设置弹窗高度(参数aspect为屏幕宽度比例 0 - 1f)
+                    .setCancelableOutside(false)
+                    .setOnBindViewListener(new OnBindViewListener() {
+                        @Override
+                        public void bindView(BindViewHolder viewHolder) {
+                            TextView tvTitle = viewHolder.getView(R.id.login_tv);
+                            Button hint_content = viewHolder.getView(R.id.login_see_btn);
+                            ImageView index_details_img = viewHolder.getView(R.id.login_interaction_ad);
+                            GlideUtil.getGlideUtil().setGifImages(context, R.drawable.interaction_ad, index_details_img);
+                            SpannableString spannableString = new SpannableString("看天气就能免费赚钱，登录即送10000金币。");
+                            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 0, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 14, 19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 19, 20, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            tvTitle.setText(spannableString);
+                            //                      hint_content.setText(notes);
+                            //                        if(!TextUtils.isEmpty(title)){
+                            //                            tvTitle.setText(title);
+                            //                        }else{
+                            //                            tvTitle.setVisibility(View.GONE);
+                            //                        }
+                            //                        if(image != 0){
+                            //                            index_details_img.setImageResource(image);
+                            //                        }
+                        }
+                    })
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    })
+                    .addOnClickListener(R.id.login_see_btn, R.id.login_img, R.id.login_interaction_ad)
+                    .setOnViewClickListener(taskFragment)
+                    .setDimAmount(0.6f)     //设置弹窗背景透明度(0-1f)
+                    .setDialogAnimationRes(R.style.animate_dialog)  //设置弹窗动画
+                    .create()   //创建TDialog
+                    .show();    //展示
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     /**
      * 领取活跃值弹出框
      */
-    public void ActiveDialog(final FragmentActivity context, TaskFragment taskFragment, final int gold) {
-        new TDialog.Builder(context.getSupportFragmentManager())
-                .setLayoutRes(R.layout.login_dialog)    //设置弹窗展示的xml布局
-                .setScreenWidthAspect(context, 0.8f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
-                .setScreenHeightAspect(context, 0.7f)  //设置弹窗高度(参数aspect为屏幕宽度比例 0 - 1f)
-                .setCancelableOutside(false)
-                .setOnBindViewListener(new OnBindViewListener() {
-                    @Override
-                    public void bindView(BindViewHolder viewHolder) {
-                        TextView tvTitle = viewHolder.getView(R.id.login_tv);
-                        Button hint_content = viewHolder.getView(R.id.login_see_btn);
-                        ImageView index_details_img = viewHolder.getView(R.id.login_interaction_ad);
-                        GlideUtil.getGlideUtil().setGifImages(context,R.drawable.interaction_ad,index_details_img);
-                        hint_content.setText("继续赚钱");
-                        SpannableString spannableString = new SpannableString("获得奖励"+gold+"金币，请继续加油哦！");
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 4, 8, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 9, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        tvTitle.setText(spannableString);
-//                      hint_content.setText(notes);
-//                        if(!TextUtils.isEmpty(title)){
-//                            tvTitle.setText(title);
-//                        }else{
-//                            tvTitle.setVisibility(View.GONE);
-//                        }
-//                        if(image != 0){
-//                            index_details_img.setImageResource(image);
-//                        }
-                    }
-                })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                    }
-                })
-                .addOnClickListener(R.id.login_see_btn, R.id.login_img,R.id.login_interaction_ad)
-                .setOnViewClickListener(taskFragment)
-                .setDimAmount(0.6f)     //设置弹窗背景透明度(0-1f)
-                .setDialogAnimationRes(R.style.animate_dialog)  //设置弹窗动画
-                .create()   //创建TDialog
-                .show();    //展示
+    public void ActiveDialog(final FragmentActivity context, TaskFragment taskFragment, final int gold, final int active) {
+        try {
+            new TDialog.Builder(context.getSupportFragmentManager())
+                    .setLayoutRes(R.layout.login_dialog)    //设置弹窗展示的xml布局
+                    .setScreenWidthAspect(context, 0.8f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
+                    .setScreenHeightAspect(context, 0.9f)  //设置弹窗高度(参数aspect为屏幕宽度比例 0 - 1f)
+                    .setCancelableOutside(false)
+                    .setOnBindViewListener(new OnBindViewListener() {
+                        @Override
+                        public void bindView(BindViewHolder viewHolder) {
+                            TextView tvTitle = viewHolder.getView(R.id.login_tv);
+                            Button hint_content = viewHolder.getView(R.id.login_see_btn);
+                            ImageView index_details_img = viewHolder.getView(R.id.login_interaction_ad);
+                            GlideUtil.getGlideUtil().setGifImages(context, R.drawable.interaction_ad, index_details_img);
+                            hint_content.setText("继续赚钱");
+                            if (gold == 0) {
+                                if(active > 0){
+                                    tvTitle.setText("已领取，继续完成任务获取金币哦！");
+                                }else{
+                                    tvTitle.setText("继续完成任务获取金币哦！");
+                                }
+                            } else {
+                                SpannableString spannableString = new SpannableString("获得奖励" + gold + "金币，请继续加油哦！");
+                                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 4, 8, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 9, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                tvTitle.setText(spannableString);
+                            }
+
+                        }
+                    })
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    })
+                    .addOnClickListener(R.id.login_see_btn, R.id.login_img, R.id.login_interaction_ad)
+                    .setOnViewClickListener(taskFragment)
+                    .setDimAmount(0.6f)     //设置弹窗背景透明度(0-1f)
+                    .setDialogAnimationRes(R.style.animate_dialog)  //设置弹窗动画
+                    .create()   //创建TDialog
+                    .show();    //展示
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
+
+    private DialogInterface.OnDismissListener onDismissListener;
+    private int goldSize;
 
     /**
      * 签到弹出框
      */
-    public void SignInDialog(final FragmentActivity context, TaskFragment taskFragment) {
-        this.taskFragment = taskFragment;
-        new TDialog.Builder(context.getSupportFragmentManager())
-                .setLayoutRes(R.layout.sign_in_dialog)    //设置弹窗展示的xml布局
-                .setScreenWidthAspect(context, 0.8f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
-                .setScreenHeightAspect(context, 0.7f)  //设置弹窗高度(参数aspect为屏幕宽度比例 0 - 1f)
-                .setCancelableOutside(false)
-                .setOnBindViewListener(new OnBindViewListener() {
-                    @Override
-                    public void bindView(BindViewHolder viewHolder) {
-                        TextView tvTitle = viewHolder.getView(R.id.sign_in_tv);
-                        Button hint_content = viewHolder.getView(R.id.sign_in_see_btn);
-                        ImageView index_details_img = viewHolder.getView(R.id.sign_interaction_ad);
-                        GlideUtil.getGlideUtil().setGifImages(context,R.drawable.interaction_ad,index_details_img);
-                        tvTitle.setText("继续签到可获得更多金币哦！");
-//                        if(!TextUtils.isEmpty(title)){
-//                            tvTitle.setText(title);
-//                        }else{
-//                            tvTitle.setVisibility(View.GONE);
-//                        }
-//                        if(image != 0){
-//                            index_details_img.setImageResource(image);
-//                        }
-                    }
-                })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                    }
-                })
-                .addOnClickListener(R.id.sign_in_see_btn, R.id.sign_img,R.id.sign_interaction_ad)
-                .setOnViewClickListener(taskFragment)
-                .setDimAmount(0.6f)     //设置弹窗背景透明度(0-1f)
-                .setDialogAnimationRes(R.style.animate_dialog)  //设置弹窗动画
-                .create()   //创建TDialog
-                .show();    //展示
+    public void SignInDialog(final FragmentActivity context, final int goldSize, TaskFragment taskFragment, DialogInterface.OnDismissListener onDismissListener) {
+        try {
+            this.goldSize = goldSize;
+            this.onDismissListener = onDismissListener;
+            this.taskFragment = taskFragment;
+            new TDialog.Builder(context.getSupportFragmentManager())
+                    .setLayoutRes(R.layout.sign_in_dialog)    //设置弹窗展示的xml布局
+                    .setScreenWidthAspect(context, 0.8f)   //设置弹窗宽度(参数aspect为屏幕宽度比例 0 - 1f)
+                    .setScreenHeightAspect(context, 0.9f)  //设置弹窗高度(参数aspect为屏幕宽度比例 0 - 1f)
+                    .setCancelableOutside(false)
+                    .setOnBindViewListener(new OnBindViewListener() {
+                        @Override
+                        public void bindView(BindViewHolder viewHolder) {
+                            TextView tvTitle = viewHolder.getView(R.id.sign_in_tv);
+                            Button hint_content = viewHolder.getView(R.id.sign_in_see_btn);
+                            if (TaskFragment.Multiple == 2) {
+                                hint_content.setText("领取3倍金币");
+                                String gold = goldSize + "";
+                                SpannableString spannableString = new SpannableString("签到红包 +" + gold + " 金币,继续签到可翻倍红包。");
+                                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#656565")), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#f48421")), 5, 6 + gold.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                tvTitle.setText(spannableString);
+                            } else {
+                                hint_content.setText("领取2倍金币");
+                                tvTitle.setText("每天签到，赚钱超简单，赚钱还能翻倍！");
+                            }
+                            ImageView index_details_img = viewHolder.getView(R.id.sign_interaction_ad);
+                            GlideUtil.getGlideUtil().setGifImages(context, R.drawable.interaction_ad, index_details_img);
+
+                        }
+                    })
+                    .setOnDismissListener(onDismissListener)
+                    .addOnClickListener(R.id.sign_in_see_btn, R.id.sign_img, R.id.sign_interaction_ad)
+                    .setOnViewClickListener(taskFragment)
+                    .setDimAmount(0.6f)     //设置弹窗背景透明度(0-1f)
+                    .setDialogAnimationRes(R.style.animate_dialog)  //设置弹窗动画
+                    .create()   //创建TDialog
+                    .show();    //展示
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -240,79 +256,83 @@ public class TaskLogic {
      * 任务列表
      */
     public void getAppTaskList(final FragmentActivity context, final RecyclerView listRecycler) {
-        this.context = context;
-        this.listRecycler = listRecycler;
-        phoneDta = LitePal.findLast(UserMessage.class);
-        LoginRequest.getWeatherRequest().getAppTaskListData(context, "", phoneDta == null ? "" : phoneDta.uesrid, "0", new RequestSyntony<AppTaskList>() {
-            @Override
-            public void onCompleted() {
+        try {
+            this.context = context;
+            this.listRecycler = listRecycler;
+            phoneDta = LitePal.findLast(UserMessage.class);
+            LoginRequest.getWeatherRequest().getAppTaskListData(context, "", phoneDta == null ? "" : phoneDta.uesrid, "0", new RequestSyntony<AppTaskList>() {
+                @Override
+                public void onCompleted() {
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(AppTaskList appTaskList) {
-                try {
-                    if (appTaskList != null && appTaskList.getData() != null && appTaskList.getData().size() > 0) {
-//                         LitePal.deleteAll(TaskType.class);
-                        setTaskList(context, listRecycler, appTaskList.getData());
-//                       if(TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
-//                            return;
-//                        }
-                        dataBeans = LitePal.findAll(TaskType.class);
-                        if (dataBeans.size() > 0 && dataBeans.size() == appTaskList.getData().size()) {
-                            for (int i = 0; i < dataBeans.size(); i++) {
-                                dataBeans.get(i).taskId = appTaskList.getData().get(i).getId();
-                                dataBeans.get(i).tasksize = appTaskList.getData().get(i).getCompleteNumber();
-                                dataBeans.get(i).taskfinishsize = appTaskList.getData().get(i).getU_CompleteNumber();
-                                dataBeans.get(i).ISfinish = appTaskList.getData().get(i).isU_IsComplete();
-                                //                        taskType.schedule = appTaskList.getData().get(i).getU_CompleteNumber();
-                                dataBeans.get(i).tasktype = appTaskList.getData().get(i).getMultitaskingType();
-                                dataBeans.get(i).IsDouble = appTaskList.getData().get(i).isIsDouble();
-                                Log.e("taskType3", "taskType3.IsDouble: "+dataBeans.get(i).IsDouble );
-                                dataBeans.get(i).gold = appTaskList.getData().get(i).getShowMinGold();
-                                dataBeans.get(i).CompleteMinTime = appTaskList.getData().get(i).getCompleteMinTime();
-                                if (TextUtils.isEmpty(dataBeans.get(i).time) || !dataBeans.get(i).time.equals(Utils.getOldDate(0))) {
-                                    dataBeans.get(i).ISStartTask = false;
-                                    dataBeans.get(i).time = Utils.getOldDate(0);
-                                }
-//                                dataBeans.add(dataBeans.get(i));
-                                //                            SaveShare.saveValue(context,"TaskId",dataBeans.get(i).taskId);
-                            }
-                        } else {
-                            LitePal.deleteAll(TaskType.class);
-                            dataBeans.clear();
-                            for (int i = 0; i < appTaskList.getData().size(); i++) {
-                                TaskType taskType = new TaskType();
-                                taskType.taskId = appTaskList.getData().get(i).getId();
-                                taskType.tasksize = appTaskList.getData().get(i).getCompleteNumber();
-                                taskType.taskfinishsize = appTaskList.getData().get(i).getU_CompleteNumber();
-                                taskType.ISfinish = appTaskList.getData().get(i).isU_IsComplete();
-                                //                        taskType.schedule = appTaskList.getData().get(i).getU_CompleteNumber();
-                                taskType.tasktype = appTaskList.getData().get(i).getMultitaskingType();
-                                taskType.IsDouble = appTaskList.getData().get(i).isIsDouble();
-                                Log.e("taskType3", "taskType3.IsDouble: "+taskType.IsDouble);
-                                taskType.gold = appTaskList.getData().get(i).getShowMinGold();
-                                taskType.ISStartTask = false;
-                                taskType.time = Utils.getOldDate(0);
-                                if (dataBeans == null) {
-                                    dataBeans = new ArrayList<>();
-                                }
-                                dataBeans.add(taskType);
-                                SaveShare.saveValue(context, "TaskId", taskType.taskId);
-                            }
-                        }
-                        LitePal.saveAll(dataBeans);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(AppTaskList appTaskList) {
+                    try {
+                        if (appTaskList != null && appTaskList.getData() != null && appTaskList.getData().size() > 0) {
+                            //                         LitePal.deleteAll(TaskType.class);
+                            setTaskList(context, listRecycler, appTaskList.getData());
+                            //                       if(TextUtils.isEmpty(SaveShare.getValue(context, "userId"))){
+                            //                            return;
+                            //                        }
+                            dataBeans = LitePal.findAll(TaskType.class);
+                            if (dataBeans.size() > 0 && dataBeans.size() == appTaskList.getData().size()) {
+                                for (int i = 0; i < dataBeans.size(); i++) {
+                                    dataBeans.get(i).taskId = appTaskList.getData().get(i).getId();
+                                    dataBeans.get(i).tasksize = appTaskList.getData().get(i).getCompleteNumber();
+                                    dataBeans.get(i).taskfinishsize = appTaskList.getData().get(i).getU_CompleteNumber();
+                                    dataBeans.get(i).ISfinish = appTaskList.getData().get(i).isU_IsComplete();
+                                    //                        taskType.schedule = appTaskList.getData().get(i).getU_CompleteNumber();
+                                    dataBeans.get(i).tasktype = appTaskList.getData().get(i).getMultitaskingType();
+                                    dataBeans.get(i).IsDouble = appTaskList.getData().get(i).isIsDouble();
+                                    dataBeans.get(i).gold = appTaskList.getData().get(i).getShowMinGold();
+                                    dataBeans.get(i).CompleteMinTime = appTaskList.getData().get(i).getCompleteMinTime();
+                                    if (TextUtils.isEmpty(dataBeans.get(i).time) || !dataBeans.get(i).time.equals(Utils.getOldDate(0))) {
+                                        dataBeans.get(i).ISStartTask = false;
+                                        dataBeans.get(i).time = Utils.getOldDate(0);
+                                    }
+                                    //                                dataBeans.add(dataBeans.get(i));
+                                    //                            SaveShare.saveValue(context,"TaskId",dataBeans.get(i).taskId);
+                                }
+                            } else {
+                                LitePal.deleteAll(TaskType.class);
+                                dataBeans.clear();
+                                for (int i = 0; i < appTaskList.getData().size(); i++) {
+                                    TaskType taskType = new TaskType();
+                                    taskType.taskId = appTaskList.getData().get(i).getId();
+                                    taskType.tasksize = appTaskList.getData().get(i).getCompleteNumber();
+                                    taskType.taskfinishsize = appTaskList.getData().get(i).getU_CompleteNumber();
+                                    taskType.ISfinish = appTaskList.getData().get(i).isU_IsComplete();
+                                    //                        taskType.schedule = appTaskList.getData().get(i).getU_CompleteNumber();
+                                    taskType.tasktype = appTaskList.getData().get(i).getMultitaskingType();
+                                    taskType.IsDouble = appTaskList.getData().get(i).isIsDouble();
+                                    Log.e("taskType3", "taskType3.IsDouble: " + taskType.IsDouble);
+                                    taskType.gold = appTaskList.getData().get(i).getShowMinGold();
+                                    taskType.ISStartTask = false;
+                                    taskType.time = Utils.getOldDate(0);
+                                    if (dataBeans == null) {
+                                        dataBeans = new ArrayList<>();
+                                    }
+                                    dataBeans.add(taskType);
+                                    SaveShare.saveValue(context, "TaskId", taskType.taskId);
+                                }
+                            }
+                            LitePal.saveAll(dataBeans);
+                        }
+                    } catch (Exception e) {
+                        Log.e("Exception", "taskType3.IsDouble: " + e.getMessage().toString());
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean ISindicate = true;
@@ -340,8 +360,8 @@ public class TaskLogic {
                             horizontalProgress1.setMax(100);
                             horizontalProgress1.setProgress((int) (((double) item.getU_CompleteNumber() / item.getCompleteNumber()) * 100));
                         } else {
-                           ImageView indicate = viewHolder.getView(R.id.indicate_btn);
-                            GlideUtil.getGlideUtil().setGifImages(context,R.drawable.pinkie,indicate);
+                            ImageView indicate = viewHolder.getView(R.id.indicate_btn);
+                            GlideUtil.getGlideUtil().setGifImages(context, R.drawable.pinkie, indicate);
                             viewHolder.getView(R.id.indicate_btn).setVisibility(View.GONE);
                             final TextView receive_btn = viewHolder.getView(R.id.receive_btn);
                             viewHolder.getView(R.id.receive_btn).setVisibility(View.VISIBLE);
@@ -408,7 +428,7 @@ public class TaskLogic {
                                 case 9://跳转任务
                                     taskType.tasktype = 9;
                                     taskType.link = beans.get(position).getLink();
-                                     FinishTask(context, "", beans.get(position).getId(), false);
+                                    FinishTask(context, "", beans.get(position).getId(), false);
                                     break;
                                 case 11://阅读广告
                                     taskType.tasktype = 11;
@@ -425,6 +445,7 @@ public class TaskLogic {
                                     break;
                                 case 5://查看7天预报
                                     taskType.tasktype = 5;
+                                    taskType.ISStartTask = true;
                                     SaveShare.saveValue(context, "7天预报", "5");
                                     break;
                                 case 6://看运势
@@ -461,6 +482,7 @@ public class TaskLogic {
 
             listRecycler.setAdapter(baseAdapter);
         } catch (Exception e) {
+            Log.e("Exception", "taskType3.IsDouble: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -509,7 +531,7 @@ public class TaskLogic {
     }
 
     /*签到翻倍*/
-    public void DoubleGold(){
+    public void DoubleGold() {
         if (mttRewardVideoAd != null) {
             ISVideo = true;
             //step6:在获取到广告后展示
@@ -519,6 +541,7 @@ public class TaskLogic {
             ToastUtils.showLong("暂时不能加倍哦");
         }
     }
+
     /**
      * 任务完成
      *
@@ -545,6 +568,8 @@ public class TaskLogic {
                         ToastUtils.setView(R.layout.toast_show);
                         View view = ToastUtils.getView();
                         ((TextView) view.findViewById(R.id.add_money)).setText("+" + finishTask.getData());
+//                        ((ImageView) view.findViewById(R.id.add_money_image)).setText("+" + finishTask.getData());
+//                        GlideUtil.getGlideUtil().setGifImages(context,R.drawable.pinkie,(ImageView) view.findViewById(R.id.add_money_image));
                         ToastUtils.showLong("");
 //                        ToastUtils.setView(null);
                         EventBus.getDefault().post(new AdTask());
@@ -558,7 +583,6 @@ public class TaskLogic {
             }
         });
     }
-
 
 
     /**
@@ -678,7 +702,7 @@ public class TaskLogic {
                 @Override
                 public void onNext(ActiveValue activeValue) {
                     if (activeValue != null && activeValue.getData() != null) {
-                        setActiveData(activeValue,activeValue.getData().getActiveRewardsVms(), ActiveValueStepView);
+                        setActiveData(activeValue, activeValue.getData().getActiveRewardsVms(), ActiveValueStepView);
                         activeListener.Active(activeValue);
                     }
 
@@ -692,7 +716,7 @@ public class TaskLogic {
     /**
      * 签到
      */
-    public void requestSuccessData(final StepsView mStepView,int Multiple, final AppContext.UserGold userGold) {
+    public void requestSuccessData(final StepsView mStepView, int Multiple, final AppContext.UserGold userGold) {
         try {
             mStepBeans.clear();//清空初始化数据
             if (TextUtils.isEmpty(SaveShare.getValue(context, "userId"))) {
@@ -714,15 +738,15 @@ public class TaskLogic {
                 @Override
                 public void onNext(SignIn signIn) {
                     try {
+                        ToastUtils.setView(R.layout.toast_show);
+                        View view = ToastUtils.getView();
+                        ((TextView) view.findViewById(R.id.add_money)).setText(signIn.getData() + "");
+                        ToastUtils.showLong("");
+                        ToastUtils.setView(null);
                         userGold.gold(null);
                         if (mStepView != null) {
                             AppSignInData(context, mStepView, signInRort);
                         }
-                        ToastUtils.setView(R.layout.toast_show);
-                        View view = ToastUtils.getView();
-                        ((TextView) view.findViewById(R.id.add_money)).setText(signIn.getData());
-                        ToastUtils.showLong("");
-                        ToastUtils.setView(null);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -745,7 +769,7 @@ public class TaskLogic {
      *
      * @param datas
      */
-    private void setActiveData(ActiveValue activeValue,List<ActiveValue.DataBean.ActiveRewardsVmsBean> datas, ActiveView ActiveStepView) {
+    private void setActiveData(ActiveValue activeValue, List<ActiveValue.DataBean.ActiveRewardsVmsBean> datas, ActiveView ActiveStepView) {
         try {
             //处理已签到的数据
             //先添加已签到的日期到集合中
@@ -754,12 +778,13 @@ public class TaskLogic {
                 for (int i = 0; i < datas.size(); i++) {
                     //判断是否需要显示积分图标，number表示-- 0为不显示积分，非0为显示积分
                     if (datas.get(i).isU_IsComplete()) {
-                        mActiveStepBeans.add(new StepBean(StepBean.STEP_COMPLETED, 1,  ""));
+                        mActiveStepBeans.add(new StepBean(StepBean.STEP_COMPLETED, 1, datas.get(i).getActive() + ""));
                     } else {
-                        if(activeValue.getData().getUserActive() > datas.get(i).getActive()){
-                            mActiveStepBeans.add(new StepBean(StepBean.STEP_CURRENT, 0,  ""));
-                        }else{
-                            mActiveStepBeans.add(new StepBean(StepBean.STEP_UNDO, 0,  ""));
+                        if (activeValue.getData().getUserActive() >= datas.get(i).getActive()) {
+                            mActiveStepBeans.add(new StepBean(StepBean.STEP_CURRENT, 0, datas.get(i).getActive() + ""));
+                            ActiveStepView.setProgress(mActiveStepBeans);
+                        } else {
+                            mActiveStepBeans.add(new StepBean(StepBean.STEP_UNDO, 0, datas.get(i).getActive() + ""));
                         }
                     }
                 }
@@ -770,6 +795,7 @@ public class TaskLogic {
             }
             ActiveStepView.setSize(2);
             ActiveStepView.setStepNum(mActiveStepBeans);
+
 //        mStepView.startSignAnimation(2);
         } catch (Exception e) {
             e.printStackTrace();
@@ -834,7 +860,6 @@ public class TaskLogic {
         }
         return time;
     }
-
 
     public void setUserGold(AppContext.UserGold userGold) {
         this.userGold = userGold;
@@ -901,8 +926,10 @@ public class TaskLogic {
                                 if (!TextUtils.isEmpty(taskID)) {
                                     FinishTask(context, "", taskID, ISVideo);
                                 } else {
-                                    if(TaskFragment.Multiple < 3){
-                                        SignInDialog(context, taskFragment);
+                                    if (TaskFragment.Multiple < 3 && onDismissListener != null) {
+                                        SignInDialog(context, goldSize, taskFragment, onDismissListener);
+                                    } else {
+                                        TaskFragment.Multiple = 1;
                                     }
                                 }
                             } catch (Exception e) {

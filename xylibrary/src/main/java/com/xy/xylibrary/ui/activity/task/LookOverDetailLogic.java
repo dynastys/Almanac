@@ -47,6 +47,7 @@ public class LookOverDetailLogic {
                     viewHolder.setText(R.id.look_gold_title_tv,  item.getActiveType());
                     viewHolder.setText(R.id.look_gold_details,  item.getName());
                     viewHolder.setText(R.id.look_gold_money,  "+"+item.getGold());
+                    viewHolder.setText(R.id.look_gold_activate,  "+"+item.getActive());
                     viewHolder.setText(R.id.look_gold_time, Utils.times(item.getUpdateTime()));
                 }
             });

@@ -163,7 +163,7 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
     @BindView(R.id.danxiangli_tv_details)
     TextView danxiangliTvDetails;
     @BindView(R.id.almanac_in_browsing)
-    ImageView almanacInBrowsing;
+    LinearLayout almanacInBrowsing;
 
     private int mYear;
     private AlmanacLogic almanacLogic;
@@ -440,7 +440,6 @@ public class AlmanacFragment extends BaseFragment implements MyEdit, CalendarVie
     @Override
     public void onResume() {
         super.onResume();
-
         MobclickAgent.onPageStart("AlmanacFragment"); //统计页面("MainScreen"为页面名称，可自定义)
         if (novelInputBox != null) {
             IMEClose(novelInputBox);

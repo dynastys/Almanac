@@ -260,7 +260,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
     LinearLayout todayTomorrowRel;
 
     @BindView(R.id.in_browsing)
-    ImageView inBrowsing;
+    LinearLayout inBrowsing;
 
     private TaskType taskType, taskType4;
     private int transAlphaY;
@@ -302,8 +302,8 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                     startActivity(intent1);
                     TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
                     SaveShare.saveValue(getActivity(), "JB", "");
-                    taskType3.ISStartTask = true;
-                    taskType3.save();
+//                    taskType3.ISStartTask = true;
+//                    taskType3.save();
                     EventBus.getDefault().post("");
                     //                if (taskType != null && !taskType.ISStartTask) {
                     //                    TaskLogic.getTaskLogic().FinishTask(getActivity(), "", taskType.taskId, taskType.IsDouble);
@@ -380,7 +380,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
             } else {
                 GlideUtil.getGlideUtil().getDrawableImages(getActivity(), INUSE, WeatherFragment.this);
             }
-            new CountDownTimer(500, 1000) {
+            new CountDownTimer(0, 0) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                 }
@@ -529,6 +529,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser && weatherPageData != null && rlHeader != null) {
+            IndicatePage.getIndicatePage().setNewbieGuide(WeatherFragment.this, getActivity(), viewSearch, tvHCurrTemp, todayTomorrowRel);
             try {
                 wetherBg.setVisibility(View.VISIBLE);
                 wetherBg.getBackground().setAlpha(transAlphaY);
@@ -609,7 +610,6 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
         try {
             if (refreshLayout != null) {
                 refreshLayout.finishRefresh();
-
             }
             if (conventionWeather.getHeWeather6().get(0) == null) {
                 return;
@@ -673,8 +673,6 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                     nextTwoHoursLin.setVisibility(View.GONE);
                 }
             }
-            IndicatePage.getIndicatePage().setNewbieGuide(WeatherFragment.this, getActivity(), viewSearch, tvHCurrTemp, todayTomorrowRel);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -742,7 +740,9 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
 //                    TaskLogic.getTaskLogic().FinishTask(getActivity(),"",taskType.taskId,taskType.IsDouble);
 
                     }
-                    x5VideoWebview.start();
+                    if(x5VideoWebview.isCurrentPlaying()){
+                        x5VideoWebview.start();
+                    }
                     if (!LookVideo) {
                         LookVideo = true;
 //                        ((ImageView) x5VideoWebview.getControlPanel().findViewById(R.id.video_cover)).setImageResource(0);
@@ -831,6 +831,9 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                 tvWetherBg.setImageDrawable(drawable);
             }
             this.resource = null;
+            if(isVisibleToUser){
+                IndicatePage.getIndicatePage().setNewbieGuide(WeatherFragment.this, getActivity(), viewSearch, tvHCurrTemp, todayTomorrowRel);
+            }
 ////            imageUrl = SaveShare.getValue(getActivity(), "INUSE");
 //            tvWetherBg.setImageDrawable(resource);
 //            SaveShare.putDrawable(Objects.requireNonNull(getActivity()), "icon",resource);

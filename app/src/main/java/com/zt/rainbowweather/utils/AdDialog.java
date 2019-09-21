@@ -110,10 +110,8 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
             View view = inflater.inflate(R.layout.ad_dialog, null);
             setContentView(view);
             TextView tvTitle = view.findViewById(R.id.finish_task_title_tv);
-            TextView ad_time = view.findViewById(R.id.ad_time);
-            TextView tvConfirm = view.findViewById(R.id.finish_task_tv);
+             TextView tvConfirm = view.findViewById(R.id.finish_task_tv);
             hint_content = view.findViewById(R.id.finish_task_see_btn);
-
             finish_task_dialog_cancel = view.findViewById(R.id.finish_task_dialog_cancel);
             adLin = view.findViewById(R.id.ad_lin);
             bannerContainer = view.findViewById(R.id.banner_container);
@@ -130,19 +128,20 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
 //        BannerAd(adLin,bannerContainer,GDTAd,adImageBanner);
             VideoAd();
             loadVideoAd("923044756", TTAdConstant.VERTICAL);
-            ad_time.setVisibility(View.VISIBLE);
+//            ad_time.setVisibility(View.VISIBLE);
             finish_task_dialog_cancel.setVisibility(View.GONE);
             new CountDownTimer(5 * 1000, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    ad_time.setText(""+(int) (millisUntilFinished/1000+1));
+//                    ad_time.setText(""+(int) (millisUntilFinished/1000+1));
+                    hint_content.setText("观看倒计时："+(int) (millisUntilFinished/1000+1));
                 }
 
                 @Override
                 public void onFinish() {
+                    hint_content.setText("立即翻倍");
                     finish_task_dialog_cancel.setVisibility(View.VISIBLE);
-                    ad_time.setVisibility(View.GONE);
-                }
+                 }
             }.start();
 //        hint_content.setText(notes);
 
@@ -239,7 +238,7 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
             /**
              *  如果选择支持视频的模版样式，请使用{@link Constants#NativeExpressSupportVideoPosID}
              */
-            nativeExpressAD = new NativeExpressAD(context, new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT), "1109529834", "3050278581035653", this);
+            nativeExpressAD = new NativeExpressAD(context, new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT), nativelogic.nativeObject.appid, nativelogic.nativeObject.posid, this);
             Map<String, String> tags = new HashMap<>();
             tags.put("native_express_tag_1", "native_express_value_1");
             tags.put("native_express_tag_2", "native_express_value_2");
@@ -263,7 +262,7 @@ public class AdDialog extends Dialog implements NativeExpressAD.NativeExpressADL
             mTTAdNative = TTAdSdk.getAdManager().createAdNative(context);
             //feed广告请求类型参数
             AdSlot adSlot = new AdSlot.Builder()
-                    .setCodeId("923044298")
+                    .setCodeId(nativelogic.nativeObject.posid)
                     .setSupportDeepLink(true)
                     .setImageAcceptedSize(640, 320)
                     .setAdCount(1)

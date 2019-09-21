@@ -91,8 +91,8 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
                 if (!TextUtils.isEmpty(taskType.link) && DeeplinkUtils.getDeeplinkUtils().CanOpenDeeplink(BaseChoiceActivity.this, taskType.link)) {
                     TaskType taskType3 = LitePal.where("tasktype = ?", taskType.tasktype + "").findFirst(TaskType.class);
                     SaveShare.saveValue(BaseChoiceActivity.this, "JB", "");
-                    taskType3.ISStartTask = true;
-                    taskType3.save();
+//                    taskType3.ISStartTask = true;
+//                    taskType3.save();
                     TaskLogic.getTaskLogic().FinishTask2(BaseChoiceActivity.this,"",taskType3.taskId,false);
                     DeeplinkUtils.getDeeplinkUtils().OpenDeeplink2(BaseChoiceActivity.this, taskType.link);
                 } else {

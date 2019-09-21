@@ -50,7 +50,7 @@ android {
     //keytool -list -v -keystore C:\Users\zhou\weather.jks
     signingConfigs {
         config {
-            storeFile file("D:\\Android\\Demo\\weather_XY.jks")//指定keystore文件的位置，在这里引用的是相对地址
+            storeFile file("C:\\Users\\zhou\\weather_XY.jks")//指定keystore文件的位置，在这里引用的是相对地址
             storePassword "123456" //指定密码
             keyAlias "key0"//指定别名
             keyPassword "123456"//指定别名密码

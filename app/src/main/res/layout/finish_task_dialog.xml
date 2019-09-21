@@ -50,6 +50,85 @@
                 android:textSize="15sp" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/dp_15"
+                >
+                <FrameLayout
+                    android:id="@+id/banner_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/GDT_ad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                </RelativeLayout>
+
+                <include layout="@layout/ad_item" />
+
+                <LinearLayout
+                    android:id="@+id/tv_title_ad_lin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_title_ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+
+                    <FrameLayout
+                        android:id="@+id/iv_listitem_video_ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/iv_image_ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_margin="@dimen/dp_4"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_line_drawable"
+                        android:scaleType="fitXY" />
+
+                    <LinearLayout
+                        android:id="@+id/tv_from_ad_lin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_from_ad"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="广告"
+                            android:textColor="#b6b6b6"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
                 android:id="@+id/finish_task_get_lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,95 +192,9 @@
         android:layout_centerHorizontal="true"
         />
 
-    <android.support.v7.widget.CardView
-        android:layout_below="@+id/task_card"
-        android:id="@+id/task_card2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/dp_1"
-        app:cardCornerRadius="8dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-            <FrameLayout
-                android:id="@+id/banner_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
 
-            <RelativeLayout
-                android:id="@+id/GDT_ad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-            </RelativeLayout>
-
-            <include layout="@layout/ad_item" />
-
-            <LinearLayout
-                android:id="@+id/tv_title_ad_lin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_title_ad"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:textColor="@color/text_black"
-                    android:textSize="16sp" />
-
-                <FrameLayout
-                    android:id="@+id/iv_listitem_video_ad"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/iv_image_ad"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_margin="@dimen/dp_4"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_line_drawable"
-                    android:scaleType="fitXY" />
-
-                <LinearLayout
-                    android:id="@+id/tv_from_ad_lin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tv_from_ad"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="广告"
-                        android:textColor="#b6b6b6"
-                        android:textSize="13sp" />
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
     <ImageView
-        android:layout_below="@+id/task_card2"
+        android:layout_below="@+id/task_card"
         android:id="@+id/finish_task_dialog_cancel"
         android:layout_width="40dp"
         android:layout_height="40dp"
