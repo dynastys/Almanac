@@ -281,6 +281,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     //获取验证码信息，进行验证码请求
     private void requestVerifyCode(String mobile) {
         try {
+            getyanzhengma1.setBackground(getResources().getDrawable(R.drawable.search_20));
             LoginRequest.getWeatherRequest().getQueryRegisteData(LoginActivity.this, mobile, new RequestSyntony<RegisteJson>() {
                 @Override
                 public void onCompleted() {

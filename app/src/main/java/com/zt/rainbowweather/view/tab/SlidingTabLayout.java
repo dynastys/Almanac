@@ -240,11 +240,9 @@ public class SlidingTabLayout extends HorizontalScrollView implements ViewPager.
         if (mTitles != null) {
             mTitles.add(title);
         }
-
         CharSequence pageTitle = mTitles == null ? mViewPager.getAdapter().getPageTitle(mTabCount) : mTitles.get(mTabCount);
         addTab(mTabCount, pageTitle.toString(), tabView);
         this.mTabCount = mTitles == null ? mViewPager.getAdapter().getCount() : mTitles.size();
-
         updateTabStyles();
     }
 
@@ -253,6 +251,7 @@ public class SlidingTabLayout extends HorizontalScrollView implements ViewPager.
         TextView tv_tab_title = (TextView) tabView.findViewById(R.id.tv_tab_title);
         if (tv_tab_title != null) {
             if (title != null) tv_tab_title.setText(title);
+
         }
 
         tabView.setOnClickListener(new OnClickListener() {
@@ -305,6 +304,9 @@ public class SlidingTabLayout extends HorizontalScrollView implements ViewPager.
                     tv_tab_title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                     tv_tab_title.setTextSize(TypedValue.COMPLEX_UNIT_PX,sp2px(14));
                 }
+//                if(title.equals("赚金币")){
+//                    tv_tab_title.setTextColor(Color.parseColor("#ff3e47"));
+//                }
                 tv_tab_title.setTextColor(i == mCurrentTab ? mTextSelectColor : mTextUnselectColor);
 
                 tv_tab_title.setPadding((int) mTabPadding, 0, (int) mTabPadding, 0);
@@ -844,6 +846,7 @@ public class SlidingTabLayout extends HorizontalScrollView implements ViewPager.
             lp.leftMargin = mTabWidth >= 0 ? (int) (mTabWidth / 2 + textWidth / 2 + dp2px(leftPadding)) : (int) (mTabPadding + textWidth + dp2px(leftPadding));
             lp.topMargin = mHeight > 0 ? (int) (mHeight - textHeight) / 2 - dp2px(bottomPadding) : 0;
             tipView.setLayoutParams(lp);
+
         }
     }
 

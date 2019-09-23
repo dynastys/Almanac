@@ -106,10 +106,13 @@ public class WeatherDetailsActivity extends BaseActivity {
             City = getIntent().getStringExtra("City");
 
             TaskType taskType3 = LitePal.where("tasktype = ?", "5").findFirst(TaskType.class);
-            Log.e("NumberFormatException", "loadViewLayout: "+taskType3.ISStartTask);
-            if(!TextUtils.isEmpty(SaveShare.getValue(WeatherDetailsActivity.this, "7天预报" ))){
+             if(!TextUtils.isEmpty(SaveShare.getValue(WeatherDetailsActivity.this, "7天预报" ))){
                 SaveShare.saveValue(WeatherDetailsActivity.this, "7天预报", "");
-                timer = new CountDownTimer(5 * 1000, 1000) {
+                 int times = (int) taskType3.CompleteMinTime;
+                 if (times == 0) {
+                     times = 5 * 1000;
+                 }
+                timer = new CountDownTimer(times, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                     }
@@ -163,7 +166,6 @@ public class WeatherDetailsActivity extends BaseActivity {
             }
             EventBus.getDefault().post("");
         } catch (NumberFormatException e) {
-            Log.e("NumberFormatException", "loadViewLayout: "+ e.getMessage().toString() );
             e.printStackTrace();
         }
     }

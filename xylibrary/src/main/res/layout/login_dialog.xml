@@ -36,13 +36,43 @@
                 android:background="@color/white"
                 android:textSize="20sp" />
 
+            <FrameLayout
+                android:id="@+id/banner_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/GDT_ad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sign_interaction_ad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="@dimen/dp_10">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/interaction_ad"
-                    android:scaleType="fitXY"
-                    android:id="@+id/login_interaction_ad"
+                    android:id="@+id/ad_image_banner"
                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#4d000000"
+                    android:textSize="8sp"
+                    android:text="AD"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/login_see_btn"
@@ -54,8 +84,6 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_18" />
         </LinearLayout>
-
-
     </LinearLayout>
     <ImageView
         android:id="@+id/login_img"

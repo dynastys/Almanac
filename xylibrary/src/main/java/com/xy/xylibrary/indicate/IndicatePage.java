@@ -110,7 +110,7 @@ public class IndicatePage {
                                         ImageView tv = view.findViewById(R.id.iv);
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                         layoutParams.leftMargin = view2.getLeft();
-                                        layoutParams.topMargin = view2.getTop() * 2 + view2.getHeight()*3/2;
+                                        layoutParams.topMargin = view2.getTop() * 2 + view2.getHeight()*2;
                                         tv.setLayoutParams(layoutParams);
                                         tv.setImageDrawable(context.getResources().getDrawable(R.drawable.weather_conditions));
                                     }

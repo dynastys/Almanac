@@ -188,10 +188,7 @@ public class ActiveView extends View {
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    if (ISAnimator) {
-                        ISAnimator = true;
                         postInvalidate();
-                    }
                 }
             });
             valueAnimator.start();

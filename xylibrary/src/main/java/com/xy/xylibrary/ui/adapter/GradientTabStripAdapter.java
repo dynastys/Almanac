@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
  import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import am.widget.gradienttabstrip.GradientTabStrip;
+import com.xy.xylibrary.view.GradientTabStrip;
+
 
 /**
  * GradientTabStripAdapter

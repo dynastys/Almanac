@@ -143,7 +143,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_below="@+id/tv_lin"
-                                android:layout_margin="5dp"
+                                android:layout_marginRight="@dimen/dp_5"
+                                android:layout_marginTop="30dp"
                                 android:visibility="gone">
 
                                 <ImageView
@@ -161,6 +162,7 @@
                                 android:layout_below="@+id/ad_icon"
                                 android:layout_marginRight="@dimen/dp_10"
                                 android:layout_marginTop="40dp"
+                                android:visibility="gone"
                                 android:background="@color/bg">
 
                                 <ImageView

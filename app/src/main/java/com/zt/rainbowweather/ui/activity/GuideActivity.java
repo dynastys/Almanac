@@ -84,10 +84,9 @@ public class GuideActivity extends BaseActivity {
 //                R.drawable.uoko_guide_background_3);
         mForegroundBanner.setData(localImageSize, ImageView.ScaleType.CENTER_CROP,
                 R.drawable.uoko_guide_background_1,
-                R.drawable.uoko_guide_background_2,
                 R.drawable.uoko_guide_background_3,
-                R.drawable.uoko_guide_background_4,
-                R.drawable.uoko_guide_background_5);
+                R.drawable.uoko_guide_background_4
+                );
     }
 
     @Override

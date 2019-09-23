@@ -87,7 +87,7 @@
             <com.xy.xylibrary.view.CustomHorizontalProgresNoNum
                 android:id="@+id/horizontalProgress1"
                 android:progress="0"
-                app:HorizontalProgresReachColor="#3585FE"
+                app:HorizontalProgresReachColor="#ff9291"
                 app:HorizontalProgresUnReachColor="#E9E9E9"
                 app:HorizontalProgresTextColor="#ffffff"
                 android:layout_centerVertical="true"

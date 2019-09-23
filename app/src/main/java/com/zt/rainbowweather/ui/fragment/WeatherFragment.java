@@ -380,7 +380,7 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
             } else {
                 GlideUtil.getGlideUtil().getDrawableImages(getActivity(), INUSE, WeatherFragment.this);
             }
-            new CountDownTimer(0, 0) {
+            new CountDownTimer(400, 100) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                 }
@@ -399,8 +399,6 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                     }
                 }
             }.start();
-
-
             if (size.equals("0")) {
                 ISNews = false;
             }
@@ -723,20 +721,30 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                         taskType = null;
                         inBrowsing.setVisibility(View.GONE);
                         TaskType taskType3 = LitePal.where("tasktype = ?", "3").findFirst(TaskType.class);
-                        FinishTaskDialog adDialog = new FinishTaskDialog(getActivity(), "3", 0);
-                        adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
+                        new CountDownTimer(taskType3.CompleteMinTime, 1000) {
                             @Override
-                            public void doConfirm(boolean b) {
-                                TaskLogic.getTaskLogic().FinishTask(getActivity(), "", taskType3.taskId, b);
-                                adDialog.dismiss();
+                            public void onTick(long millisUntilFinished) {
                             }
 
                             @Override
-                            public void doCancel() {
-                                adDialog.dismiss();
+                            public void onFinish() {
+                                FinishTaskDialog adDialog = new FinishTaskDialog(getActivity(), "3", 0);
+                                adDialog.setClicklistener(new FinishTaskDialog.ClickListenerInterface() {
+                                    @Override
+                                    public void doConfirm(boolean b) {
+                                        TaskLogic.getTaskLogic().FinishTask(getActivity(), "", taskType3.taskId, b);
+                                        adDialog.dismiss();
+                                    }
+
+                                    @Override
+                                    public void doCancel() {
+                                        adDialog.dismiss();
+                                    }
+                                });
+                                adDialog.show();
                             }
-                        });
-                        adDialog.show();
+                        }.start();
+
 //                    TaskLogic.getTaskLogic().FinishTask(getActivity(),"",taskType.taskId,taskType.IsDouble);
 
                     }
@@ -831,9 +839,9 @@ public class WeatherFragment extends BaseFragment implements TranslucentScrollVi
                 tvWetherBg.setImageDrawable(drawable);
             }
             this.resource = null;
-            if(isVisibleToUser){
-                IndicatePage.getIndicatePage().setNewbieGuide(WeatherFragment.this, getActivity(), viewSearch, tvHCurrTemp, todayTomorrowRel);
-            }
+//            if(isVisibleToUser){
+//                IndicatePage.getIndicatePage().setNewbieGuide(WeatherFragment.this, getActivity(), viewSearch, tvHCurrTemp, todayTomorrowRel);
+//            }
 ////            imageUrl = SaveShare.getValue(getActivity(), "INUSE");
 //            tvWetherBg.setImageDrawable(resource);
 //            SaveShare.putDrawable(Objects.requireNonNull(getActivity()), "icon",resource);

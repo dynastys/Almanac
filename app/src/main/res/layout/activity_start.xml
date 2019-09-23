@@ -5,6 +5,7 @@
     android:id="@+id/content_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/start_bg2"
     android:orientation="vertical">
     <TextView
         android:id="@+id/actionBarSize"
@@ -12,67 +13,63 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:background="@color/integral_color" />
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <RelativeLayout
-            android:id="@+id/container"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/iv_image"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+           >
+            <RelativeLayout
+                android:id="@+id/container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY" />
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/tv_ad_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="40dp"
-            android:background="#4d000000"
-            android:paddingBottom="1dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="1dp"
-            android:text="广告"
-            android:textColor="@color/white"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </FrameLayout>
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_ad_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="40dp"
+                android:background="#4d000000"
+                android:paddingBottom="1dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="1dp"
+                android:text="广告"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/ad_relative"
         android:layout_width="match_parent"
-        android:layout_height="96dp">
-
+        android:layout_height="96dp"
+        android:background="@color/white"
+        >
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/app_name"
-                android:visibility="gone"
-                android:textColor="@color/textSecondary"
-                android:textSize="20sp" />
+                android:src="@mipmap/xytq"/>
 
-            <TextView
-                android:id="@+id/tv_version_name"
+            <ImageView
+                android:layout_marginTop="@dimen/dp_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:textColor="@color/textAssist"
-                android:textSize="10sp"
-                android:visibility="gone"
-                tools:text="v1.0" />
+                android:src="@mipmap/xytq_xq"/>
         </LinearLayout>
 
         <RelativeLayout

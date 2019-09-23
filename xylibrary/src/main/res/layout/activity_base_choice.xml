@@ -26,7 +26,7 @@
         <!--&gt; android:background="@drawable/bg_gradienttabstrip_tab"-->
         <!--</android.support.design.widget.TabLayout>-->
 
-        <am.widget.gradienttabstrip.GradientTabStrip
+        <com.xy.xylibrary.view.GradientTabStrip
             android:id="@+id/gts_gts_tabs"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"

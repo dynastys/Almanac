@@ -3,6 +3,7 @@ package com.xy.xylibrary.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import com.xy.xylibrary.utils.DeeplinkUtils;
 import com.xy.xylibrary.utils.RomUtils;
 import com.xy.xylibrary.utils.SaveShare;
 import com.xy.xylibrary.utils.ToastUtils;
+import com.xy.xylibrary.view.GradientTabStrip;
 import com.xy.xylibrary.view.ViewPagerSlide;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,7 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
 import am.widget.basetabstrip.BaseTabStrip;
-import am.widget.gradienttabstrip.GradientTabStrip;
+
 
 /**
  * zw
@@ -170,6 +172,7 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
                 }
                 gtsGtsTabs.bindViewPager(tabVp);
                 gtsGtsTabs.setOnItemClickListener(this);
+
 //                if(TextUtils.isEmpty(SaveShare.getValue(this,"indicate"))){
 //                    indicate_image.setVisibility(View.VISIBLE);
 //                    indicate_image.setImageDrawable(getResources().getDrawable(R.drawable.my_wallet_bg));
@@ -194,10 +197,12 @@ public abstract class BaseChoiceActivity extends BaseActivity implements ViewPag
 
     @Override
     public void onItemClick(int position) {
+
     }
 
     @Override
     public void onSelectedClick(int position) {
+
     }
 
     @Override

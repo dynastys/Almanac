@@ -179,14 +179,19 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                 try {
                     SaveShare.saveValue(MainActivity.this, "almanac", Utils.getOldDate(0));
                     myGradientTabStripAdapter.isTagEnable(3);
+                    TaskType taskType3 = LitePal.where("tasktype = ?", "6").findFirst(TaskType.class);
                     String Sp = SaveShare.getValue(MainActivity.this, "HL");
                     if (!TextUtils.isEmpty(Sp) && Sp.equals("5")) {
                         if(timer != null){
                             timer.cancel();
                             timer = null;
                         }
-                        SaveShare.saveValue(MainActivity.this, "HL", "");
-                        timer2 = new CountDownTimer(5 * 1000, 1000) {
+                       int times = (int) taskType3.CompleteMinTime;
+                        if (times == 0) {
+                            times = 5 * 1000;
+                        }
+                         SaveShare.saveValue(MainActivity.this, "HL", "");
+                        timer2 = new CountDownTimer(times, 1000) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                             }
@@ -195,7 +200,6 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                             public void onFinish() {
                                 try {
                                     timer2 = null;
-                                    TaskType taskType3 = LitePal.where("tasktype = ?", "6").findFirst(TaskType.class);
                                     if (taskType3 == null) {
                                         ToastUtils.showLong("获取任务失败！");
                                         return;
@@ -293,8 +297,6 @@ public class MainActivity extends BaseChoiceActivity implements OnViewClickListe
                  TaskType taskType3 = LitePal.where("tasktype = ?", "9").findFirst(TaskType.class);
                 if (taskType3 != null) {
                     SaveShare.saveValue(MainActivity.this, "JB", "");
-//                    taskType3.ISStartTask = true;
-//                    taskType3.save();
                     TaskLogic.getTaskLogic().FinishTask(MainActivity.this, "", taskType3.taskId, false);
                     AdviseMoreDetailActivity.startActivity(MainActivity.this, "落地页", taskType3.link, "0");
                 }

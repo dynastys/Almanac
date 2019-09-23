@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="lucency">#1fffffff</color>
     <color name="lucency3">#2fffffff</color>
-    <color name="lucency2">#9f000000</color>
+    <color name="lucency2">#7f000000</color>
     <color name="lucency4">#2f000000</color>
     <color name="text_light_gray">#767676</color>
     <!--通用一级标题的颜色-->

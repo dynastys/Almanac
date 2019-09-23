@@ -53,7 +53,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class TaskFragment extends BaseFragment implements SwipeRefreshListener, View.OnClickListener, SignInRort,OnViewClickListener,AppContext.UserGold,ActiveListener {
+public class TaskFragment extends BaseFragment implements SwipeRefreshListener, View.OnClickListener, SignInRort, OnViewClickListener, AppContext.UserGold, ActiveListener {
 
     private StepsView stepView;
     private Button linxiasamo;
@@ -70,6 +70,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     private TextView active_value;
     private boolean sign_in = true;
     private int goldSize;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         try {
@@ -123,6 +124,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
         }
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void RefreshTask(AdTask adTask) {
         if (recyclerLayoutList != null) {
@@ -134,13 +136,14 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
 
                 @Override
                 public void onFinish() {
-                    AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
+                    AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"), TaskFragment.this);
                     TaskLogic.getTaskLogic().getAppTaskList(getActivity(), recyclerLayoutList);
                 }
             }.start();
 
-         }
+        }
     }
+
     @Override
     protected void initListener() {
         try {
@@ -171,7 +174,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                 //用户数据
                 TaskLogic.getTaskLogic().setUserGold(this);
                 //活跃值
-                TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(),ActiveValueStepView,TaskFragment.this);
+                TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(), ActiveValueStepView, TaskFragment.this);
                 //加载视频广告
                 TaskLogic.getTaskLogic().loadVideoAd("923044756", TTAdConstant.VERTICAL);
                 if (AppContext.userMessageData != null && gold != null) {
@@ -179,13 +182,13 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                     gold_RMB.setText("约" + Utils.doubleToString((double) AppContext.userMessageData.gold / 10000) + "元");
 //                    active_value.setText(AppContext.userMessageData.active + "");
                 }
-                long loginTime = Long.parseLong((TextUtils.isEmpty(SaveShare.getValue(getActivity(), "loginTime"))? "0" : SaveShare.getValue(getActivity(), "loginTime")));
+                long loginTime = Long.parseLong((TextUtils.isEmpty(SaveShare.getValue(getActivity(), "loginTime")) ? "0" : SaveShare.getValue(getActivity(), "loginTime")));
                 //判断是否登录和是否在三天内未登录再次弹出登录提示框
-                if (TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId")) && System.currentTimeMillis() - loginTime > 24*3*60*1000) {//
-                    SaveShare.saveValue(getActivity(), "loginTime",System.currentTimeMillis()+"");
-                    TaskLogic.getTaskLogic().LoadDialog((AppCompatActivity) getActivity(),TaskFragment.this);
-                }else {
-                    IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
+                if (TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId")) && System.currentTimeMillis() - loginTime > 24 * 3 * 60 * 1000) {//
+                    SaveShare.saveValue(getActivity(), "loginTime", System.currentTimeMillis() + "");
+                    TaskLogic.getTaskLogic().LoadDialog((AppCompatActivity) getActivity(), TaskFragment.this);
+                } else {
+                    IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this, getActivity(), linxiasamo, recyclerLayoutList);
                 }
             }
         } catch (Exception e) {
@@ -197,7 +200,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     public void onRefresh() {
         TaskLogic.getTaskLogic().getAppTaskList(getActivity(), recyclerLayoutList);
         TaskLogic.getTaskLogic().initData(stepView, TaskFragment.this);
-        TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(),ActiveValueStepView,TaskFragment.this);
+        TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(), ActiveValueStepView, TaskFragment.this);
 
     }
 
@@ -213,17 +216,17 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                 if (!TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId"))) {
                     if (!linxiasamo.getText().equals("已签到")) {
                         linxiasamo_cover.setVisibility(View.VISIBLE);
-                        promptly_sign_bg.setBackground(getResources().getDrawable(R.drawable.promptly_sign_bg));
+                        promptly_sign_bg.setBackground(getResources().getDrawable(R.drawable.promptly_sign_bg2));
                         linxiasamo.setBackground(getResources().getDrawable(R.drawable.search_5));
                         linxiasamo.setText("已签到");
-                        TaskLogic.getTaskLogic().SignInDialog(getActivity(), goldSize,TaskFragment.this,new DialogInterface.OnDismissListener() {
+                        TaskLogic.getTaskLogic().SignInDialog(getActivity(), goldSize, TaskFragment.this, new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                if(sign_in){
-                                    TaskLogic.getTaskLogic().requestSuccessData(stepView,Multiple, new AppContext.UserGold() {
+                                if (sign_in) {
+                                    TaskLogic.getTaskLogic().requestSuccessData(stepView, Multiple, new AppContext.UserGold() {
                                         @Override
                                         public void gold(UserMessage userMessage) {
-                                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
+                                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"), TaskFragment.this);
                                         }
                                     });
                                 }
@@ -248,18 +251,18 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
                     getActivity().startActivity(intent1);
                     ToastUtils.showLong("请先登录哦！");
                 }
-            }else if(i == R.id.active_value_step_view){
-                if(TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId"))){
+            } else if (i == R.id.active_value_step_view) {
+                if (TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId"))) {
                     Intent intent1 = new Intent(getActivity(), LoginTypeActivity.class);
                     getActivity().startActivity(intent1);
-                }else{
-                    if(activeValue != null){
-                         try {
+                } else {
+                    if (activeValue != null) {
+                        try {
                             int gold = 0;
                             for (int j = 0; j < activeValue.getData().getActiveRewardsVms().size(); j++) {
-                                if(activeValue.getData().getUserActive() >= activeValue.getData().getActiveRewardsVms().get(j).getActive() && !activeValue.getData().getActiveRewardsVms().get(j).isU_IsComplete()){
-                                     gold = gold + activeValue.getData().getActiveRewardsVms().get(j).getGold();
-                                     LoginRequest.getWeatherRequest().getCompleteActiveRewardsData(getActivity(),activeValue.getData().getActiveRewardsVms().get(j).getId(), new RequestSyntony<CompleteActive>() {
+                                if (activeValue.getData().getUserActive() >= activeValue.getData().getActiveRewardsVms().get(j).getActive() && !activeValue.getData().getActiveRewardsVms().get(j).isU_IsComplete()) {
+                                    gold = gold + activeValue.getData().getActiveRewardsVms().get(j).getGold();
+                                    LoginRequest.getWeatherRequest().getCompleteActiveRewardsData(getActivity(), activeValue.getData().getActiveRewardsVms().get(j).getId(), new RequestSyntony<CompleteActive>() {
                                         @Override
                                         public void onCompleted() {
 
@@ -272,22 +275,22 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
 
                                         @Override
                                         public void onNext(CompleteActive completeActive) {
-    //                                    if (activeValue != null && activeValue.getData() != null) {
-    //                                        setActiveData(activeValue,activeValue.getData().getActiveRewardsVms(), ActiveValueStepView);
-    //                                        activeListener.Active(activeValue);
-    //                                    }
-                                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
-                                            TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(),ActiveValueStepView,TaskFragment.this);
+                                            //                                    if (activeValue != null && activeValue.getData() != null) {
+                                            //                                        setActiveData(activeValue,activeValue.getData().getActiveRewardsVms(), ActiveValueStepView);
+                                            //                                        activeListener.Active(activeValue);
+                                            //                                    }
+                                            AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"), TaskFragment.this);
+                                            TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(), ActiveValueStepView, TaskFragment.this);
                                         }
                                     });
                                 }
                             }
-                            TaskLogic.getTaskLogic().ActiveDialog((AppCompatActivity) getActivity(),TaskFragment.this,gold,activeValue.getData().getUserActive());
+                            TaskLogic.getTaskLogic().ActiveDialog((AppCompatActivity) getActivity(), TaskFragment.this, gold, activeValue.getData().getUserActive());
 
                         } catch (Exception e) {
-                             e.printStackTrace();
+                            e.printStackTrace();
                         }
-                    }else {
+                    } else {
                         ToastUtils.showLong("暂无活跃值领取");
                     }
                 }
@@ -307,7 +310,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
             if (appSignInList != null && appSignInList.getData() != null) {
                 if (appSignInList.getData().isToDayIsSign()) {
                     linxiasamo_cover.setVisibility(View.VISIBLE);
-                    promptly_sign_bg.setBackground(getResources().getDrawable(R.drawable.promptly_sign_bg));
+                    promptly_sign_bg.setBackground(getResources().getDrawable(R.drawable.promptly_sign_bg2));
                     linxiasamo.setBackground(getResources().getDrawable(R.drawable.search_5));
                     linxiasamo.setText("已签到");
                 } else {
@@ -349,10 +352,10 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
         super.onResume();
         try {
             if (isVisibleToUser && gold != null) {
-                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"),TaskFragment.this);
+                AppContext.getUserInfo(getActivity(), "", SaveShare.getValue(getActivity(), "userId"), TaskFragment.this);
                 TaskLogic.getTaskLogic().getAppTaskList(getActivity(), recyclerLayoutList);
                 TaskLogic.getTaskLogic().initData(stepView, this);
-                TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(),ActiveValueStepView,TaskFragment.this);
+                TaskLogic.getTaskLogic().ActiveValueStepViewData(getActivity(), ActiveValueStepView, TaskFragment.this);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -365,39 +368,39 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     public void onViewClick(BindViewHolder viewHolder, View view, TDialog tDialog) {
         int i = view.getId();
         if (i == R.id.login_see_btn) {
-            if(TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId"))){
+            if (TextUtils.isEmpty(SaveShare.getValue(getActivity(), "userId"))) {
                 Intent intent1 = new Intent(getActivity(), LoginTypeActivity.class);
                 getActivity().startActivity(intent1);
-            }else{
-                IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
+            } else {
+                IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this, getActivity(), linxiasamo, recyclerLayoutList);
                 tDialog.dismiss();
             }
         } else if (i == R.id.login_img) {
-            IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this,getActivity(), linxiasamo, recyclerLayoutList);
+            IndicatePage.getIndicatePage().setGoldNewbieGuide(TaskFragment.this, getActivity(), linxiasamo, recyclerLayoutList);
             tDialog.dismiss();
-        }else if(i == R.id.sign_in_see_btn){
+        } else if (i == R.id.sign_in_see_btn) {
             TaskFragment.Multiple++;
-            if(TaskFragment.Multiple == 3){
+            if (TaskFragment.Multiple == 3) {
                 sign_in = true;
-            }else {
-                sign_in =false;
+            } else {
+                sign_in = false;
             }
             tDialog.dismiss();
-            TaskLogic.getTaskLogic(). DoubleGold();
-
-        }else if(i == R.id.sign_img){
+            TaskLogic.getTaskLogic().DoubleGold();
+        } else if (i == R.id.sign_img) {
             sign_in = true;
             tDialog.dismiss();
-        }else if(i == R.id.login_interaction_ad){
-            TaskType taskType = new TaskType();
-            taskType.tasktype = -1;
-            EventBus.getDefault().post(taskType);
-         }else if(i == R.id.sign_interaction_ad){
-             TaskType taskType = new TaskType();
-            taskType.tasktype = -1;
-            EventBus.getDefault().post(taskType);
-
         }
+//        else if(i == R.id.login_interaction_ad){
+//            TaskType taskType = new TaskType();
+//            taskType.tasktype = -1;
+//            EventBus.getDefault().post(taskType);
+//         }else if(i == R.id.sign_interaction_ad){
+//             TaskType taskType = new TaskType();
+//            taskType.tasktype = -1;
+//            EventBus.getDefault().post(taskType);
+//
+//        }
     }
 
 
@@ -413,7 +416,7 @@ public class TaskFragment extends BaseFragment implements SwipeRefreshListener, 
     @Override
     public void Active(ActiveValue activeValue) {
         this.activeValue = activeValue;
-        if(active_value != null && activeValue != null && activeValue.getData() != null){
+        if (active_value != null && activeValue != null && activeValue.getData() != null) {
             active_value.setText(activeValue.getData().getUserActive() + "");
         }
 

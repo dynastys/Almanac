@@ -118,7 +118,7 @@ public class CustomHorizontalProgresNoNum extends ProgressBar {
 
         //绘制走完的进度线
         LinearGradient mLinearGradient = new LinearGradient(getPaddingLeft(),getPaddingTop()-HorizontalProgresReachHeight/2,(int)progressX,HorizontalProgresReachHeight/2,
-                new int[]{0xFF86D3FF, 0xFF469DF9}, null,
+                new int[]{0xFFff9291, 0xFFff3e47}, null,
                 Shader.TileMode.REPEAT);
         mPaint.setShader(mLinearGradient);
 //        mPaint.setColor(HorizontalProgresReachColor);

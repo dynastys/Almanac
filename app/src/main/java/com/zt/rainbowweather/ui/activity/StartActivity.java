@@ -70,7 +70,6 @@ import rx.Subscription;
 public class StartActivity extends BaseActivity implements RequestSyntony<Switch>, MapLocation.Dismiss, SplashADListener, TTSplashAd.AdInteractionListener {
 
     private ImageView ivImage;
-    private TextView tvVersionName;
     private TextView splash_skip_tv;
     private ShapeTextView tvSkip;
     private RelativeLayout container, ad_relative;
@@ -96,7 +95,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
         super.onCreate(savedInstanceState);
         try {
             setTheme(R.style.AppTheme);//恢复原有的样式
-            // 隐藏pad底部虚拟键
+//            // 隐藏pad底部虚拟键
             Window _window = getWindow();
             WindowManager.LayoutParams params = _window.getAttributes();
             params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
@@ -150,7 +149,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                                 @Override
                                 public void onSplashAdLoad() {
                                     actionBarSize.setVisibility(View.VISIBLE);
-                                    ad_relative.setVisibility(View.GONE);
+//                                    ad_relative.setVisibility(View.GONE);
                                 }
                             });
                         }
@@ -197,7 +196,7 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                         @SuppressLint("ResourceAsColor")
                         @Override
                         public void onSplashAdLoad() {
-                            ad_relative.setVisibility(View.GONE);
+//                            ad_relative.setVisibility(View.GONE);
 
                         }
                     });
@@ -388,15 +387,11 @@ public class StartActivity extends BaseActivity implements RequestSyntony<Switch
                 SaveShare.saveValue(StartActivity.this, "finish", "finish");
             }
 
-            tvVersionName = findViewById(R.id.tv_version_name);
-            tvSkip = findViewById(R.id.tv_skip);
+             tvSkip = findViewById(R.id.tv_skip);
             container = findViewById(R.id.container);
             splash_skip_tv = findViewById(R.id.splash_skip_tv);
             ad_relative = findViewById(R.id.ad_relative);
-            if (tvVersionName != null) {
-                tvVersionName.setText(BuildConfig.VERSION_NAME);
-                tvVersionName.setText(getResources().getString(R.string.about_tv));
-            }
+
             tvSkip.setOnClickListener(v -> skip());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DisplayUtil.hasVirtualNavigationBar(this)) {
                 findViewById(R.id.content_view).setPadding(0, 0, 0, DisplayUtil.getNavigationBarHeight(this));

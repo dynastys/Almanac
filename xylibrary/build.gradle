@@ -28,61 +28,85 @@ repositories {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     //noinspection GradleCompatible
+
     //    api 'com.android.support:appcompat-v7:28.0.0'
     api 'com.android.support:support-v4:28.0.0'
+
     //    api 'com.android.support:design:28.0.0'
     api 'com.android.support.constraint:constraint-layout:1.1.3'
     api 'com.android.support:design:28.0.0'
+
     //butterknife控件
     api 'com.jakewharton:butterknife:8.8.1'
     api 'com.jakewharton:butterknife-compiler:8.8.1'
+
     //gson解析
     api 'com.google.code.gson:gson:2.8.5'
-//    api 'com.github.bumptech.glide:glide:4.9.0'
+
+    //    api 'com.github.bumptech.glide:glide:4.9.0'
     api 'com.github.bumptech.glide:glide:4.8.0'
+
     //rxjava框架
     api 'io.reactivex:rxandroid:1.2.1'
     api 'io.reactivex:rxjava:1.3.8'
     api 'com.jakewharton.rxrelay:rxrelay:1.2.0'
+
     //网络请求框架
     api 'com.squareup.okhttp3:okhttp:3.12.0'
+
     //retrofit2+okhttp+rxjava框架
     api 'com.squareup.retrofit2:retrofit:2.5.0'
     api 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
     api 'com.squareup.retrofit2:converter-gson:2.4.0'
+
     //数据库框架
     api 'org.litepal.android:core:2.0.0'
+
     //RecyclerView适配器
+
     //    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     api files('libs/android-viewbadger.jar')
+
     //    api files('libs/tbs_sdk_thirdapp_v3.6.0.1310_43612_sharewithdownload_withoutGame_obfs_20180706_163319.jar')
     api 'am.widget:gradienttabstrip:26.1.0'
     api 'am.widget:basetabstrip:26.1.0'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+
     //    api 'com.android.support:cardview-v7:28.0.0'
+
     //    api 'com.klinkerapps:recyclerview:21.0.0'
     api 'cn.jzvd:jiaozivideoplayer:6.2.10'
     api 'com.android.support:support-vector-drawable:28.0.0'
     api files('libs/tbs_sdk_thirdapp_v3.6.0.1310_43612_sharewithdownload_withoutGame_obfs_20180706_163319.jar')
+
     //微信登录
     api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     api 'de.hdodenhof:circleimageview:2.1.0'
+
     //友盟PushSDK必须依赖基础组件库，所以需要加入对应依赖
     api 'com.umeng.umsdk:common:2.1.0'
-    api  'com.umeng.umsdk:analytics:8.0.0'
+    api 'com.umeng.umsdk:analytics:8.0.0'
+
     //PushSDK必须依赖utdid库，所以需要加入对应依赖
     api 'com.umeng.umsdk:utdid:1.1.5.3'
+
     //PushSDK
     api 'com.umeng.umsdk:push:6.0.1'
+
     //弹窗
     api 'com.timmy.tdialog:tdialog:2.1.1'
+
     //新APP需要清除
-    api "com.yilan.sdk:ui:1.3.2.1"
+    api 'com.yilan.sdk:ui:1.3.2.1'
     api 'jp.wasabeef:glide-transformations:3.1.1'
     api 'org.greenrobot:eventbus:3.1.1'
     api(name: 'open_ad_sdk', ext: 'aar')
+    api files('libs/xuanyin.jar')
+    api files('libs/GDTSDK.union.4.63.933.jar')
     //指示页
     api 'com.github.huburt-Hu:NewbieGuide:v2.4.0'
+    implementation files('libs/GDTSDK.union.4.63.933.jar')
 }

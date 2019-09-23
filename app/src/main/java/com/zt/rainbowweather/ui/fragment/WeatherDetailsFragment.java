@@ -243,13 +243,26 @@ public class WeatherDetailsFragment extends BaseFragment implements RequestSynto
                     huangLis = huangLi;
                     bean.sui_ci_shengxiao = huangLi.getData().getSui_ci().get(1) + huangLi.getData().getSui_ci().get(2) + huangLi.getData().getSui_ci().get(0);
                     bean.week = "周" + huangLi.getData().getWeek();
+                    weatherDetailsLunarCalendar.setText(bean.sui_ci_shengxiao);
                     if (huangLi.getData().getYi() != null && huangLi.getData().getYi().size() > 0) {
-                        weatherDetailsSuitable.setText(huangLi.getData().getYi().get(0).getValues().get(0) + " " + huangLi.getData().getYi().get(0).getValues().get(1));
+                        if(huangLi.getData().getYi().get(0).getValues() != null && huangLi.getData().getYi().get(0).getValues().size() > 0){
+                            if(huangLi.getData().getYi().get(0).getValues().size() > 1){
+                                weatherDetailsSuitable.setText(huangLi.getData().getYi().get(0).getValues().get(0) + " " + huangLi.getData().getYi().get(0).getValues().get(1));
+                            }else{
+                                weatherDetailsSuitable.setText(huangLi.getData().getYi().get(0).getValues().get(0));
+                            }
+                        }
                     }
                     if (huangLi.getData().getJi() != null && huangLi.getData().getJi().size() > 0) {
-                        weatherDetailsAvoid.setText(huangLi.getData().getJi().get(0).getValues().get(0) + " " + huangLi.getData().getJi().get(0).getValues().get(1));
-                    }
-                    weatherDetailsLunarCalendar.setText(bean.sui_ci_shengxiao);
+                        if(huangLi.getData().getJi().get(0).getValues() != null && huangLi.getData().getJi().get(0).getValues().size() > 0){
+                            if(huangLi.getData().getJi().get(0).getValues().size() > 1){
+                                weatherDetailsAvoid.setText(huangLi.getData().getJi().get(0).getValues().get(0) + " " + huangLi.getData().getJi().get(0).getValues().get(1));
+                            }else{
+                                weatherDetailsAvoid.setText(huangLi.getData().getJi().get(0).getValues().get(0));
+                            }
+                        }
+                     }
+
                 }
             }
         });
